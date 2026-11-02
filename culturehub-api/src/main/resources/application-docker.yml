@@ -1,0 +1,2 @@
+logging.level.cn.culturehub: INFO
+spring.datasource.hikari.maximum-pool-size: 20

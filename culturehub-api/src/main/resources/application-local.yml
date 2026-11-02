@@ -1,0 +1,3 @@
+# Local development overrides; credentials remain environment-driven.
+logging.level.cn.culturehub: DEBUG
+spring.datasource.hikari.maximum-pool-size: 10

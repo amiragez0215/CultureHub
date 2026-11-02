@@ -1,0 +1,97 @@
+{
+  "command": "mvn -s settings.xml -q '-Dculturehub.localTest=true' package",
+  "exitCode": 0,
+  "additionalChecks": [
+    "mvn -s settings.xml -q -Dtest=AiValidationTest -Dsurefire.failIfNoSpecifiedTests=false test (step bounds/overflow)",
+    "mvn -s settings.xml -q -DskipTests package (final delivery build)"
+  ],
+  "passed": 69,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 51,
+  "realMySqlRedisExecutions": 45,
+  "unitExecutions": 24,
+  "note": "Integration suites reuse original booking regression tests; counts are test executions, not distinct business scenarios. Container tests skipped because Docker is unavailable.",
+  "suites": [
+    {
+      "name": "cn.culturehub.AiBoundaryTest",
+      "tests": "4",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "2.707"
+    },
+    {
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "tests": "15",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "0.808"
+    },
+    {
+      "name": "cn.culturehub.AiValidationTest",
+      "tests": "2",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "6.079"
+    },
+    {
+      "name": "cn.culturehub.ContainerBookingTest",
+      "tests": "15",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "15",
+      "time": "0.0"
+    },
+    {
+      "name": "cn.culturehub.InputValidationTest",
+      "tests": "3",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "0.0"
+    },
+    {
+      "name": "cn.culturehub.LocalBookingTest",
+      "tests": "15",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "12.44"
+    },
+    {
+      "name": "cn.culturehub.ProposalContainerTest",
+      "tests": "30",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "30",
+      "time": "0.0"
+    },
+    {
+      "name": "cn.culturehub.ProposalLocalTest",
+      "tests": "30",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "22.571"
+    },
+    {
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "tests": "2",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "2",
+      "time": "0.0"
+    },
+    {
+      "name": "cn.culturehub.WorkerKafkaTest",
+      "tests": "4",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "4",
+      "time": "0.0"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "model": "deepseek-flash",
+  "answer": "CultureHub 连接成功。",
+  "usage": {
+    "prompt_tokens": 20,
+    "completion_tokens": 6,
+    "total_tokens": 26,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 20
+  },
+  "seconds": 9.7,
+  "realModelCalled": true
+}

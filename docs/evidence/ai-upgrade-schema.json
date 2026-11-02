@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "database": "culturehub_graph_schema_demo",
+  "tables": 14,
+  "proposalColumns": 17,
+  "proposalForeignKeys": 4,
+  "originalDatabaseModified": false
+}

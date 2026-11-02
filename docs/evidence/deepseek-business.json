@@ -1,0 +1,148 @@
+{
+  "model": "deepseek-flash",
+  "realModelCalled": true,
+  "ragVerified": false,
+  "checks": [
+    "guide returns real activity IDs/titles and authoritative session capacity",
+    "multi-turn guide retains the recommended activity",
+    "structured activity plan passes DTO validation and totals 60 minutes; not saved or published",
+    "ordinary user cannot invoke admin planning",
+    "real review analysis preserves Java metrics, validates review references and persists report"
+  ],
+  "results": {
+    "guide": {
+      "activities": [
+        {
+          "id": 5,
+          "title": "非遗剪纸四季花窗",
+          "description": "从对称折叠开始创作花窗，认识剪纸中的季节与祝福符号。\n\n从辨认阴刻与阳刻、观察折叠后的对称关系开始，老师会示范纸张转向与剪刻顺序。参与者可以选择花叶、窗格或季节符号组合自己的图案，完成后交流设计含义并装裱展示。过程重视安全操作和个人表达，作品不要求完全一致。",
+          "sessions": [
+            {
+              "id": 10,
+              "start_at": "2026-11-06T14:00:29",
+              "registration_end_at": "2026-11-06T13:00:29",
+              "remaining": 10,
+              "status": "PUBLISHED",
+              "as_of": "2026-11-01T14:33:23"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "explanation": "为你找到一项已发布并可报名的非遗剪纸活动「非遗剪纸四季花窗」，属于非遗传承类，适合家庭参与。该活动目前有可报名的场次，报名窗口在活动开始前仍然开放，名额查询结果仅代表查询时刻的状态。建议你通过官方渠道自行完成报名。",
+      "notice": "推荐不等于预约成功，名额以业务接口为准"
+    },
+    "followup": {
+      "activities": [
+        {
+          "id": 5,
+          "title": "非遗剪纸四季花窗",
+          "description": "从对称折叠开始创作花窗，认识剪纸中的季节与祝福符号。\n\n从辨认阴刻与阳刻、观察折叠后的对称关系开始，老师会示范纸张转向与剪刻顺序。参与者可以选择花叶、窗格或季节符号组合自己的图案，完成后交流设计含义并装裱展示。过程重视安全操作和个人表达，作品不要求完全一致。",
+          "sessions": [
+            {
+              "id": 10,
+              "start_at": "2026-11-06T14:00:29",
+              "registration_end_at": "2026-11-06T13:00:29",
+              "remaining": 10,
+              "status": "PUBLISHED",
+              "as_of": "2026-11-01T14:33:24"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "explanation": "刚才推荐的是非遗剪纸活动「非遗剪纸四季花窗」，仅作信息说明，未进行预约。",
+      "notice": "推荐不等于预约成功，名额以业务接口为准"
+    },
+    "plan": {
+      "title": "城市记忆：老地图与街区故事",
+      "description": "本活动为免费公众文化活动，以市文化博物馆常设展览中的老地图、生活器具、票据和影像资料为线索，引导参与者观察城市街巷的形成与变迁，聆听街区故事，并用自己的语言表达发现。活动适合所有人群，尤其适合初次参加者，总时长60分钟，包含4个环节。",
+      "steps": [
+        {
+          "name": "地图初探",
+          "minutes": 15,
+          "description": "在展厅导览区，参与者观察不同年代的老地图复制品，对比街巷格局的变化，了解城市形成的初步脉络。"
+        },
+        {
+          "name": "街区故事",
+          "minutes": 15,
+          "description": "结合生活器具、票据和影像资料，讲述两个典型街区的变迁故事，引导参与者提问与讨论。"
+        },
+        {
+          "name": "互动问答",
+          "minutes": 15,
+          "description": "围绕展品提出开放性问题，鼓励参与者分享自己的城市记忆，使用复制品或专用材料进行简单记录。"
+        },
+        {
+          "name": "表达分享",
+          "minutes": 15,
+          "description": "参与者用一句话或一幅简图表达对城市记忆的理解，并在小组内分享，最后进行集体交流。"
+        }
+      ],
+      "notice": "本活动为免费公众文化活动，适合所有人群。请提前10分钟到场签到；活动期间请勿触摸馆藏文物，教学体验使用复制品或专用材料；请遵守场馆秩序，保持安静。",
+      "copywriting": "老地图里藏着一座城的呼吸，街区故事中住着几代人的日常。用60分钟，一起观察街巷的纹理，聆听时光的回声，写下属于你的城市记忆。免费参与，无需经验，带上好奇心来就好。"
+    },
+    "report": {
+      "session_id": 48,
+      "sampleCount": 8,
+      "generatedAt": "2026-11-01T06:33:29.906337700Z",
+      "metrics": {
+        "sessionId": 48,
+        "asOf": "2026-11-01T14:33:28.687373",
+        "status": "PUBLISHED",
+        "reserved": 14,
+        "checkedIn": 8,
+        "occupied": 14,
+        "waiting": 0,
+        "offered": 0,
+        "expired": 1,
+        "successCount": 15,
+        "cancelCount": 1,
+        "waitlistJoined": 1,
+        "waitlistConverted": 0,
+        "confirmTimeout": 0,
+        "finished": true,
+        "notCheckedIn": 6,
+        "checkinProgress": 0.5714285714285714,
+        "checkinRate": 0.5714285714285714,
+        "reviews": {
+          "count": 8,
+          "average": 4.125
+        }
+      },
+      "promptVersion": "v1",
+      "sampling": "latest 50, max 300 characters each",
+      "analysis": {
+        "positives": [
+          "整体体验不错",
+          "内容丰富，适合初次体验，材料准备很充分",
+          "工作人员耐心，流程顺畅",
+          "讲解清晰，动手环节很有收获"
+        ],
+        "issues": [
+          "分组人数偏多",
+          "到场指引不够明确",
+          "交流时间偏少",
+          "个别评价内容过于简短，信息有限"
+        ],
+        "suggestions": [
+          "减少分组人数",
+          "补充更明确的到场指引",
+          "多留一些交流时间"
+        ],
+        "reviewIds": [
+          56,
+          55,
+          54,
+          53,
+          52,
+          51,
+          50,
+          49
+        ]
+      }
+    }
+  },
+  "passed": true,
+  "seconds": 9.55
+}

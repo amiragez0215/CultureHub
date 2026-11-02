@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "counts": {
+    "ACTIVE": 31,
+    "PUBLISHED": 29,
+    "DRAFT": 2,
+    "CANCELLED": 1,
+    "ALL": 32
+  },
+  "cancelledHistoryIds": [
+    31
+  ],
+  "checks": [
+    "default management hides cancelled activity",
+    "cancelled/all filters retain history",
+    "all filtered totals match paginated lists",
+    "public list/detail cannot expose cancelled activity",
+    "venue permissions apply to history filters",
+    "invalid status rejected as 400"
+  ],
+  "databaseMutated": false
+}

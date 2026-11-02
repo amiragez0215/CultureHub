@@ -1,0 +1,7 @@
+
+> culturehub-web@1.0.0 test:ui
+> node check-template.cjs && node check-locale.mjs && node --import ./register-test-loader.mjs check-interactions.mjs
+
+Vue template compilation passed
+Chinese labels, errors, notifications and report formatting passed
+PASS: Vue interaction regression; cancellation removes default/public list, refreshes totals/clamps last page, preserves cancelled/all history and disables mutation; grants and AI display checks

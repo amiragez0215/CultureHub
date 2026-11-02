@@ -1,0 +1,294 @@
+{
+  "generatedAt": "2026-11-01T18:19:45",
+  "mavenCommand": "mvn -s settings.xml -q clean package '-Dculturehub.localTest=true'",
+  "mavenExitCode": 0,
+  "totals": {
+    "tests": 174,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 73,
+    "passed": 101
+  },
+  "suites": [
+    {
+      "module": "culturehub-api",
+      "name": "cn.culturehub.AiStreamControllerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.AiBoundaryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.AiValidationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.ContainerBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "15"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.InputValidationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.LocalBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.OptimizationContainerTest",
+      "tests": "22",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "22"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.OptimizationLocalTest",
+      "tests": "22",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.ProposalContainerTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "30"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.ProposalLocalTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "module": "culturehub-business",
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "2"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "name": "cn.culturehub.WorkerKafkaTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "4"
+    }
+  ],
+  "executionNote": "Local integration suites inherit booking tests; executions are not all unique scenarios. Dedicated database culturehub on port 13306, Redis 16379; rich_demo was never truncated.",
+  "frontend": {
+    "testUiPassed": true,
+    "productionBuildPassed": true,
+    "visualScreenshotVerified": false
+  },
+  "ordinaryHttp": {
+    "passed": true,
+    "checks": [
+      "venue categories and enriched descriptions",
+      "activity venue filters and matching pagination totals",
+      "admin count/list venue authorization and ordinary-user isolation",
+      "my participation pagination total",
+      "real MySQL session create/edit dates and capacity; invalid/missing input is 400",
+      "temporary regression drafts cleaned up"
+    ],
+    "realModelCalled": false
+  },
+  "realSseHttp": {
+    "evidence": "technical-sse-http.json",
+    "passed": true
+  },
+  "notVerified": [
+    "Docker Compose",
+    "real Kafka failure recovery",
+    "XXL-JOB Admin full scheduling",
+    "Embedding/Chroma retrieval quality",
+    "large-scale load/performance",
+    "browser visual screenshot"
+  ],
+  "sourceChanges": [
+    {
+      "path": "README.md",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-api/pom.xml",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-api/src/main/java/cn/culturehub/AiStreamController.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-api/src/main/java/cn/culturehub/ApiController.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-api/src/main/java/cn/culturehub/SecurityConfiguration.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-api/src/test/java/cn/culturehub/AiStreamControllerTest.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/AiGuideGraph.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/AiService.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/Cache.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/Management.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/Operations.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/PublicSessions.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-business/src/main/java/cn/culturehub/VenueMapper.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/test/java/cn/culturehub/AiGuideGraphTest.java",
+      "kind": "modified"
+    },
+    {
+      "path": "culturehub-business/src/test/java/cn/culturehub/LegacyFacts.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-business/src/test/java/cn/culturehub/OptimizationContainerTest.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-business/src/test/java/cn/culturehub/OptimizationIntegrationTest.java",
+      "kind": "added"
+    },
+    {
+      "path": "culturehub-business/src/test/java/cn/culturehub/OptimizationLocalTest.java",
+      "kind": "added"
+    },
+    {
+      "path": "deploy/migrations/20261101-participation-history-index.sql",
+      "kind": "added"
+    },
+    {
+      "path": "deploy/mysql/01-schema.sql",
+      "kind": "modified"
+    },
+    {
+      "path": "docs/api.md",
+      "kind": "modified"
+    },
+    {
+      "path": "docs/technical-enhancement.md",
+      "kind": "added"
+    },
+    {
+      "path": "docs/verification.md",
+      "kind": "modified"
+    },
+    {
+      "path": "scripts/init-demo.ps1",
+      "kind": "modified"
+    },
+    {
+      "path": "scripts/measure-technical-sql.py",
+      "kind": "added"
+    },
+    {
+      "path": "scripts/package-full-source.py",
+      "kind": "added"
+    },
+    {
+      "path": "scripts/package-source.py",
+      "kind": "modified"
+    },
+    {
+      "path": "scripts/verify-ai-upgrade.py",
+      "kind": "modified"
+    },
+    {
+      "path": "web/check-interactions.mjs",
+      "kind": "modified"
+    },
+    {
+      "path": "web/check-sse.mjs",
+      "kind": "added"
+    },
+    {
+      "path": "web/nginx.conf",
+      "kind": "modified"
+    },
+    {
+      "path": "web/package.json",
+      "kind": "modified"
+    },
+    {
+      "path": "web/src/app-template.html",
+      "kind": "modified"
+    },
+    {
+      "path": "web/src/locale.js",
+      "kind": "modified"
+    },
+    {
+      "path": "web/src/main.js",
+      "kind": "modified"
+    },
+    {
+      "path": "web/src/sse.js",
+      "kind": "added"
+    }
+  ]
+}

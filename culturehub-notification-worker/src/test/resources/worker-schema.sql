@@ -1,0 +1,1 @@
+CREATE TABLE notification(id BIGINT PRIMARY KEY AUTO_INCREMENT,source_event_id CHAR(36) NOT NULL,user_id BIGINT NOT NULL,type VARCHAR(60) NOT NULL,title VARCHAR(150),body JSON,participation_id BIGINT,occurred_at DATETIME(6),created_at DATETIME DEFAULT CURRENT_TIMESTAMP,read_at DATETIME,UNIQUE(source_event_id,user_id,type));

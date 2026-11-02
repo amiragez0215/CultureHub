@@ -1,0 +1,24 @@
+cn.culturehub:culturehub-business:jar:1.0.0
++- com.alibaba.cloud.ai:spring-ai-alibaba-graph-core:jar:1.1.2.0:compile
+|  +- org.springframework.ai:spring-ai-commons:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-rag:jar:1.1.2:compile
+|  |  \- org.springframework.ai:spring-ai-vector-store:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-retry:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-autoconfigure-retry:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-deepseek:jar:1.1.2:compile
+|  |  \- org.springframework.ai:spring-ai-model:jar:1.1.2:compile
+|  |     \- org.springframework.ai:spring-ai-template-st:jar:1.1.2:compile
+|  \- org.springframework.ai:spring-ai-client-chat:jar:1.1.2:compile
++- org.springframework.ai:spring-ai-starter-model-openai:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-autoconfigure-model-openai:jar:1.1.2:compile
+|  |  +- org.springframework.ai:spring-ai-autoconfigure-model-tool:jar:1.1.2:compile
+|  |  +- org.springframework.ai:spring-ai-autoconfigure-model-chat-observation:jar:1.1.2:compile
+|  |  +- org.springframework.ai:spring-ai-autoconfigure-model-embedding-observation:jar:1.1.2:compile
+|  |  \- org.springframework.ai:spring-ai-autoconfigure-model-image-observation:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-openai:jar:1.1.2:compile
+|  +- org.springframework.ai:spring-ai-autoconfigure-model-chat-client:jar:1.1.2:compile
+|  \- org.springframework.ai:spring-ai-autoconfigure-model-chat-memory:jar:1.1.2:compile
+\- org.springframework.ai:spring-ai-starter-vector-store-chroma:jar:1.1.2:compile
+   +- org.springframework.ai:spring-ai-autoconfigure-vector-store-chroma:jar:1.1.2:compile
+   +- org.springframework.ai:spring-ai-autoconfigure-vector-store-observation:jar:1.1.2:compile
+   \- org.springframework.ai:spring-ai-chroma-store:jar:1.1.2:compile

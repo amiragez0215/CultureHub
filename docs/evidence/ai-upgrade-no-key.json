@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "realModelCalled": false,
+  "checks": [
+    "isolated API starts with placeholder key",
+    "ordinary login/activity queries work",
+    "AI1 and AI2 return AI_UNAVAILABLE 503",
+    "AI3 unavailable preserves previous report"
+  ]
+}

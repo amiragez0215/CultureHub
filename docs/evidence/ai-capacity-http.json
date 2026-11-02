@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "realModelCalled": true,
+  "conversation": [
+    "有没有适合青少年的活动？",
+    "都可以啊，剩余人数达到3人以上的，我要带我老婆和孩子一起去"
+  ],
+  "firstPhase": "CLARIFICATION",
+  "secondPhase": "RECOMMENDATION",
+  "preferences": {
+    "fromDate": null,
+    "toDate": null,
+    "fromTime": null,
+    "toTime": null,
+    "category": null,
+    "audience": "YOUTH",
+    "keyword": null,
+    "venue": null,
+    "childAge": null,
+    "minimumRemaining": 3
+  },
+  "candidateRemaining": [
+    20,
+    22,
+    9
+  ],
+  "explanation": "平台规则已确定：一个账号对同一场次只有一个名额，不支持一次为家人预约多人。按剩余名额查询，不等于为一家人锁定名额。以下场次查询时剩余均超过3人：传统建筑的力学智慧、社区版画小展导览、博物馆里的城市记忆。实际预约仍需您独立选择并确认。\n已按至少剩余 3 个名额筛选。当前账号一次只能预约 1 个名额，不支持代家人一次预约多人；查询结果不会为你锁定这些名额。",
+  "noReservationCreated": true,
+  "streams": [
+    [
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.079
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 1.469
+      },
+      {
+        "event": "proposal",
+        "afterSeconds": 1.469
+      },
+      {
+        "event": "done",
+        "afterSeconds": 1.469
+      }
+    ],
+    [
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.828
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.844
+      },
+      {
+        "event": "status",
+        "afterSeconds": 3.437
+      },
+      {
+        "event": "status",
+        "afterSeconds": 3.453
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.219
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.234
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.265
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.344
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.344
+      },
+      {
+        "event": "proposal",
+        "afterSeconds": 4.344
+      },
+      {
+        "event": "done",
+        "afterSeconds": 4.344
+      }
+    ]
+  ]
+}

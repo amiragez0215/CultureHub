@@ -1,0 +1,19 @@
+{
+  "name": "culturehub-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test:ui": "node check-template.cjs && node check-locale.mjs && node check-sse.mjs && node --import ./register-test-loader.mjs check-interactions.mjs"
+  },
+  "dependencies": {
+    "vue": "3.5.22",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "vite": "6.1.0"
+  }
+}

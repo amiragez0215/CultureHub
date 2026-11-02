@@ -1,0 +1,35 @@
+{
+  "database": "culturehub_rich_demo",
+  "mysql": "8.0.27",
+  "queries": {
+    "history": {
+      "sql": "select p.id,p.session_id,p.status,p.queue_seq,p.confirm_deadline,p.created_at,a.title,x.start_at,x.end_at,current_timestamp server_time from participation p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id where p.user_id=(select id from app_user where username='user') order by p.id desc limit 20",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\tp\tNULL\tref\tuq_request,uq_active,uq_queue,ix_queue,ix_user\tuq_request\t8\tconst\t45\t100.00\tUsing where; Using filesort\r\n1\tPRIMARY\tx\tNULL\teq_ref\tPRIMARY,ix_session_activity\tPRIMARY\t8\tculturehub_rich_demo.p.session_id\t1\t100.00\tNULL\r\n1\tPRIMARY\ta\tNULL\teq_ref\tPRIMARY\tPRIMARY\t8\tculturehub_rich_demo.x.activity_id\t1\t100.00\tNULL\r\n2\tSUBQUERY\tapp_user\tNULL\tconst\tusername\tusername\t162\tconst\t1\t100.00\tUsing index\r\n",
+      "clientWallMs": [
+        65.565,
+        63.463,
+        65.992
+      ]
+    },
+    "dashboard_selection": {
+      "sql": "select x.id from activity_session x join activity a on a.id=x.activity_id where a.venue_id=1 and x.start_at>='2026-10-01' and x.start_at<'2026-12-01' order by x.id limit 201",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\ta\tNULL\tref\tPRIMARY,ix_activity_venue\tix_activity_venue\t8\tconst\t1\t100.00\tUsing index; Using temporary; Using filesort\r\n1\tSIMPLE\tx\tNULL\tref\tix_session_activity\tix_session_activity\t8\tculturehub_rich_demo.a.id\t1\t11.11\tUsing where; Using index\r\n",
+      "clientWallMs": [
+        64.206,
+        62.922,
+        61.934
+      ]
+    },
+    "session_history_aggregate": {
+      "sql": "select count(*) from participation_history h join participation p on p.id=h.participation_id where p.session_id=48 and h.to_status='RESERVED'",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tp\tNULL\tref\tPRIMARY,uq_active,uq_queue,ix_queue\tuq_queue\t8\tconst\t16\t100.00\tUsing index\r\n1\tSIMPLE\th\tNULL\tref\tix_history\tix_history\t8\tculturehub_rich_demo.p.id\t1\t10.00\tUsing where\r\n",
+      "clientWallMs": [
+        65.276,
+        62.844,
+        62.394
+      ]
+    }
+  },
+  "scale": "sessions\tparticipations\ttransitions\r\n52\t254\t359\r\n",
+  "timingNote": "Client wall time includes mysql process startup and connection overhead; not a server latency benchmark."
+}

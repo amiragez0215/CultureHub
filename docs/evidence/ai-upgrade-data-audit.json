@@ -1,0 +1,19 @@
+{
+  "counts": {
+    "venue": 8,
+    "activity": 32,
+    "activity_session": 52,
+    "app_user": 35,
+    "participation": 253,
+    "checkin_record": 56,
+    "review": 56
+  },
+  "violations": {
+    "capacityMismatch": 0,
+    "duplicateActive": 0,
+    "checkinMismatch": 0,
+    "invalidReviews": 0,
+    "cancelledOccupancy": 0,
+    "invalidOfferDeadline": 0
+  }
+}

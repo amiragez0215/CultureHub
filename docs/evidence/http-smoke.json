@@ -1,0 +1,1 @@
+{"result": "PASS", "activityId": 7, "sessionId": 7, "checks": ["registration", "JWT login", "public queries", "admin activity/session publish", "scope denial", "request result lookup", "capacity denial", "waitlist", "cancel/promote", "confirm", "credential", "check-in idempotence", "cancel after check-in denied", "statistics", "AI permission", "missing-model error"]}

@@ -1,0 +1,33 @@
+**/target/
+web/node_modules/
+web/dist/
+.env
+*.log
+.idea/
+.tools/
+logs/
+
+# Local credentials; keep only the configuration template.
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Generated packages, Python cache and local database files.
+/CultureHub-V1.0-source*.zip
+**/node_modules/
+**/dist/
+**/__pycache__/
+*.pyc
+*.rdb
+*.aof
+*.db
+*.sqlite
+*.sqlite3
+*.pid
+*.pem
+*.key
+*.p12
+*.pfx
+.vscode/

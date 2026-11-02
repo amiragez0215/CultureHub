@@ -1,0 +1,736 @@
+<header class="site-header">
+  <a href="#/activities" @click.prevent="go('activities')" class="brand"
+    >文化有约<span>公共文化预约平台</span></a
+  >
+  <nav aria-label="主导航">
+    <button
+      v-for="[key,name] in [['activities','探索活动'],['venuePublic','文化场馆']]"
+      :class="{active:section===key}"
+      :aria-current="section===key?'page':undefined"
+      @click="go(key)"
+    >
+      {{name}}
+    </button>
+    <template v-if="token"
+      ><button
+        v-for="[key,name] in [['mine','我的参与'],['notifications','站内通知'],['guide','智能导览']]"
+        :class="{active:section===key}"
+        :aria-current="section===key?'page':undefined"
+        @click="go(key)"
+      >
+        {{name}}</button
+      ><button
+        v-if="admin"
+        :class="{active:pageMeta[2]==='管理工作台'||['manage','venues'].includes(section)}"
+        @click="go('manage')"
+      >
+        管理工作台
+      </button></template
+    >
+  </nav>
+  <div class="account">
+    <span v-if="me"
+      >{{me.user.nickname||me.user.username}} ·
+      {{platform?'平台管理员':admin?'场馆管理员':'普通用户'}}</span
+    ><button v-if="token" @click="logout">退出登录</button
+    ><button v-else class="primary" @click="nav('login')">登录 / 注册</button>
+  </div>
+</header>
+<main :aria-busy="busy">
+  <nav class="breadcrumbs" aria-label="当前位置">
+    <button @click="go('activities')">首页</button><span>›</span
+    ><span>{{pageMeta[2]}}</span><span>›</span><strong>{{pageMeta[0]}}</strong>
+  </nav>
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">公共文化 · 人人共享</p>
+      <h1 id="page-title" tabindex="-1">{{pageMeta[0]}}</h1>
+      <p class="page-description">{{pageMeta[1]}}</p>
+    </div>
+    <button class="back-button" @click="back" v-if="page!=='activities'">
+      ← 返回上一页
+    </button>
+  </div>
+  <div class="success feedback" v-if="toast" role="status">
+    {{toast}}<button @click="toast=''" aria-label="关闭提示">×</button>
+  </div>
+  <div class="error feedback" v-if="error" role="alert">
+    {{error}}<button @click="error=''" aria-label="关闭错误提示">×</button>
+  </div>
+  <div v-if="busy" role="status" class="loading-line">
+    正在加载或处理，请稍候…
+  </div>
+  <aside
+    v-if="admin&&['manage','venues','grants','check','stats','plan','report'].includes(section)"
+    class="admin-nav"
+    aria-label="管理模块"
+  >
+    <button
+      v-for="[key,name] in [['manage','活动与场次'],['venues','场馆管理'],['grants','管理员授权'],['check','签到核销'],['stats','运营报表'],['plan','智能策划'],['report','智能复盘']]"
+      v-show="key!=='grants'||platform"
+      :class="{active:section===key}"
+      @click="form={};go(key)"
+    >
+      {{name}}
+    </button>
+  </aside>
+
+  <form
+    v-if="page==='login'"
+    class="panel narrow"
+    @submit.prevent="login(false)"
+  >
+    <h2>欢迎来到文化有约</h2>
+    <p class="muted">普通用户与管理员使用相同入口登录。</p>
+    <label
+      >账号<input
+        v-model="auth.username"
+        autocomplete="username"
+        required
+        placeholder="请输入账号" /></label
+    ><label
+      >密码<input
+        v-model="auth.password"
+        type="password"
+        autocomplete="current-password"
+        required
+        placeholder="请输入密码"
+    /></label>
+    <div class="actions">
+      <button class="primary" :disabled="busy" type="submit">登录</button
+      ><button type="button" :disabled="busy" @click="login(true)">
+        注册并登录</button
+      ><button type="button" @click="go('activities')">先逛逛活动</button>
+    </div>
+  </form>
+
+  <template v-if="page==='activities'||page==='manage'">
+    <form class="toolbar panel" @submit.prevent="search">
+      <label
+        >活动关键词<input
+          v-model="q"
+          placeholder="搜索感兴趣的文化活动" /></label
+      ><label v-if="page==='activities'"
+        >活动分类<select v-model="category">
+          <option value="">全部分类</option>
+          <option v-for="code in categories" :value="code">
+            {{label(code)}}
+          </option>
+        </select></label
+      ><label>所属场馆<select v-model.number="venueFilter" @change="search">
+        <option :value="0">全部场馆</option>
+        <option v-for="v in page==='activities'?publicVenues:venues" :key="v.id" :value="v.id">{{v.name}}</option>
+      </select></label>
+      <label v-if="page==='manage'">活动状态<select v-model="managementStatus" @change="search">
+        <option value="ACTIVE">未取消（默认）</option>
+        <option value="PUBLISHED">已发布</option>
+        <option value="DRAFT">草稿</option>
+        <option value="CANCELLED">已取消</option>
+        <option value="ALL">全部状态</option>
+      </select></label>
+      <button class="primary" :disabled="busy" type="submit">查询活动</button
+      ><button v-if="page==='manage'" type="button" @click="newActivity">
+        ＋ 创建活动
+      </button>
+    </form>
+    <p class="list-summary">
+      共 {{total}} 个活动 · 共 {{pageCount}} 页 · 当前第 {{total?pageNo:0}} 页 · 每页 20 条
+    </p>
+    <p class="muted" v-if="page==='manage'">默认隐藏已取消活动；可切换“已取消”查看历史记录。取消会保留关联的参与记录。</p>
+    <div class="cards">
+      <article v-for="r in rows" :key="r.id" class="activity-card">
+        <img
+          class="activity-cover"
+          :src="cover(r.category)"
+          alt="活动主题插画"
+        />
+        <div class="card-tags">
+          <span class="badge">{{label(r.category)}}</span
+          ><span>{{r.venue_name}}</span>
+        </div>
+        <h2>{{r.title}}</h2>
+        <p class="activity-description">{{r.description}}</p>
+        <p class="date-line">最近场次：{{date(r.next_start_at)}}</p>
+        <p>
+          <span class="badge" :class="r.status.toLowerCase()"
+            >{{label(r.status)}}</span
+          >
+          · {{label(r.audience)}}
+        </p>
+        <div class="actions">
+          <button
+            class="primary"
+            :disabled="busy"
+            @click="run(()=>detail(r,page==='manage'))"
+          >
+            {{page==='manage'?'管理场次':'查看场次 →'}}</button
+          ><template v-if="page==='manage'"
+            ><button :disabled="busy||r.status==='CANCELLED'" @click="edit(r,'editActivity')">编辑</button
+            ><button
+              :disabled="busy||r.status==='CANCELLED'"
+              @click="manageAction(r.id,'publish')"
+            >
+              发布</button
+            ><button
+              class="danger"
+              :disabled="busy||r.status==='CANCELLED'"
+              @click="manageAction(r.id,'cancel')"
+            >
+              取消
+            </button></template
+          >
+        </div>
+      </article>
+    </div>
+  </template>
+
+  <template v-if="['activityDetail','adminDetail'].includes(page)&&selected">
+    <section class="detail-hero">
+      <img :src="cover(selected.category)" alt="活动主题插画" />
+      <div>
+        <span class="badge">{{label(selected.category)}}</span>
+        <h2>{{selected.title}}</h2>
+        <p class="preserve-lines">{{selected.description}}</p>
+        <p>适合人群：{{label(selected.audience)}}</p>
+        <button @click="showVenue(selected.venue_id)">查看所属场馆 →</button>
+      </div>
+    </section>
+    <div class="detail-columns">
+      <section>
+        <h2>活动流程</h2>
+        <p class="preserve-lines">{{selected.plan||'以现场安排为准'}}</p>
+      </section>
+      <section>
+        <h2>报名与参与须知</h2>
+        <p class="preserve-lines">
+          {{selected.notice||'请按场次准时到场，向工作人员出示电子凭证。'}}
+        </p>
+      </section>
+    </div>
+    <div class="section-heading">
+      <h2>{{page==='adminDetail'?'场次管理':'选择参与场次'}}</h2>
+      <button v-if="page==='adminDetail'" class="primary" @click="newSession">
+        ＋ 新增场次
+      </button>
+    </div>
+    <p class="muted" v-if="page==='activityDetail'">
+      每个账号限一个名额。满员后可主动加入候补，获得机会后需要确认。
+    </p>
+    <article class="session-card" v-for="x in sessions" :key="x.id">
+      <div>
+        <span class="badge">{{sessionLabel(x)}}</span>
+        <h3>{{date(x.start_at)}} — {{date(x.end_at)}}</h3>
+        <p>
+          报名：{{date(x.registration_start_at)}} 至
+          {{date(x.registration_end_at)}}
+        </p>
+        <p>签到：{{date(x.checkin_open_at)}} 至 {{date(x.checkin_close_at)}}</p>
+        <p>
+          剩余名额 <strong>{{x.capacity-x.occupied_count}}</strong> /
+          {{x.capacity}} · 场次编号 {{x.id}}
+        </p>
+      </div>
+      <div class="actions" v-if="page==='activityDetail'">
+        <template v-if="token"
+          ><button
+            class="primary"
+            :disabled="busy||!canBook(x)||x.occupied_count>=x.capacity"
+            @click="book(x.id)"
+          >
+            预约本场</button
+          ><button
+            :disabled="busy||!canBook(x)||x.occupied_count<x.capacity"
+            @click="book(x.id,true)"
+          >
+            加入候补
+          </button></template
+        ><button v-else class="primary" @click="nav('login')">
+          登录后参与
+        </button>
+      </div>
+      <div class="actions" v-else>
+        <button @click="edit(x,'editSession')">编辑</button
+        ><button @click="sessionAction(x.id,'participations')">参与记录</button
+        ><button @click="sessionAction(x.id,'statistics')">签到统计</button
+        ><button @click="sessionAction(x.id,'reviews')">用户评价</button
+        ><button
+          class="danger"
+          :disabled="busy||x.status==='CANCELLED'"
+          @click="sessionAction(x.id,'cancel')"
+        >
+          取消场次
+        </button>
+      </div>
+    </article>
+    <p v-if="!sessions.length&&!busy" class="empty">该活动暂无可展示的场次。</p>
+  </template>
+
+  <template v-if="page==='venuePublic'||page==='venues'"
+    ><div class="section-heading">
+      <p>查看场馆资料与开放安排，具体活动以场次预约规则为准。</p>
+      <button
+        v-if="page==='venues'&&platform"
+        class="primary"
+        @click="edit({name:'',address:'',introduction:'',opening_hours:'',status:'OPEN',category:'CULTURE_CENTER'},'editVenue')"
+      >
+        ＋ 新建场馆
+      </button>
+    </div>
+    <form class="toolbar panel" @submit.prevent>
+      <label>场馆关键词<input v-model="venueQuery" placeholder="搜索场馆名称或地址" /></label>
+      <label>场馆类型<select v-model="venueCategory">
+        <option value="">全部类型</option>
+        <option v-for="code in venueCategories" :key="code" :value="code">{{label(code)}}</option>
+      </select></label>
+      <button type="button" @click="venueQuery='';venueCategory=''">重置筛选</button>
+    </form>
+    <p class="list-summary">找到 {{visibleVenues.length}} 个场馆</p>
+    <p class="empty" v-if="!busy&&rows.length&&!visibleVenues.length">没有符合条件的场馆，请调整筛选。</p>
+    <div class="cards">
+      <article v-for="v in visibleVenues" :key="v.id">
+        <span class="badge">{{label(v.category||'CULTURE_CENTER')}}</span>
+        <span class="badge">{{label(v.status)}}</span>
+        <h2>{{v.name}}</h2>
+        <p class="muted" v-if="page==='venues'">场馆编号：{{v.id}}</p>
+        <p class="venue-excerpt">{{v.introduction}}</p>
+        <p>地址：{{v.address}}</p>
+        <p>开放时间：{{v.opening_hours||v.openingHours}}</p>
+        <div class="actions">
+          <button class="primary" @click="showVenue(v.id)">参观详情 →</button
+          ><button
+            v-if="page==='venues'&&platform"
+            @click="edit(v,'editVenue')"
+          >
+            编辑场馆
+          </button>
+        </div>
+      </article>
+    </div></template
+  >
+  <section v-if="page==='venueDetail'&&venueInfo" class="venue-detail">
+    <span class="badge">{{label(venueInfo.category||'CULTURE_CENTER')}}</span>
+    <span class="badge">{{label(venueInfo.status)}}</span>
+    <h2>{{venueInfo.name}}</h2>
+    <h3>认识这座场馆</h3>
+    <p class="lead preserve-lines">{{venueInfo.introduction}}</p>
+    <dl>
+      <dt>场馆地址</dt>
+      <dd>{{venueInfo.address}}</dd>
+      <dt>开放时间</dt>
+      <dd>{{venueInfo.opening_hours||venueInfo.openingHours}}</dd>
+      <dt>参与方式</dt>
+      <dd>活动按场次预约。到场后由工作人员核销电子凭证。</dd>
+    </dl>
+    <div class="actions">
+      <button class="primary" @click="searchVenueActivities(venueInfo.id)">查看本馆活动</button
+      ><button @click="back">返回刚才的页面</button>
+    </div>
+  </section>
+
+  <template v-if="page==='mine'"
+    ><p class="list-summary">共 {{total}} 条参与记录 · 共 {{pageCount}} 页 · 当前第 {{total?pageNo:0}} 页 · 每页 20 条</p>
+    <article v-for="r in rows" :key="r.id" class="participation-card">
+      <div class="section-heading">
+        <h2>{{r.title}}</h2>
+        <span class="badge" :class="r.status.toLowerCase()"
+          >{{label(r.status)}}</span
+        >
+      </div>
+      <p>活动时间：{{date(r.start_at)}} — {{date(r.end_at)}}</p>
+      <p v-if="r.queue_seq&&r.status==='WAITING'">
+        入队序号：{{r.queue_seq}}（并非前方排队人数）
+      </p>
+      <div v-if="r.status==='OFFERED'" class="opportunity">
+        <strong>{{countdown(r)}}</strong>
+        <p>
+          确认截止：{{date(r.confirm_deadline)}}。名额已暂时保留，请及时确认。
+        </p>
+      </div>
+      <div class="actions">
+        <button
+          v-if="r.status==='OFFERED'"
+          class="primary"
+          :disabled="busy||!canCancel(r)"
+          @click="act(r.id,'confirm')"
+        >
+          确认候补机会</button
+        ><button
+          v-if="['RESERVED','OFFERED','WAITING'].includes(r.status)"
+          :disabled="busy||!canCancel(r)"
+          @click="act(r.id,'cancel')"
+        >
+          取消 / 退出</button
+        ><button
+          v-if="['RESERVED','CHECKED_IN'].includes(r.status)"
+          class="primary"
+          :disabled="busy"
+          @click="credential(r.id)"
+        >
+          查看电子凭证 →</button
+        ><button
+          v-if="r.status==='CHECKED_IN'"
+          :disabled="busy||!canReview(r)"
+          @click="review(r)"
+        >
+          提交 / 修改评价 →
+        </button>
+      </div>
+      <p class="muted" v-if="r.status==='CHECKED_IN'&&!canReview(r)">
+        活动结束后即可提交评价。
+      </p>
+    </article>
+    <button @click="nav('mine')" :disabled="busy">
+      刷新参与状态
+    </button></template
+  >
+  <section v-if="page==='credential'&&ticket" class="ticket panel narrow">
+    <div class="ticket-heading">
+      <span class="badge">{{label(ticket.status)}}</span>
+      <h2>{{ticket.title||('场次 '+ticket.session_id)}}</h2>
+      <p>资格编号 {{ticket.id}} · 场次编号 {{ticket.session_id}}</p>
+    </div>
+    <template v-if="qr"
+      ><img class="qr-image" :src="qr" alt="个人签到二维码" />
+      <p v-if="ticket.status==='CHECKED_IN'" class="success">
+        该凭证已经完成签到，请勿重复核销。
+      </p>
+      <p v-else>请向有权限的场馆工作人员出示此二维码。</p>
+      <label
+        >核销码<input
+          class="credential-code"
+          :value="ticket.checkin_token"
+          readonly
+          @focus="$event.target.select()"
+      /></label>
+      <div class="actions">
+        <button @click="copyCredential">复制核销码</button
+        ><button @click="credential(ticket.id)">刷新凭证状态</button>
+      </div>
+      <p class="muted">
+        凭证仅供本人使用。资格或场次取消后失效，核销结果以系统实时校验为准。
+      </p></template
+    >
+    <p v-else class="error">当前资格无法使用签到凭证，请返回查看参与状态。</p>
+    <button class="primary" @click="back">返回我的参与</button>
+  </section>
+
+  <form
+    v-if="page==='review'"
+    class="panel narrow"
+    @submit.prevent="saveReview"
+  >
+    <h2>{{selected?.title||'本次活动'}}</h2>
+    <p class="muted">已为你载入现有评价；保存将更新同一条评价。</p>
+    <label
+      >评分<select v-model.number="form.rating" required>
+        <option v-for="n in 5" :value="n">{{n}} 星</option>
+      </select></label
+    ><label
+      >参与体验<textarea
+        v-model="form.content"
+        required
+        maxlength="2000"
+        rows="6"
+        placeholder="分享你的收获，也欢迎提出具体改进建议"
+      ></textarea></label
+    ><small>{{form.content?.length||0}} / 2000 字</small>
+    <div class="actions">
+      <button class="primary" type="submit" :disabled="busy">保存评价</button
+      ><button type="button" @click="back">取消并返回</button>
+    </div>
+  </form>
+
+  <form
+    v-if="page==='editActivity'"
+    class="panel"
+    @submit.prevent="saveActivity"
+  >
+    <label
+      >所属场馆<select v-model.number="form.venue_id" required>
+        <option v-for="v in venues" :value="v.id">{{v.name}}</option>
+      </select></label
+    ><label
+      >活动标题<input v-model="form.title" required maxlength="120"
+    /></label>
+    <div class="form-grid">
+      <label
+        >分类<select v-model="form.category">
+          <option v-for="code in categories" :value="code">
+            {{label(code)}}
+          </option>
+        </select></label
+      ><label
+        >适合人群<select v-model="form.audience">
+          <option v-for="code in audiences" :value="code">
+            {{label(code)}}
+          </option>
+        </select></label
+      >
+    </div>
+    <label v-for="k in ['description','plan','notice','copywriting']"
+      >{{label(k)}}<textarea v-model="form[k]"></textarea>
+    </label>
+    <p class="muted">新活动保存为草稿，发布前请创建场次并检查安排。</p>
+    <div class="actions">
+      <button class="primary" :disabled="busy">保存活动</button
+      ><button type="button" @click="back">取消并返回</button>
+    </div>
+  </form>
+  <form v-if="page==='editSession'" class="panel" @submit.prevent="saveSession">
+    <p class="muted">
+      已有参与记录的场次不能修改关键字段。所有时间均为北京时间（Asia/Shanghai），日期和时刻分别填写。
+    </p>
+    <div class="form-grid">
+      <fieldset v-for="k in sessionTimeKeys" :key="k" class="time-field">
+        <legend>{{label(k)}}</legend>
+        <div class="date-time-inputs">
+          <input type="date" :name="k+'_date'" :aria-label="label(k)+'日期'" :value="sessionFields[k].date" @input="updateSessionTime(k,'date',$event.target.value)" required />
+          <input type="time" :name="k+'_time'" :aria-label="label(k)+'时刻'" :value="sessionFields[k].time" @input="updateSessionTime(k,'time',$event.target.value)" required step="60" />
+        </div>
+      </fieldset>
+    </div>
+    <label
+      >预约人数上限<input name="capacity" type="number" min="1" max="2147483647" step="1" inputmode="numeric" :value="form.capacity" @input="updateCapacity($event.target.value)" required
+    /></label>
+    <p class="muted">报名开始 &lt; 报名截止 ≤ 活动开始 &lt; 活动结束；签到开放 &lt; 签到截止 ≤ 活动结束。保存后返回当前活动的场次列表。</p>
+    <div class="actions">
+      <button class="primary" :disabled="busy">保存场次</button
+      ><button type="button" @click="back">取消并返回</button>
+    </div>
+  </form>
+  <form v-if="page==='editVenue'" class="panel" @submit.prevent="venueSave">
+    <label>场馆类型<select v-model="form.category" required>
+      <option v-for="code in venueCategories" :key="code" :value="code">{{label(code)}}</option>
+    </select></label>
+    <label>场馆介绍<textarea v-model="form.introduction" rows="8" placeholder="介绍场馆特色、空间与服务，以及适合怎样的文化体验"></textarea></label>
+    <label v-for="k in ['name','address','opening_hours']" :key="k"
+      >{{label(k)}}<input v-model="form[k]" :required="k==='name'" /></label
+    ><label
+      >开放状态<select v-model="form.status">
+        <option value="OPEN">开放中</option>
+        <option value="CLOSED">已关闭</option>
+      </select></label
+    >
+    <div class="actions">
+      <button class="primary" :disabled="busy">保存场馆</button
+      ><button type="button" @click="back">取消并返回</button>
+    </div>
+  </form>
+  <section v-if="page==='grants'&&platform" class="panel">
+    <h2>选择用户与授权范围</h2>
+    <p>先选择用户，系统会载入已有授权，再直接勾选场馆名称。无需查询或手填编号。</p>
+    <form @submit.prevent="grant">
+      <label>查找用户<input v-model="grantUserQuery" placeholder="输入账号或昵称" /></label>
+      <label>授权用户<select name="grant_user" v-model.number="grantUserId" @change="selectGrantUser" :disabled="busy" required>
+        <option :value="0" disabled>请选择要授权的用户</option>
+        <option v-for="u in grantUsers" :key="u.id" :value="u.id" :disabled="!!u.platform_admin">
+          {{u.nickname}}（{{u.username}}）{{u.platform_admin?' · 平台管理员已有全局权限':!u.enabled?' · 账号已停用':''}}
+        </option>
+      </select></label>
+      <p class="muted" v-if="!grantUserId">平台管理员已有全局权限，无需分配场馆。普通用户分配场馆后将获得场馆管理员角色。</p>
+      <template v-if="grantUserId">
+        <p v-if="!grantReady" role="status">{{busy?'正在载入该用户的已有授权，载入完成后可以勾选场馆。':'授权信息未载入，请重试。'}}<button type="button" v-if="!busy" @click="selectGrantUser">重新载入授权</button></p>
+        <template v-else-if="grantUser">
+          <p class="grant-summary">正在编辑：<strong>{{grantUser.nickname}}（{{grantUser.username}}）</strong> · 当前选择 {{grantVenueIds.length}} 个场馆</p>
+          <label>查找场馆<input v-model="grantVenueQuery" placeholder="输入场馆名称或地址" /></label>
+          <div class="grant-choices" role="group" aria-label="可授权场馆">
+            <label v-for="v in grantVenues" :key="v.id" class="venue-choice" :class="{chosen:grantVenueIds.includes(v.id)}">
+              <input type="checkbox" :name="'grant_venue_'+v.id" :checked="grantVenueIds.includes(v.id)" :disabled="busy" @change="toggleGrantVenue(v.id,$event.target.checked)" />
+              <span><strong>{{v.name}}</strong><small>{{label(v.category||'CULTURE_CENTER')}} · 编号 {{v.id}} · {{label(v.status)}}</small><small>{{v.address}}</small></span>
+            </label>
+          </div>
+          <p class="empty" v-if="!grantVenues.length">没有符合条件的场馆，请调整关键词。</p>
+          <p class="muted" v-if="grantVenueQuery">筛选只影响显示，不会取消其他场馆的勾选。</p>
+          <p class="grant-summary">保存后的管理范围：{{venues.filter(v=>grantVenueIds.includes(v.id)).map(v=>v.name).join('、')||'无场馆授权'}}</p>
+          <p class="muted">保存会替换该用户的完整场馆授权。取消全部勾选并保存，将清空其管理范围；其他用户的授权不受影响。</p>
+        </template>
+      </template>
+      <div class="actions">
+        <button type="submit" class="primary" :disabled="busy||!grantReady||!grantChanged">保存场馆授权</button>
+        <button type="button" :disabled="busy||!grantReady||!grantChanged" @click="grantVenueIds=[...grantOriginalIds]">撤销未保存修改</button>
+        <button type="button" @click="back">返回上一页</button>
+      </div>
+    </form>
+  </section>
+  <form v-if="page==='check'" class="panel narrow" @submit.prevent="check">
+    <label
+      >场次编号<input
+        v-model.number="form.session_id"
+        type="number"
+        min="1"
+        required /></label
+    ><label
+      >核销凭证<input
+        v-model.trim="form.token"
+        required
+        placeholder="粘贴用户电子凭证页中的核销码" /></label
+    ><button class="primary" :disabled="busy">核销签到</button>
+  </form>
+  <form v-if="page==='stats'" class="panel toolbar" @submit.prevent="stats">
+    <label
+      >场馆<select v-model.number="form.venue_id" required>
+        <option v-for="v in venues" :value="v.id">{{v.name}}</option>
+      </select></label
+    ><label>开始日期<input type="date" v-model="form.from" required /></label
+    ><label
+      >截止日期（不含）<input type="date" v-model="form.to" required /></label
+    ><button class="primary" :disabled="busy">查询运营报表</button>
+  </form>
+  <section v-if="page==='guide'" class="chat-panel">
+    <div class="section-heading"><h2>文化活动助手</h2><button :disabled="busy||guideProposal?.status==='PROCESSING'" @click="newGuideConversation">开始新对话</button></div>
+    <p class="muted">
+      先描述时间、兴趣和人群，再选择具体场次，最后明确确认。当前账号仅预约一个名额，不支持代报多人。发送新问题会使尚未确认的旧方案失效。
+    </p>
+    <article v-for="(m,index) in messages" :key="index">
+      <strong>{{m.role}}</strong>
+      <span class="badge" v-if="m.type">{{label(m.type)}}</span>
+      <p class="preserve-lines">{{m.text}}</p>
+      <div v-for="a in m.cards" :key="a.candidateId" class="guide-session-card">
+        <h3>{{a.title}}</h3>
+        <p>{{a.venueName}} · {{date(a.startAt)}} — {{date(a.endAt)}}</p>
+        <p>剩余名额：{{a.remaining}} · 查询时刻：{{date(a.asOf)}}（北京时间）</p>
+        <p class="muted">{{a.ageNotice}}</p>
+        <p v-if="m.current===false" class="muted">这是之前的推荐，请使用最新回复中的场次。</p>
+        <div class="actions">
+          <button class="primary" :disabled="busy||m.current===false||!a.bookingAllowed" @click="selectGuideCandidate(a,'DIRECT')">选择此场次</button>
+          <button v-if="a.waitlistAllowed" :disabled="busy||m.current===false" @click="selectGuideCandidate(a,'WAITLIST')">选择候补（需另行确认）</button>
+          <button @click="run(()=>detail({id:a.activityId}))">查看活动与场次 →</button>
+        </div>
+      </div>
+      <small v-if="m.sources?.length">知识来源：{{m.sources.join('、')}}</small>
+      <p class="muted" v-if="m.knowledgeNotice">{{m.knowledgeNotice}}</p>
+    </article>
+    <section v-if="guideProposal" id="guide-proposal" class="guide-proposal" aria-live="polite">
+      <h3>{{guideProposal.entryType==='WAITLIST'?'候补确认方案':'预约确认方案'}}</h3>
+      <strong>{{guideProposal.session.title}}</strong>
+      <p>{{guideProposal.session.venueName}} · {{date(guideProposal.session.startAt)}} — {{date(guideProposal.session.endAt)}}</p>
+      <p>当前登录账号 · 1 人名额 · {{guideProposal.entryType==='WAITLIST'?'加入候补队列，等待补位':'提交正式预约'}}</p>
+      <p>确认截止：{{date(guideProposal.expiresAt)}} · 名额以最终提交时为准</p>
+      <p class="proposal-result">{{guideResultText(guideProposal)}}</p>
+      <p v-if="guideExpired&&guideProposal.status==='PENDING'">确认时间已截止，请重新查询。</p>
+      <div class="actions">
+        <button v-if="guideProposal.status==='PENDING'" class="primary" :disabled="busy||guideExpired" @click="confirmGuideProposal">{{guideProposal.entryType==='WAITLIST'?'确认加入候补':'确认预约'}}</button>
+        <button v-if="guideProposal.status==='PENDING'" :disabled="busy" @click="rejectGuideProposal">取消此方案</button>
+        <button :disabled="busy" @click="run(refreshGuideProposal)">刷新方案状态</button>
+        <button v-if="guideProposal.status==='PROCESSING'&&guideProposal.canRetry" :disabled="busy" @click="confirmGuideProposal">使用原请求恢复结果</button>
+        <button v-if="guideProposal.participation" @click="go('mine')">查看我的参与</button>
+        <button v-if="guideProposal.status==='FAILED'&&guideProposal.errorCode==='SESSION_FULL'" :disabled="busy" @click="prepareFailedWaitlist">为此场次生成候补方案（仍需确认）</button>
+      </div>
+      <small v-if="guideProposal.status==='PROCESSING'">提交中的请求不可撤回。成功后可通过“我的参与”按业务规则取消预约。</small>
+    </section>
+    <p v-if="guideStreaming" role="status" aria-live="polite">{{guideProgress}} <button type="button" @click="stopGuide">停止生成</button></p>
+    <p class="muted">助手文本与推荐不代表预约成功；请选择场次并在确认方案中提交。</p>
+    <form @submit.prevent="chat">
+      <label
+        >你的问题<textarea
+          v-model="question"
+          placeholder="有哪些适合亲子的文化活动？"
+          required
+          maxlength="2000"
+        ></textarea></label
+      ><button class="primary" :disabled="busy||!question.trim()">
+        发送问题
+      </button>
+    </form>
+  </section>
+  <form v-if="page==='plan'" class="panel" @submit.prevent="plan">
+    <p class="muted">生成后进入可编辑草稿，不会自动发布。</p>
+    <label
+      >场馆<select v-model.number="form.venue_id" required>
+        <option v-for="v in venues" :value="v.id">{{v.name}}</option>
+      </select></label
+    ><label>主题<input v-model="form.theme" required /></label
+    ><label
+      >适合人群<select v-model="form.audience">
+        <option v-for="code in audiences" :value="code">{{label(code)}}</option>
+      </select></label
+    ><label
+      >时长（分钟）<input
+        type="number"
+        min="1"
+        max="480"
+        v-model.number="form.minutes"
+        required /></label
+    ><label>其他要求<textarea v-model="form.requirements"></textarea></label
+    ><button class="primary" :disabled="busy">生成并预览活动草稿</button>
+  </form>
+  <form v-if="page==='report'" class="panel narrow" @submit.prevent="report">
+    <label
+      >复盘范围<select v-model="form.report_scope">
+        <option value="session">已结束场次</option>
+        <option value="activity">活动（所有正常场次均需结束）</option>
+      </select></label
+    ><label
+      >范围编号<input
+        type="number"
+        min="1"
+        v-model.number="form.scope_id"
+        required /></label
+    ><button class="primary" :disabled="busy">生成运营复盘</button>
+  </form>
+
+  <p
+    v-if="!busy&&!error&&!rows.length&&['activities','manage','mine','notifications','venuePublic','venues'].includes(page)"
+    class="empty"
+  >
+    暂无符合条件的记录。可以调整筛选或稍后刷新。
+  </p>
+  <article
+    v-if="page==='notifications'"
+    v-for="r in rows"
+    :key="r.id"
+    class="notification-card"
+  >
+    <div class="section-heading">
+      <h2>{{r.title}}</h2>
+      <span class="badge">{{r.read_at?'已读':'未读'}}</span>
+    </div>
+    <p>{{label(r.type)}} · {{date(r.occurred_at)}}</p>
+    <p>{{notificationText(r.body)}}</p>
+    <div class="actions">
+      <button :disabled="!!r.read_at||busy" @click="read(r)">标为已读</button
+      ><button @click="nav('mine')">查看当前参与状态</button>
+    </div>
+  </article>
+  <section
+    v-if="result"
+    id="operation-result"
+    tabindex="-1"
+    class="result-panel"
+  >
+    <div class="section-heading">
+      <h2>{{resultTitle||'操作结果'}}</h2>
+      <button @click="result=null">收起结果</button>
+    </div>
+    <div
+      class="metric-grid"
+      v-if="result.summary||result.checkinProgress!==undefined"
+    >
+      <article
+        v-for="(v,k) in result.summary||result"
+        v-show="['reserved','checkedIn','checkinProgress','checkinRate','activityCount','successCount','cancelCount'].includes(k)"
+      >
+        <small>{{label(k)}}</small
+        ><strong
+          >{{v==null?'暂无最终结果':['checkinRate','checkinProgress'].includes(k)?(v*100).toFixed(1)+'%':v}}</strong
+        >
+      </article>
+    </div>
+    <DataView :value="result" />
+  </section>
+  <footer
+    v-if="['activities','manage','mine'].includes(page)"
+    class="pagination"
+  >
+    <button :disabled="busy||pageNo<=1" @click="paginate(-1)">上一页</button
+    ><span
+      >第 {{total?pageNo:0}} / {{pageCount}} 页 · 共 {{total}} 条</span
+    ><button
+      :disabled="busy||pageNo>=pageCount"
+      @click="paginate(1)"
+    >
+      下一页
+    </button>
+  </footer>
+</main>
+<footer class="site-footer">文化有约 · 公共文化，人人共享</footer>

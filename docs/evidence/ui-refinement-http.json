@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    "venue categories and enriched descriptions",
+    "activity venue filters and matching pagination totals",
+    "admin count/list venue authorization and ordinary-user isolation",
+    "my participation pagination total",
+    "real MySQL session create/edit dates and capacity; invalid/missing input is 400",
+    "temporary regression drafts cleaned up"
+  ],
+  "realModelCalled": false,
+  "command": "python scripts/verify-ui-improvements.py --write-demo --mysql D:/mysql/mysqlx/bin/mysql.exe --database culturehub_rich_demo --db-port 13306",
+  "environment": "Local API through Vite with real MySQL; no Docker or real model invocation",
+  "date": "2026-11-01"
+}

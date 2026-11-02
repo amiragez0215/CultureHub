@@ -1,0 +1,226 @@
+{
+  "passed": true,
+  "realModelCalled": true,
+  "ragVerified": false,
+  "checks": [
+    "real Graph clarification branch does not book",
+    "real tool calling returns a verified session and authoritative remaining capacity",
+    "expired confirmation is rejected without booking",
+    "selection and rejection do not create participation",
+    "concurrent and repeated real confirmations create one reservation and one Outbox event",
+    "multi-turn venue information does not require a booking date",
+    "AI2 real structured plan and DTO/permission regression",
+    "AI3 real review analysis preserves Java metrics and valid review references"
+  ],
+  "results": {
+    "recommendation": {
+      "type": "RECOMMENDATION",
+      "phase": "RECOMMENDATION",
+      "traceId": "4c042adc-faf1-4392-a3e4-5dcccacff72c",
+      "explanation": "符合该完整名称关键词的场次为“AI-GRAPH-5207b490ef”，分类为文化遗产，面向所有人群。以下为真实场次。尚未提交预约，请选择场次后再明确确认。地点在市文化博物馆，地址是文化路十八号，时间为2026-11-04 14:00至15:00。以下为真实场次。尚未提交预约，请选择场次后再明确确认。该场次说明为测试用临时内容，不面向公众预约。以下为真实场次。尚未提交预约，请选择场次后再明确确认。以下为真实场次。尚未提交预约，请选择场次后再明确确认。",
+      "candidates": [
+        {
+          "sessionId": 58,
+          "activityId": 39,
+          "title": "AI-GRAPH-5207b490ef",
+          "category": "HERITAGE",
+          "audience": "ALL",
+          "description": "AI confirmation test fixture; temporary, not for public registration.",
+          "venueId": 9,
+          "venueName": "市文化博物馆",
+          "address": "文化路十八号",
+          "startAt": "2026-11-04T14:00",
+          "endAt": "2026-11-04T15:00",
+          "registrationStartAt": "2026-10-25T14:00",
+          "registrationEndAt": "2026-11-04T13:00",
+          "remaining": 2,
+          "sessionStatus": "PUBLISHED",
+          "activityStatus": "PUBLISHED",
+          "venueStatus": "OPEN",
+          "waitlistPriority": 0,
+          "asOf": "2026-11-01T18:18:09.311829",
+          "bookingAllowed": true,
+          "waitlistAllowed": false,
+          "ageNotice": "人群分类仅供参考，未做精确年龄资格认证；亲子主题仍是当前账号一个名额。",
+          "candidateId": "37bc5385-bb37-403c-a580-3cc027fab8da"
+        }
+      ],
+      "sources": [],
+      "knowledgeNotice": "知识库未配置，场馆规则资料不足；以下活动来自实时业务查询。",
+      "preferences": {
+        "fromDate": "2026-11-04",
+        "toDate": "2026-11-04",
+        "fromTime": "12:00",
+        "toTime": "18:00",
+        "category": null,
+        "audience": "ALL",
+        "keyword": "AI-GRAPH-5207b490ef",
+        "venue": null,
+        "childAge": null
+      },
+      "serverTime": "2026-11-01T18:18:10.699283",
+      "notice": "尚未提交预约。请选择一个具体场次，再确认；当前账号仅一个名额，候补需单独确认。"
+    },
+    "confirmation": {
+      "status": "SUCCEEDED",
+      "participationStatus": "RESERVED",
+      "people": 1
+    },
+    "venueInformation": "市文化博物馆开放时间为周二至周日 09:00—17:00。该馆以城市生活变迁为线索，适合初次了解地方文化的市民参观。",
+    "planTitle": "城市记忆与公共文化：60分钟发现之旅",
+    "report": {
+      "sessionId": 48,
+      "metrics": {
+        "sessionId": 48,
+        "asOf": "2026-11-01T18:18:17.352025",
+        "status": "PUBLISHED",
+        "occupied": 14,
+        "reserved": 14,
+        "checkedIn": 8,
+        "waiting": 0,
+        "offered": 0,
+        "expired": 1,
+        "waitlistJoined": 1,
+        "waitlistConverted": 0,
+        "confirmTimeout": 0,
+        "successCount": 15,
+        "cancelCount": 1,
+        "finished": true,
+        "notCheckedIn": 6,
+        "checkinProgress": 0.5714285714285714,
+        "checkinRate": 0.5714285714285714,
+        "reviews": {
+          "count": 8,
+          "average": 4.125
+        }
+      },
+      "sampleCount": 8
+    }
+  },
+  "streams": [
+    [
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.031
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 1.156
+      },
+      {
+        "event": "proposal",
+        "afterSeconds": 1.156
+      },
+      {
+        "event": "done",
+        "afterSeconds": 1.156
+      }
+    ],
+    [
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.734
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.734
+      },
+      {
+        "event": "status",
+        "afterSeconds": 3.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 3.0
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 3.984
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.0
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.094
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.094
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.344
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.344
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 4.391
+      },
+      {
+        "event": "proposal",
+        "afterSeconds": 4.391
+      },
+      {
+        "event": "done",
+        "afterSeconds": 4.391
+      }
+    ],
+    [
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.0
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.844
+      },
+      {
+        "event": "status",
+        "afterSeconds": 0.844
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 1.281
+      },
+      {
+        "event": "delta",
+        "afterSeconds": 1.39
+      },
+      {
+        "event": "status",
+        "afterSeconds": 1.39
+      },
+      {
+        "event": "proposal",
+        "afterSeconds": 1.406
+      },
+      {
+        "event": "done",
+        "afterSeconds": 1.406
+      }
+    ]
+  ],
+  "fixturesCleaned": true,
+  "seconds": 14.23
+}

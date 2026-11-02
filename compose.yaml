@@ -1,0 +1,98 @@
+name: culturehub
+x-app: &app
+  DB_URL: jdbc:mysql://mysql:3306/culturehub?useUnicode=true&characterEncoding=UTF-8&connectionTimeZone=Asia/Shanghai
+  DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+  KAFKA_BOOTSTRAP: kafka:9092
+  TZ: Asia/Shanghai
+services:
+  mysql:
+    image: mysql:8.0.44
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Shanghai
+    ports: ["127.0.0.1:3306:3306"]
+    volumes: ["mysql-data:/var/lib/mysql", "./deploy/mysql:/docker-entrypoint-initdb.d:ro"]
+    healthcheck:
+      test: [CMD-SHELL, 'mysqladmin ping -h localhost -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 5s
+      retries: 30
+  redis:
+    image: redis:7.4.6-alpine
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      retries: 20
+    ports: ["127.0.0.1:6379:6379"]
+  kafka:
+    image: apache/kafka:3.9.1
+    hostname: kafka
+    ports: ["127.0.0.1:29092:29092"]
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,EXTERNAL://:29092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes: ["kafka-data:/var/lib/kafka/data"]
+    healthcheck:
+      test: [CMD-SHELL, /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list]
+      interval: 10s
+      retries: 30
+  chroma:
+    image: chromadb/chroma:1.0.0
+    volumes: ["chroma-data:/data"]
+    ports: ["127.0.0.1:8000:8000"]
+  xxl-job:
+    image: xuxueli/xxl-job-admin:3.1.1
+    environment:
+      PARAMS: --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8 --spring.datasource.username=root --spring.datasource.password=${DB_PASSWORD} --xxl.job.accessToken=${XXL_JOB_TOKEN}
+    ports: ["127.0.0.1:8088:8080"]
+    depends_on:
+      mysql: {condition: service_healthy}
+  api:
+    build: {context: ., dockerfile: deploy/Dockerfile.java, args: {MODULE: culturehub-api}}
+    environment:
+      <<: *app
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      DEMO_PASSWORD: ${DEMO_PASSWORD}
+      REDIS_HOST: redis
+      JOBS_ENABLED: "true"
+      XXL_JOB_ADMIN: http://xxl-job:8080/xxl-job-admin
+      XXL_EXECUTOR_ADDRESS: http://api:9999/
+      XXL_JOB_TOKEN: ${XXL_JOB_TOKEN}
+      AI_VECTORSTORE: ${AI_VECTORSTORE:-none}
+      AI_CHAT_PROVIDER: ${AI_CHAT_PROVIDER:-none}
+      AI_EMBEDDING_PROVIDER: ${AI_EMBEDDING_PROVIDER:-none}
+      AI_API_KEY: ${AI_API_KEY:-not-configured}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.openai.com}
+      AI_CHAT_MODEL: ${AI_CHAT_MODEL:-gpt-4o-mini}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+      AI_EMBEDDING_MODEL: ${AI_EMBEDDING_MODEL:-text-embedding-3-small}
+      AI_EMBEDDING_API_KEY: ${AI_EMBEDDING_API_KEY:-${AI_API_KEY:-not-configured}}
+      AI_EMBEDDING_BASE_URL: ${AI_EMBEDDING_BASE_URL:-${AI_BASE_URL:-https://api.openai.com}}
+      CHROMA_HOST: http://chroma
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      mysql: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      kafka: {condition: service_healthy}
+  worker:
+    build: {context: ., dockerfile: deploy/Dockerfile.java, args: {MODULE: culturehub-notification-worker}}
+    environment: *app
+    depends_on:
+      mysql: {condition: service_healthy}
+      kafka: {condition: service_healthy}
+  web:
+    build: ./web
+    ports: ["127.0.0.1:8089:80"]
+    depends_on: [api]
+volumes:
+  mysql-data:
+  kafka-data:
+  chroma-data:

@@ -1,0 +1,88 @@
+{
+  "database": "culturehub_rich_demo",
+  "mysql": "version()\r\n8.0.27\r\n",
+  "scale": "sessions\tparticipations\ttransitions\r\n52\t254\t359\r\n",
+  "queries": {
+    "history": {
+      "sql": "select p.id,p.session_id,p.status,p.queue_seq,p.confirm_deadline,p.created_at,a.title,x.start_at,x.end_at,current_timestamp server_time from participation p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id where p.user_id=(select id from app_user where username='user') order by p.id desc limit 20",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\tp\tNULL\tref\tuq_request,uq_active,uq_queue,ix_queue,ix_user_history\tuq_request\t8\tconst\t45\t100.00\tUsing where; Using filesort\r\n1\tPRIMARY\tx\tNULL\teq_ref\tPRIMARY,ix_session_activity\tPRIMARY\t8\tculturehub_rich_demo.p.session_id\t1\t100.00\tNULL\r\n1\tPRIMARY\ta\tNULL\teq_ref\tPRIMARY\tPRIMARY\t8\tculturehub_rich_demo.x.activity_id\t1\t100.00\tNULL\r\n2\tSUBQUERY\tapp_user\tNULL\tconst\tusername\tusername\t162\tconst\t1\t100.00\tUsing index\r\n",
+      "clientWallMs": [
+        78.766,
+        75.593,
+        71.271
+      ]
+    },
+    "dashboard_selection": {
+      "sql": "select x.id from activity_session x join activity a on a.id=x.activity_id where a.venue_id=1 and x.start_at>='2026-10-01' and x.start_at<'2026-12-01' order by x.id limit 201",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\ta\tNULL\tref\tPRIMARY,ix_activity_venue\tix_activity_venue\t8\tconst\t1\t100.00\tUsing index; Using temporary; Using filesort\r\n1\tSIMPLE\tx\tNULL\tref\tix_session_activity\tix_session_activity\t8\tculturehub_rich_demo.a.id\t1\t11.11\tUsing where; Using index\r\n",
+      "clientWallMs": [
+        75.823,
+        71.104,
+        67.684
+      ]
+    },
+    "session_history_aggregate": {
+      "sql": "select count(*) from participation_history h join participation p on p.id=h.participation_id where p.session_id=48 and h.to_status='RESERVED'",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tp\tNULL\tref\tPRIMARY,uq_active,uq_queue,ix_queue\tuq_queue\t8\tconst\t16\t100.00\tUsing index\r\n1\tSIMPLE\th\tNULL\tref\tix_history\tix_history\t8\tculturehub_rich_demo.p.id\t1\t10.00\tUsing where\r\n",
+      "clientWallMs": [
+        69.161,
+        71.351,
+        73.337
+      ]
+    },
+    "batch_participation": {
+      "sql": "select session_id,sum(status in ('RESERVED','CHECKED_IN')) reserved,sum(status='CHECKED_IN') checkedIn,sum(status='WAITING') waiting,sum(status='OFFERED') offered from participation where session_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) group by session_id",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tparticipation\tNULL\trange\tuq_active,uq_queue,ix_queue,ix_timeout\tix_queue\t8\tNULL\t111\t100.00\tUsing where; Using index\r\n",
+      "clientWallMs": [
+        71.869,
+        74.883,
+        72.885
+      ]
+    },
+    "batch_history": {
+      "sql": "select p.session_id,sum(h.to_status='RESERVED') successCount,sum(h.from_status='RESERVED' and h.to_status='CANCELLED' and h.reason='USER_CANCEL') cancelCount from participation p join participation_history h on h.participation_id=p.id where p.session_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) group by p.session_id",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tp\tNULL\trange\tPRIMARY,uq_active,uq_queue,ix_queue,ix_timeout\tuq_queue\t8\tNULL\t111\t100.00\tUsing where; Using index\r\n1\tSIMPLE\th\tNULL\tref\tix_history\tix_history\t8\tculturehub_rich_demo.p.id\t1\t100.00\tNULL\r\n",
+      "clientWallMs": [
+        75.979,
+        86.933,
+        94.023
+      ]
+    },
+    "activity_list_retained": {
+      "sql": "select a.id,a.title,(select min(x.start_at) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED' and x.start_at>current_timestamp) next_start,(select count(*) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED') session_count from activity a where a.status='PUBLISHED' order by a.id desc limit 20",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\ta\tNULL\tindex\tNULL\tPRIMARY\t8\tNULL\t20\t33.33\tUsing where; Backward index scan\r\n3\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_rich_demo.a.id,const\t1\t100.00\tUsing index\r\n2\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_rich_demo.a.id,const\t1\t33.33\tUsing where; Using index\r\n",
+      "clientWallMs": [
+        89.735,
+        89.901,
+        90.403
+      ]
+    }
+  },
+  "timingNote": "Client wall time includes mysql process startup and connection overhead; not a server latency benchmark.",
+  "statementCounts": {
+    "originalDashboardExcludingAuthorization": "14 * N + 4",
+    "newDashboardNonEmptyExcludingAuthorization": 6,
+    "originalSingleSessionFacts": 14,
+    "newFactsBatch1To200": 4
+  },
+  "batchMeasurement": {
+    "sessions": 20,
+    "note": "SQL work and mysql-client wall time only; not an HTTP load test. Same sample IDs, three repetitions, process/connection startup included.",
+    "original": {
+      "statements": 280,
+      "clientWallMs": [
+        208.398,
+        175.938,
+        193.99
+      ]
+    },
+    "optimized": {
+      "statements": 4,
+      "clientWallMs": [
+        97.087,
+        93.276,
+        82.684
+      ]
+    }
+  }
+}

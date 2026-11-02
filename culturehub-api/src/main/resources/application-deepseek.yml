@@ -1,0 +1,7 @@
+# OpenAI-compatible DeepSeek chat only. Embedding/Chroma remain separately configurable.
+# Non-thinking mode avoids reasoning-content replay requirements during tool calling.
+spring.ai.openai.chat.options.reasoning-effort: none
+spring.ai.openai.chat.options.max-tokens: 2048
+spring.ai.retry.max-attempts: 2
+spring.http.client.connect-timeout: 10s
+spring.http.client.read-timeout: 90s

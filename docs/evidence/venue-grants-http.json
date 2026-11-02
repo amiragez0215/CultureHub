@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": [
+    "existing grants readback",
+    "platform flag in user options",
+    "manager/user cannot query grants",
+    "unknown user is 404",
+    "save and duplicate ID deduplication",
+    "granted user sees exactly chosen venues",
+    "invalid venue rollback",
+    "nonplatform write rejected",
+    "clear grants removes venue access",
+    "temporary test user cleaned up"
+  ],
+  "environment": "real local API/MySQL; temporary user only",
+  "date": "2026-11-01"
+}
