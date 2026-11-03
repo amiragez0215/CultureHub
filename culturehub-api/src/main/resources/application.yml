@@ -54,3 +54,4 @@ xxl.job.accessToken: ${XXL_JOB_TOKEN:local-job-token}
 xxl.job.executor.address: ${XXL_EXECUTOR_ADDRESS:}
 server.port: 8080
 culture.jobs.enabled: ${JOBS_ENABLED:false}
+mybatis-plus.configuration.call-setters-on-nulls: true

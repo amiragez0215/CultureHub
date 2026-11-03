@@ -1,0 +1,61 @@
+{
+  "schema": "culturehub_perf",
+  "scale": "activities\tparticipations\r\n2003\t30290\r\n",
+  "note": "Each measurement includes mysql client startup/connection; not pure server latency. Deferred history is evaluated, not automatically adopted.",
+  "queries": {
+    "activity-before": {
+      "sql": "select a.*,v.name venue_name,(select min(x.start_at) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED' and x.end_at>current_timestamp) next_start_at,(select count(*) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED') session_count from activity a join venue v on v.id=a.venue_id where (0=1 or a.status='PUBLISHED') and (1=1 or exists(select 1 from venue_grant g where g.venue_id=a.venue_id and g.user_id=0)) and a.title like '%' and (''='' or a.category='') and (2=0 or a.venue_id=2) and ('PUBLISHED'='ALL' or ('PUBLISHED'='ACTIVE' and a.status<>'CANCELLED') or a.status='PUBLISHED') order by a.id desc limit 20",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\tv\tNULL\tconst\tPRIMARY\tPRIMARY\t8\tconst\t1\t100.00\tNULL\r\n1\tPRIMARY\ta\tNULL\tref\tix_activity_venue\tix_activity_venue\t9\tconst,const\t1001\t11.11\tUsing where; Backward index scan\r\n3\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_perf.a.id,const\t1\t100.00\tUsing index\r\n2\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_perf.a.id,const\t1\t33.33\tUsing where\r\n",
+      "clientWallMs": [
+        70.83199999999998,
+        70.8278,
+        72.4304
+      ]
+    },
+    "activity-after": {
+      "sql": "select a.*,v.name venue_name,(select min(x.start_at) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED' and x.end_at>current_timestamp) next_start_at,(select count(*) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED') session_count from activity a join venue v on v.id=a.venue_id where a.status='PUBLISHED' and a.venue_id=2 order by a.id desc limit 20",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\tv\tNULL\tconst\tPRIMARY\tPRIMARY\t8\tconst\t1\t100.00\tNULL\r\n1\tPRIMARY\ta\tNULL\tref\tix_activity_venue\tix_activity_venue\t9\tconst,const\t1001\t100.00\tBackward index scan\r\n3\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_perf.a.id,const\t1\t100.00\tUsing index\r\n2\tDEPENDENT SUBQUERY\tx\tNULL\tref\tix_session_activity,ix_session_time\tix_session_activity\t9\tculturehub_perf.a.id,const\t1\t33.33\tUsing where\r\n",
+      "clientWallMs": [
+        71.52910000000001,
+        72.36209999999998,
+        70.45129999999999
+      ]
+    },
+    "history-join-0": {
+      "sql": "select p.id,p.session_id,p.status,a.title,v.name from participation p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id join venue v on v.id=a.venue_id where p.user_id=201 order by p.id desc limit 20 offset 0",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tp\tNULL\tref\tuq_request,uq_active,uq_queue,ix_queue,ix_user_history\tuq_request\t8\tconst\t14656\t100.00\tUsing temporary; Using filesort\r\n1\tSIMPLE\tx\tNULL\teq_ref\tPRIMARY,ix_session_activity\tPRIMARY\t8\tculturehub_perf.p.session_id\t1\t100.00\tNULL\r\n1\tSIMPLE\ta\tNULL\teq_ref\tPRIMARY,ix_activity_venue\tPRIMARY\t8\tculturehub_perf.x.activity_id\t1\t100.00\tNULL\r\n1\tSIMPLE\tv\tNULL\tALL\tPRIMARY\tNULL\tNULL\tNULL\t3\t33.33\tUsing where; Using join buffer (hash join)\r\n",
+      "clientWallMs": [
+        416.6985000000001,
+        440.0185000000001,
+        414.6719000000001
+      ]
+    },
+    "history-deferred-0": {
+      "sql": "select p.id,p.session_id,p.status,a.title,v.name from (select id,session_id,status from participation where user_id=201 order by id desc limit 20 offset 0) p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id join venue v on v.id=a.venue_id order by p.id desc",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\t<derived2>\tNULL\tALL\tNULL\tNULL\tNULL\tNULL\t20\t100.00\tUsing temporary; Using filesort\r\n1\tPRIMARY\tx\tNULL\teq_ref\tPRIMARY,ix_session_activity\tPRIMARY\t8\tp.session_id\t1\t100.00\tNULL\r\n1\tPRIMARY\ta\tNULL\teq_ref\tPRIMARY,ix_activity_venue\tPRIMARY\t8\tculturehub_perf.x.activity_id\t1\t100.00\tNULL\r\n1\tPRIMARY\tv\tNULL\tALL\tPRIMARY\tNULL\tNULL\tNULL\t3\t33.33\tUsing where; Using join buffer (hash join)\r\n2\tDERIVED\tparticipation\tNULL\tindex\tuq_request,ix_user_history\tPRIMARY\t8\tNULL\t40\t50.00\tUsing where; Backward index scan\r\n",
+      "clientWallMs": [
+        94.64559999999977,
+        84.08760000000015,
+        90.75979999999984
+      ]
+    },
+    "history-join-20000": {
+      "sql": "select p.id,p.session_id,p.status,a.title,v.name from participation p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id join venue v on v.id=a.venue_id where p.user_id=201 order by p.id desc limit 20 offset 20000",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tSIMPLE\tp\tNULL\tref\tuq_request,uq_active,uq_queue,ix_queue,ix_user_history\tuq_request\t8\tconst\t14656\t100.00\tUsing temporary; Using filesort\r\n1\tSIMPLE\tx\tNULL\teq_ref\tPRIMARY,ix_session_activity\tPRIMARY\t8\tculturehub_perf.p.session_id\t1\t100.00\tNULL\r\n1\tSIMPLE\ta\tNULL\teq_ref\tPRIMARY,ix_activity_venue\tPRIMARY\t8\tculturehub_perf.x.activity_id\t1\t100.00\tNULL\r\n1\tSIMPLE\tv\tNULL\tALL\tPRIMARY\tNULL\tNULL\tNULL\t3\t33.33\tUsing where; Using join buffer (hash join)\r\n",
+      "clientWallMs": [
+        473.6878,
+        424.7724999999996,
+        411.51520000000016
+      ]
+    },
+    "history-deferred-20000": {
+      "sql": "select p.id,p.session_id,p.status,a.title,v.name from (select id,session_id,status from participation where user_id=201 order by id desc limit 20 offset 20000) p join activity_session x on x.id=p.session_id join activity a on a.id=x.activity_id join venue v on v.id=a.venue_id order by p.id desc",
+      "explain": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\r\n1\tPRIMARY\ta\tNULL\tALL\tPRIMARY,ix_activity_venue\tNULL\tNULL\tNULL\t2003\t100.00\tUsing temporary; Using filesort\r\n1\tPRIMARY\tv\tNULL\tALL\tPRIMARY\tNULL\tNULL\tNULL\t3\t33.33\tUsing where; Using join buffer (hash join)\r\n1\tPRIMARY\tx\tNULL\tref\tPRIMARY,ix_session_activity\tix_session_activity\t8\tculturehub_perf.a.id\t1\t100.00\tUsing index\r\n1\tPRIMARY\t<derived2>\tNULL\tref\t<auto_key0>\t<auto_key0>\t8\tculturehub_perf.x.id\t10\t100.00\tNULL\r\n2\tDERIVED\tparticipation\tNULL\tref\tuq_request,ix_user_history\tuq_request\t8\tconst\t14656\t100.00\tUsing filesort\r\n",
+      "clientWallMs": [
+        126.13899999999933,
+        107.61070000000039,
+        106.02100000000014
+      ]
+    }
+  }
+}

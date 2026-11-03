@@ -1,0 +1,115 @@
+{
+  "tool": "Python stdlib barrier + urllib real HTTP (no keep-alive pool)",
+  "environment": {
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.8.0",
+    "cpuCount": 16,
+    "database": "culturehub_perf",
+    "mysql": "8.0.27",
+    "redis": [
+      "# Server",
+      "redis_version:7.4.9",
+      "redis_git_sha1:00000000",
+      "redis_git_dirty:0"
+    ],
+    "dataScale": "2003\t2070\t30389"
+  },
+  "runs": 3,
+  "results": [
+    {
+      "name": "C-rollback-retry",
+      "injectedFailure": {
+        "ms": 23.511100000000006,
+        "status": 500,
+        "code": "INTERNAL_ERROR",
+        "category": "system"
+      },
+      "retry": {
+        "ms": 8.400799999999986,
+        "status": 200,
+        "code": "OK",
+        "category": "success"
+      },
+      "rollbackVerified": true
+    },
+    {
+      "name": "C-timeout-before-response",
+      "clientTimeout": {
+        "ms": 50.79550000000022,
+        "status": 0,
+        "code": "timeout",
+        "category": "transport"
+      },
+      "retry": {
+        "ms": 2.641099999999952,
+        "status": 200,
+        "code": "OK",
+        "category": "success"
+      },
+      "singleQualificationAndEvent": true
+    }
+  ],
+  "poolAfterLoad": {
+    "hikaricp.connections.active": {
+      "name": "hikaricp.connections.active",
+      "description": "Active connections",
+      "measurements": [
+        {
+          "statistic": "VALUE",
+          "value": 0.0
+        }
+      ],
+      "availableTags": [
+        {
+          "tag": "pool",
+          "values": [
+            "HikariPool-1"
+          ]
+        }
+      ]
+    },
+    "hikaricp.connections.max": {
+      "name": "hikaricp.connections.max",
+      "description": "Max connections",
+      "measurements": [
+        {
+          "statistic": "VALUE",
+          "value": 10.0
+        }
+      ],
+      "availableTags": [
+        {
+          "tag": "pool",
+          "values": [
+            "HikariPool-1"
+          ]
+        }
+      ]
+    },
+    "hikaricp.connections.pending": {
+      "name": "hikaricp.connections.pending",
+      "description": "Pending threads",
+      "measurements": [
+        {
+          "statistic": "VALUE",
+          "value": 0.0
+        }
+      ],
+      "availableTags": [
+        {
+          "tag": "pool",
+          "values": [
+            "HikariPool-1"
+          ]
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Burst concurrency is client concurrency, not admitted database concurrency. 429 is reported separately.",
+    "Shared isolated MySQL/Redis counters include monitoring and any other clients; not per-request tracing.",
+    "Pool metrics sampled after load, not peak utilization.",
+    "SQL digest instrumentation may be disabled; zero is not proof of zero queries.",
+    "No Kafka worker is required for committed Outbox correctness; delivery is not tested here."
+  ]
+}

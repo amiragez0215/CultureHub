@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.culturehub.CatalogQueryMapper">
+  <!-- Shared predicates guarantee count/list visibility and time semantics agree. -->
+  <sql id="whereActivity">
+    <where>
+      <if test="f.restricted">exists(select 1 from venue_grant g where g.venue_id=a.venue_id and g.user_id=#{f.user})</if>
+      <choose>
+        <when test="f.status == 'ACTIVE'">and a.status&lt;&gt;'CANCELLED'</when>
+        <when test="f.status != 'ALL'">and a.status=#{f.status}</when>
+      </choose>
+      <if test="f.q != null and f.q != ''">and a.title like concat('%',#{f.q},'%')</if>
+      <if test="f.category != null and f.category != ''">and a.category=#{f.category}</if>
+      <if test="f.venue != 0">and a.venue_id=#{f.venue}</if>
+      <if test="f.from != null or f.to != null">
+        and exists(select 1 from activity_session t where t.activity_id=a.id and t.status='PUBLISHED'
+          <if test="f.from != null">and t.start_at&gt;=#{f.from}</if>
+          <if test="f.to != null">and t.start_at&lt;#{f.to}</if>)
+      </if>
+    </where>
+  </sql>
+  <select id="activities" resultType="java.util.LinkedHashMap">
+    select a.*,v.name venue_name,
+      (select min(x.start_at) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED' and x.end_at&gt;current_timestamp) next_start_at,
+      (select count(*) from activity_session x where x.activity_id=a.id and x.status='PUBLISHED') session_count
+    from activity a join venue v on v.id=a.venue_id
+    <include refid="whereActivity"/>
+    order by a.id desc limit 20 offset #{offset}
+  </select>
+  <select id="countActivities" resultType="long">
+    select count(*) from activity a <include refid="whereActivity"/>
+  </select>
+  <resultMap id="participationView" type="cn.culturehub.CatalogQueryMapper$ParticipationView">
+    <id property="id" column="id"/>
+    <result property="session_id" column="session_id"/><result property="activity_id" column="activity_id"/>
+    <result property="venue_id" column="venue_id"/><result property="venue_name" column="venue_name"/>
+    <result property="status" column="status"/><result property="title" column="title"/>
+    <result property="queue_seq" column="queue_seq"/><result property="confirm_deadline" column="confirm_deadline"/>
+    <result property="created_at" column="created_at"/><result property="start_at" column="start_at"/>
+    <result property="end_at" column="end_at"/><result property="server_time" column="server_time"/>
+  </resultMap>
+  <select id="history" resultMap="participationView">
+    select p.id,p.session_id,p.status,p.queue_seq,p.confirm_deadline,p.created_at,
+      a.id activity_id,a.title,v.id venue_id,v.name venue_name,x.start_at,x.end_at,current_timestamp server_time
+    from (select id,session_id,status,queue_seq,confirm_deadline,created_at from participation
+      where user_id=#{user} order by id desc limit 20 offset #{offset}) p
+      join activity_session x on x.id=p.session_id
+      join activity a on a.id=x.activity_id join venue v on v.id=a.venue_id
+    order by p.id desc
+  </select>
+</mapper>

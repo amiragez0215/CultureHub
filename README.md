@@ -174,6 +174,8 @@ npm run build
 | [API 文档](docs/api.md) | 业务接口、权限与错误码 |
 | [架构与一致性设计](docs/design.md) | 模块职责、事务、状态机与消息机制 |
 | [技术增强与源码导读](docs/technical-enhancement.md) | Redis 批量读取、SQL 优化、SSE、ORM 迁移 |
+| [数据访问规范化](docs/data-access-upgrade.md) | MP 实体、XML 动态查询、关联分页与回归 |
+| [性能测试报告](docs/performance-report.md) | 真实 HTTP 并发、限流拆分、缓存及 SQL 对照 |
 | [AI Graph 设计](docs/ai-graph-upgrade.md) | 多轮推荐、只读工具与独立预约确认 |
 | [AI 配置与启动](docs/ai-and-startup.md) | 模型、Embedding 与知识库配置 |
 | [实际验证记录](docs/verification.md) | 已执行测试及环境限制 |

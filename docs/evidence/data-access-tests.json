@@ -1,0 +1,110 @@
+{
+  "totals": {
+    "tests": 205,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 74,
+    "passed": 131
+  },
+  "suites": [
+    {
+      "name": "cn.culturehub.AiStreamControllerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiBoundaryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "tests": "21",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiValidationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.CatalogLocalTest",
+      "tests": "27",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ContainerBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "15"
+    },
+    {
+      "name": "cn.culturehub.InputValidationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.LocalBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.OptimizationContainerTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "23"
+    },
+    {
+      "name": "cn.culturehub.OptimizationLocalTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ProposalContainerTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "30"
+    },
+    {
+      "name": "cn.culturehub.ProposalLocalTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "2"
+    },
+    {
+      "name": "cn.culturehub.WorkerKafkaTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "4"
+    }
+  ],
+  "notes": "Inherited booking tests execute in multiple suites; not all executions are unique scenarios. Full Maven test plus targeted CatalogLocalTest after deferred-join XML change; package built with skipTests afterward."
+}

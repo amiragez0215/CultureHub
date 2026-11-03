@@ -14,6 +14,8 @@ public class ApiController {
   final CheckInService c;
   final Operations o;
   final PublicSessions publicSessions;
+  final CatalogQueryMapper queries;
+  final CatalogReadService reads;
 
   public ApiController(
       Store s,
@@ -23,7 +25,9 @@ public class ApiController {
       ParticipationService p,
       CheckInService c,
       Operations o,
-      PublicSessions publicSessions) {
+      PublicSessions publicSessions,
+      CatalogQueryMapper queries,
+      CatalogReadService reads) {
     this.s = s;
     this.a = a;
     this.m = m;
@@ -32,6 +36,8 @@ public class ApiController {
     this.c = c;
     this.o = o;
     this.publicSessions = publicSessions;
+    this.queries = queries;
+    this.reads = reads;
   }
 
   @GetMapping("/venues")
@@ -49,21 +55,25 @@ public class ApiController {
       @RequestParam(defaultValue = "") String q,
       @RequestParam(defaultValue = "") String category,
       @RequestParam(defaultValue = "0") long venueId,
-      @RequestParam(defaultValue = "1") int page) {
-    return m.activities(false, q, category, page, venueId);
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(required = false) String from,
+      @RequestParam(required = false) String to) {
+    return m.activities(false, q, category, page, venueId, "ACTIVE", from, to);
   }
 
   @GetMapping("/activities/{id}")
   Object activity(@PathVariable long id) {
-    return s.one("select * from activity where id=? and status='PUBLISHED'", id);
+    return reads.published(id);
   }
 
   @GetMapping("/activities/count")
   Object activityCount(
       @RequestParam(defaultValue = "") String q,
       @RequestParam(defaultValue = "") String category,
-      @RequestParam(defaultValue = "0") long venueId) {
-    return Map.of("total", m.activityCount(false, q, category, venueId));
+      @RequestParam(defaultValue = "0") long venueId,
+      @RequestParam(required = false) String from,
+      @RequestParam(required = false) String to) {
+    return Map.of("total", m.activityCount(false, q, category, venueId, "ACTIVE", from, to));
   }
 
   @GetMapping("/activities/{id}/sessions")
@@ -83,14 +93,7 @@ public class ApiController {
 
   @GetMapping("/me/participations")
   Object mine(@RequestParam(defaultValue = "1") int page) {
-    return s.db.queryForList(
-        "select"
-            + " p.id,p.session_id,p.status,p.queue_seq,p.confirm_deadline,p.created_at,a.title,x.start_at,x.end_at,current_timestamp"
-            + " server_time from participation p join activity_session x on x.id=p.session_id join"
-            + " activity a on a.id=x.activity_id where p.user_id=? order by p.id desc limit 20"
-            + " offset ?",
-        a.user(),
-        Inputs.offset(page));
+    return queries.history(a.user(), Inputs.offset(page));
   }
 
   @GetMapping("/me/participations/by-request/{request}")
@@ -222,16 +225,20 @@ public class ApiController {
       @RequestParam(defaultValue = "") String q,
       @RequestParam(defaultValue = "0") long venueId,
       @RequestParam(defaultValue = "ACTIVE") String status,
-      @RequestParam(defaultValue = "1") int page) {
-    return m.activities(true, q, "", page, venueId, status);
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(required = false) String from,
+      @RequestParam(required = false) String to) {
+    return m.activities(true, q, "", page, venueId, status, from, to);
   }
 
   @GetMapping("/admin/activities/count")
   Object adminActivityCount(
       @RequestParam(defaultValue = "") String q,
       @RequestParam(defaultValue = "0") long venueId,
-      @RequestParam(defaultValue = "ACTIVE") String status) {
-    return Map.of("total", m.activityCount(true, q, "", venueId, status));
+      @RequestParam(defaultValue = "ACTIVE") String status,
+      @RequestParam(required = false) String from,
+      @RequestParam(required = false) String to) {
+    return Map.of("total", m.activityCount(true, q, "", venueId, status, from, to));
   }
 
   @PostMapping("/admin/activities")
@@ -254,7 +261,7 @@ public class ApiController {
   @GetMapping("/admin/activities/{id}/sessions")
   Object adminSessions(@PathVariable long id) {
     a.venue(s.number("select venue_id from activity where id=?", id));
-    return s.db.queryForList("select * from activity_session where activity_id=? order by id", id);
+    return reads.sessions(id);
   }
 
   @PostMapping("/admin/sessions")
@@ -291,8 +298,7 @@ public class ApiController {
   @GetMapping("/admin/sessions/{id}/reviews")
   Object adminReviews(@PathVariable long id) {
     a.session(id);
-    return s.db.queryForList(
-        "select * from review where session_id=? order by id desc limit 100", id);
+    return reads.reviews(id);
   }
 
   @GetMapping("/admin/statistics")

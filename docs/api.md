@@ -51,3 +51,5 @@
 预约关键错误包括 `SESSION_FULL`、`WAITLIST_PRIORITY`、`ALREADY_PARTICIPATING`、`REQUEST_ID_REUSED`、`REGISTRATION_CLOSED`、`CONFIRM_EXPIRED`。限流为 429，依赖不可用为 503，越权为 403。模型关闭或未配置返回 `AI_UNAVAILABLE`，不能把它显示成预约失败。
 
 所有管理 Service 都根据实体实际场馆校验授权；公开接口只返回已发布活动。通知是事件发生时事实，确认页面必须重新读取实时资格。
+
+活动列表与对应 count 接口另支持可选 `from`、`to`（YYYY-MM-DD），按已发布场次开始时间筛选，from 含、to 不含；缺省保持原行为。用户参与历史保留原字段并增加 activity_id、venue_id、venue_name，分页仍为每页20条、按资格ID倒序。

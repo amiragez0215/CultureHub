@@ -15,8 +15,15 @@ public class Management {
 
   final VenueMapper venues;
   final Cache cache;
+  final CatalogQueryMapper queries;
 
-  public Management(Store s, Access a, ParticipationService p, VenueMapper venues, Cache cache) {
+  public Management(
+      Store s,
+      Access a,
+      ParticipationService p,
+      VenueMapper venues,
+      Cache cache,
+      CatalogQueryMapper queries) {
 
     this.s = s;
 
@@ -26,6 +33,7 @@ public class Management {
 
     this.venues = venues;
     this.cache = cache;
+    this.queries = queries;
   }
 
   public Object venueEntities() {
@@ -331,61 +339,58 @@ public class Management {
     return activities(admin, q, category, page, 0);
   }
 
-  // List and count use the same visibility, venue authorization and filter predicates.
-  private String activityWhere() {
-    return " where (?=1 or a.status='PUBLISHED') and (?=1 or exists(select 1 from venue_grant g"
-        + " where g.venue_id=a.venue_id and g.user_id=?)) and a.title like ?"
-        + " and (?='' or a.category=?) and (?=0 or a.venue_id=?)"
-        + " and (?='ALL' or (?='ACTIVE' and a.status<>'CANCELLED') or a.status=?)";
+  private CatalogQueryMapper.Filter filter(
+      boolean admin, String q, String category, long venue, String status, String from, String to) {
+    if (venue < 0 || !Set.of("ACTIVE", "ALL", "DRAFT", "PUBLISHED", "CANCELLED").contains(status))
+      throw new Problem("VALIDATION_FAILED", "Invalid activity filter", 400);
+    var begin = from == null ? null : java.time.LocalDate.parse(from).atStartOfDay();
+    var end = to == null ? null : java.time.LocalDate.parse(to).atStartOfDay();
+    if (begin != null && end != null && !begin.isBefore(end))
+      throw new Problem("VALIDATION_FAILED", "from must precede to (exclusive)", 400);
+    return new CatalogQueryMapper.Filter(
+        admin && !a.platform(),
+        admin ? a.user() : 0,
+        q,
+        category,
+        venue,
+        admin ? status : "PUBLISHED",
+        begin,
+        end);
   }
 
-  private Object[] activityArgs(
-      boolean admin, String q, String category, long venueId, String status) {
-    if (venueId < 0) throw new Problem("VALIDATION_FAILED", "场馆编号不正确", 400);
-    if (!Set.of("ACTIVE", "ALL", "DRAFT", "PUBLISHED", "CANCELLED").contains(status))
-      throw new Problem("VALIDATION_FAILED", "活动状态筛选不正确", 400);
-    String visibility = admin ? status : "PUBLISHED";
-    return new Object[] {
-      admin ? 1 : 0,
-      !admin || a.platform() ? 1 : 0,
-      admin ? a.user() : 0,
-      "%" + q + "%",
-      category,
-      category,
-      venueId,
-      venueId,
-      visibility,
-      visibility,
-      visibility
-    };
+  public long activityCount(boolean admin, String q, String category, long venue) {
+    return activityCount(admin, q, category, venue, "ACTIVE");
   }
 
-  public long activityCount(boolean admin, String q, String category, long venueId) {
-    return activityCount(admin, q, category, venueId, "ACTIVE");
+  public long activityCount(boolean admin, String q, String category, long venue, String status) {
+    return activityCount(admin, q, category, venue, status, null, null);
   }
 
-  public long activityCount(boolean admin, String q, String category, long venueId, String status) {
-    return s.number(
-        "select count(*) from activity a" + activityWhere(),
-        activityArgs(admin, q, category, venueId, status));
+  public long activityCount(
+      boolean admin, String q, String category, long venue, String status, String from, String to) {
+    return queries.countActivities(filter(admin, q, category, venue, status, from, to));
   }
 
   public List<Map<String, Object>> activities(
-      boolean admin, String q, String category, int page, long venueId) {
-    return activities(admin, q, category, page, venueId, "ACTIVE");
+      boolean admin, String q, String category, int page, long venue) {
+    return activities(admin, q, category, page, venue, "ACTIVE");
   }
 
   public List<Map<String, Object>> activities(
-      boolean admin, String q, String category, int page, long venueId, String status) {
-    var args = new ArrayList<>(Arrays.asList(activityArgs(admin, q, category, venueId, status)));
-    args.add(Inputs.offset(page));
-    return s.db.queryForList(
-        "select a.*,v.name venue_name,(select min(x.start_at) from activity_session x where"
-            + " x.activity_id=a.id and x.status='PUBLISHED' and x.end_at>current_timestamp)"
-            + " next_start_at,(select count(*) from activity_session x where x.activity_id=a.id and"
-            + " x.status='PUBLISHED') session_count from activity a join venue v on v.id=a.venue_id"
-            + activityWhere()
-            + " order by a.id desc limit 20 offset ?",
-        args.toArray());
+      boolean admin, String q, String category, int page, long venue, String status) {
+    return activities(admin, q, category, page, venue, status, null, null);
+  }
+
+  public List<Map<String, Object>> activities(
+      boolean admin,
+      String q,
+      String category,
+      int page,
+      long venue,
+      String status,
+      String from,
+      String to) {
+    return queries.activities(
+        filter(admin, q, category, venue, status, from, to), Inputs.offset(page));
   }
 }

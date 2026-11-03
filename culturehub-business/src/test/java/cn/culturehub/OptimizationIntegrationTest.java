@@ -12,14 +12,52 @@ import org.springframework.transaction.support.TransactionTemplate;
 @SpringJUnitConfig({BookingIntegrationTest.Config.class, OptimizationIntegrationTest.Extra.class})
 abstract class OptimizationIntegrationTest extends BookingIntegrationTest {
   @Configuration
-  @Import({Management.class, PublicSessions.class})
+  @Import({Management.class, PublicSessions.class, CatalogReadService.class})
   static class Extra {
     @Bean
     org.apache.ibatis.session.SqlSessionFactory sqlFactory(javax.sql.DataSource source)
         throws Exception {
       var factory = new com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean();
       factory.setDataSource(source);
+      var configuration = new com.baomidou.mybatisplus.core.MybatisConfiguration();
+      configuration.setCallSettersOnNulls(true);
+      factory.setConfiguration(configuration);
+      factory.setMapperLocations(
+          new org.springframework.core.io.support.PathMatchingResourcePatternResolver()
+              .getResources("classpath*:mapper/*.xml"));
       return factory.getObject();
+    }
+
+    @Bean
+    org.mybatis.spring.mapper.MapperFactoryBean<CatalogQueryMapper> queryMapper(
+        org.apache.ibatis.session.SqlSessionFactory factory) {
+      var mapper = new org.mybatis.spring.mapper.MapperFactoryBean<>(CatalogQueryMapper.class);
+      mapper.setSqlSessionFactory(factory);
+      return mapper;
+    }
+
+    @Bean
+    org.mybatis.spring.mapper.MapperFactoryBean<ActivityMapper> activityMapper(
+        org.apache.ibatis.session.SqlSessionFactory factory) {
+      var mapper = new org.mybatis.spring.mapper.MapperFactoryBean<>(ActivityMapper.class);
+      mapper.setSqlSessionFactory(factory);
+      return mapper;
+    }
+
+    @Bean
+    org.mybatis.spring.mapper.MapperFactoryBean<SessionMapper> sessionMapper(
+        org.apache.ibatis.session.SqlSessionFactory factory) {
+      var mapper = new org.mybatis.spring.mapper.MapperFactoryBean<>(SessionMapper.class);
+      mapper.setSqlSessionFactory(factory);
+      return mapper;
+    }
+
+    @Bean
+    org.mybatis.spring.mapper.MapperFactoryBean<ReviewMapper> reviewMapper(
+        org.apache.ibatis.session.SqlSessionFactory factory) {
+      var mapper = new org.mybatis.spring.mapper.MapperFactoryBean<>(ReviewMapper.class);
+      mapper.setSqlSessionFactory(factory);
+      return mapper;
     }
 
     @Bean
