@@ -32,6 +32,7 @@ if (root/'docs/evidence/performance-faults.json').exists():
  fault=json.loads((root/'docs/evidence/performance-faults.json').read_text())
  assert all(r.get('rollbackVerified') or r.get('singleQualificationAndEvent') for r in fault['results'])
  lines+=['','## 额外故障回归','', '另行执行 --fault-only：专用库延迟触发器使初次请求发生客户端超时，清理后以原request_id重试，资格/名额/确认Outbox各1；Outbox失败导致的事务回滚也重测成功。见 evidence/performance-faults.json。额外故障注入不合并到正常RPS统计。']
+lines.insert(2,'先看 [实验效果与结论](experiment-results.md)，了解收益、未证实的改善及深分页瓶颈；本文保留逐轮数据。Docker按本轮要求跳过，不作为验收前置条件。')
 (root/'docs/performance-report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
 rows=[dict(E.parse(p).getroot().attrib) for p in root.glob('culturehub-*/target/surefire-reports/TEST-*.xml')]
 totals={k:sum(int(r.get(k,0)) for r in rows) for k in ('tests','failures','errors','skipped')};totals['passed']=totals['tests']-totals['skipped']-totals['errors']-totals['failures']

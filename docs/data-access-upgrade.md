@@ -2,6 +2,8 @@
 
 本轮仅修改读取链路；ParticipationService、Booking、CheckInService、Events、Publisher 和 Worker 事务代码未改动。业务状态机、锁顺序、Lua、request_id、唯一约束以及 Outbox 同事务提交均保留。
 
+改造的实际效果、三轮并发结果与仍存在的瓶颈见[实验效果与结论](experiment-results.md)。Docker按本轮要求跳过。
+
 ## 数据访问清单
 
 | 场景 | 实现 | 说明 |

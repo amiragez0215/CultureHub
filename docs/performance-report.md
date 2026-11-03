@@ -1,5 +1,6 @@
 # CultureHub HTTP 性能测试报告
 
+先看 [实验效果与结论](experiment-results.md)，了解收益、未证实的改善及深分页瓶颈；本文保留逐轮数据。Docker按本轮要求跳过，不作为验收前置条件。
 本报告由 scripts/perf/report.py 从真实 HTTP 原始记录生成；工具为 Python stdlib Barrier/urllib，不是 k6。k6 脚本已提供，本机未安装，未执行。
 
 ## 环境与方法
