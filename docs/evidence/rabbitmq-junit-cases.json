@@ -1,0 +1,1790 @@
+[
+  {
+    "name": "channelCancellationIsIdempotentAndStopsFutureEmits",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "6.989",
+    "status": "passed"
+  },
+  {
+    "name": "disconnectedTransportClosesChannelAndCancellationSignal",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "0.061",
+    "status": "passed"
+  },
+  {
+    "name": "mvcStreamsEventsWithCapturedAuthenticationAndCleansWorkerContext",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "0.265",
+    "status": "passed"
+  },
+  {
+    "name": "saturatedWorkerPoolFailsFastInsteadOfQueueingUnboundedRequests",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "0.035",
+    "status": "passed"
+  },
+  {
+    "name": "authorizationAndValidationFailBeforeSseHeaders",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "0.066",
+    "status": "passed"
+  },
+  {
+    "name": "providerTimeoutIsAnErrorEventWithoutStackOrDone",
+    "classname": "cn.culturehub.AiStreamControllerTest",
+    "time": "0.019",
+    "status": "passed"
+  },
+  {
+    "name": "reportWithoutReviewsUsesJavaMetricsAndNoModel",
+    "classname": "cn.culturehub.AiBoundaryTest",
+    "time": "4.42",
+    "status": "passed"
+  },
+  {
+    "name": "planPermissionCheckedBeforeModel",
+    "classname": "cn.culturehub.AiBoundaryTest",
+    "time": "0.011",
+    "status": "passed"
+  },
+  {
+    "name": "invalidReviewReferenceCannotOverwriteExistingReport",
+    "classname": "cn.culturehub.AiBoundaryTest",
+    "time": "0.208",
+    "status": "passed"
+  },
+  {
+    "name": "disabledCredentialAndOverflowDurationAreRejected",
+    "classname": "cn.culturehub.AiBoundaryTest",
+    "time": "0.057",
+    "status": "passed"
+  },
+  {
+    "name": "unavailableKnowledgeDegradesToRealData",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.488",
+    "status": "passed"
+  },
+  {
+    "name": "selectionRequiresOwnedFreshCandidateAndStillDoesNotBook",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.037",
+    "status": "passed"
+  },
+  {
+    "name": "streamingProviderFailureReleasesConversationAndNoBooking",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.069",
+    "status": "passed"
+  },
+  {
+    "name": "toolBudgetFailurePropagatesThroughTheRealSpringToolManager",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.01",
+    "status": "passed"
+  },
+  {
+    "name": "optionalExplanationConnectionResetKeepsVerifiedCardsWithoutBooking",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.051",
+    "status": "passed"
+  },
+  {
+    "name": "endedOrUnpublishedCandidateCannotBeConfirmed",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.045",
+    "status": "passed"
+  },
+  {
+    "name": "realStreamPublisherProducesMultipleSafeChunksBeforeVerifiedCards",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.041",
+    "status": "passed"
+  },
+  {
+    "name": "venueInformationDoesNotDemandAnActivityDate",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.024",
+    "status": "passed"
+  },
+  {
+    "name": "noModelDoesNotPreventGraphConstructionButRequestIsUnavailable",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.006",
+    "status": "passed"
+  },
+  {
+    "name": "vagueQuestionClarifiesWithoutQueryOrBooking",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.01",
+    "status": "passed"
+  },
+  {
+    "name": "unavailableKnowledgeProviderAlsoDegradesSafely",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.024",
+    "status": "passed"
+  },
+  {
+    "name": "foreignConversationIsRejected",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "toolFailureFailsWithoutWriteAndWithoutLoop",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.024",
+    "status": "passed"
+  },
+  {
+    "name": "minimumRemainingIsVerifiedAndExplainsSinglePersonBoundary",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.032",
+    "status": "passed"
+  },
+  {
+    "name": "streamCancellationStopsUpstreamAndNeverExposesCandidates",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.051",
+    "status": "passed"
+  },
+  {
+    "name": "streamingTimeoutHasExplicitErrorCode",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.01",
+    "status": "passed"
+  },
+  {
+    "name": "expiredMemoryCannotStartAnotherTurn",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "changedDateReplacesPreferenceAndInvalidatesOldCandidate",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.07",
+    "status": "passed"
+  },
+  {
+    "name": "inventedSessionIsRejectedAndRetryIsBounded",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.047",
+    "status": "passed"
+  },
+  {
+    "name": "emptySearchDoesNotAskModelToInventCandidates",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.018",
+    "status": "passed"
+  },
+  {
+    "name": "modelCannotClaimSuccessWithoutConfirmation",
+    "classname": "cn.culturehub.AiGuideGraphTest",
+    "time": "0.03",
+    "status": "passed"
+  },
+  {
+    "name": "structuredPlanHasValidatedDuration",
+    "classname": "cn.culturehub.AiValidationTest",
+    "time": "0.336",
+    "status": "passed"
+  },
+  {
+    "name": "badEventRejected",
+    "classname": "cn.culturehub.AiValidationTest",
+    "time": "0.002",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "1.74",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.807",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.762",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.813",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.756",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.776",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.75",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.827",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.795",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.728",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.737",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.751",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.748",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.699",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.662",
+    "status": "passed"
+  },
+  {
+    "name": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "1.18",
+    "status": "passed"
+  },
+  {
+    "name": "cacheFailureFallsBackToBatchDatabase",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "1.061",
+    "status": "passed"
+  },
+  {
+    "name": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.848",
+    "status": "passed"
+  },
+  {
+    "name": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.926",
+    "status": "passed"
+  },
+  {
+    "name": "publicCacheColdHotPartialMissAndOrder",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.83",
+    "status": "passed"
+  },
+  {
+    "name": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "1.17",
+    "status": "passed"
+  },
+  {
+    "name": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.743",
+    "status": "passed"
+  },
+  {
+    "name": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.767",
+    "status": "passed"
+  },
+  {
+    "name": "dynamicFiltersDatesCountAndPrivilegeAreConsistent",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.812",
+    "status": "passed"
+  },
+  {
+    "name": "lambdaEntityReadsAndMapNullsPreserveContract",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.74",
+    "status": "passed"
+  },
+  {
+    "name": "activityJoinDoesNotMultiplyPaginationRows",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.692",
+    "status": "passed"
+  },
+  {
+    "name": "historyResultMapMaintainsNullableQueueAndOwnerIsolation",
+    "classname": "cn.culturehub.CatalogLocalTest",
+    "time": "0.7",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.ContainerBookingTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "invalidPaginationAndBlankText",
+    "classname": "cn.culturehub.InputValidationTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "timeAndCodesAreValidated",
+    "classname": "cn.culturehub.InputValidationTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "missingAndWrongInputsAre400",
+    "classname": "cn.culturehub.InputValidationTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.702",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.653",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.656",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.698",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.644",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.673",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.641",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.786",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.784",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.754",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.747",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.751",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.771",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.727",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.LocalBookingTest",
+    "time": "0.678",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "cacheFailureFallsBackToBatchDatabase",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "publicCacheColdHotPartialMissAndOrder",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+    "classname": "cn.culturehub.OptimizationContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.733",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.667",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.782",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.725",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.655",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.69",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.621",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.701",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.756",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.686",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.834",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.782",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.725",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.754",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.656",
+    "status": "passed"
+  },
+  {
+    "name": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.674",
+    "status": "passed"
+  },
+  {
+    "name": "cacheFailureFallsBackToBatchDatabase",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.654",
+    "status": "passed"
+  },
+  {
+    "name": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.784",
+    "status": "passed"
+  },
+  {
+    "name": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "1.023",
+    "status": "passed"
+  },
+  {
+    "name": "publicCacheColdHotPartialMissAndOrder",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.843",
+    "status": "passed"
+  },
+  {
+    "name": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "1.174",
+    "status": "passed"
+  },
+  {
+    "name": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.765",
+    "status": "passed"
+  },
+  {
+    "name": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+    "classname": "cn.culturehub.OptimizationLocalTest",
+    "time": "0.704",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.718",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.719",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "1.035",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.814",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.751",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.979",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.738",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.854",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "1.107",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.903",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.978",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "1.015",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.817",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.795",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.998",
+    "status": "passed"
+  },
+  {
+    "name": "realNotificationFailureRollsBackAndControlledRetryRecovers",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "2.041",
+    "status": "passed"
+  },
+  {
+    "name": "realNotificationTransactionCommitsBeforeAckAndDeduplicates",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.996",
+    "status": "passed"
+  },
+  {
+    "name": "abandonedLeaseIsRecoveredWithoutNewEvent",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.918",
+    "status": "passed"
+  },
+  {
+    "name": "firstPersistentFailureDoesNotBlockBatchAndBackoffRecovers",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "1.055",
+    "status": "passed"
+  },
+  {
+    "name": "brokerFailureDoesNotRollbackReservationAndStableEventRecovers",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "1.141",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentPublishersClaimOnlyOnceAndDoNotHoldTransaction",
+    "classname": "cn.culturehub.OutboxRabbitLocalTest",
+    "time": "0.795",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "proposalExpiryCannotExceedRegistrationEnd",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "concurrentConfirmationsCreateExactlyOneQualification",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredLeaseRetriesSameRequestAndConverges",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "newSelectionSupersedesPendingButNotProcessing",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "redisFailureRemainsRecoverableAndDoesNotWriteQualification",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "fullAtConfirmationDoesNotImplicitlyWaitlist",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unconfirmedProposalAndRejectionNeverBook",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredOrLostConversationCannotStartBooking",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "foreignProposalCannotBeReadConfirmedOrRejected",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "confirmationBooksThroughOriginalEntryAndOutbox",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "confirmedResultReflectsLaterCancellationWithoutRebooking",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "ongoingLeaseCannotBeRejectedOrRunAgain",
+    "classname": "cn.culturehub.ProposalContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.824",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.982",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.94",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.846",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.871",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.054",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.882",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.063",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.128",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.904",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.928",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.005",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.998",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.996",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.742",
+    "status": "passed"
+  },
+  {
+    "name": "proposalExpiryCannotExceedRegistrationEnd",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.186",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentConfirmationsCreateExactlyOneQualification",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.29",
+    "status": "passed"
+  },
+  {
+    "name": "expiredLeaseRetriesSameRequestAndConverges",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.398",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "0.94",
+    "status": "passed"
+  },
+  {
+    "name": "newSelectionSupersedesPendingButNotProcessing",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.156",
+    "status": "passed"
+  },
+  {
+    "name": "rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.376",
+    "status": "passed"
+  },
+  {
+    "name": "redisFailureRemainsRecoverableAndDoesNotWriteQualification",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "2.367",
+    "status": "passed"
+  },
+  {
+    "name": "fullAtConfirmationDoesNotImplicitlyWaitlist",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.667",
+    "status": "passed"
+  },
+  {
+    "name": "crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.208",
+    "status": "passed"
+  },
+  {
+    "name": "unconfirmedProposalAndRejectionNeverBook",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.362",
+    "status": "passed"
+  },
+  {
+    "name": "expiredOrLostConversationCannotStartBooking",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.282",
+    "status": "passed"
+  },
+  {
+    "name": "foreignProposalCannotBeReadConfirmedOrRejected",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.077",
+    "status": "passed"
+  },
+  {
+    "name": "confirmationBooksThroughOriginalEntryAndOutbox",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.187",
+    "status": "passed"
+  },
+  {
+    "name": "confirmedResultReflectsLaterCancellationWithoutRebooking",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.555",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingLeaseCannotBeRejectedOrRunAgain",
+    "classname": "cn.culturehub.ProposalLocalTest",
+    "time": "1.034",
+    "status": "passed"
+  },
+  {
+    "name": "brokerSendFailureRetainsEvent",
+    "classname": "cn.culturehub.PublisherIntegrationTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unroutableConfirmDoesNotMarkPublished",
+    "classname": "cn.culturehub.PublisherIntegrationTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "successThenMarkerFailureRetainsRetry",
+    "classname": "cn.culturehub.PublisherIntegrationTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "returnOverridesPositiveConfirm",
+    "classname": "cn.culturehub.RabbitConfirmTest",
+    "time": "0.154",
+    "status": "passed"
+  },
+  {
+    "name": "negativeConfirmRejects",
+    "classname": "cn.culturehub.RabbitConfirmTest",
+    "time": "0.001",
+    "status": "passed"
+  },
+  {
+    "name": "positiveConfirmAcceptsPersistentMessage",
+    "classname": "cn.culturehub.RabbitConfirmTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "actualBrokerStopAndRestartRetainsCommittedOutbox",
+    "classname": "cn.culturehub.RabbitEndToEndContainerTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "2.16",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.699",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.843",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.827",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.745",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.729",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.992",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.704",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.96",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.962",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.816",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "2.013",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.786",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.823",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.755",
+    "status": "passed"
+  },
+  {
+    "name": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "1.998",
+    "status": "passed"
+  },
+  {
+    "name": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+    "classname": "cn.culturehub.RabbitEndToEndLocalTest",
+    "time": "2.007",
+    "status": "passed"
+  },
+  {
+    "name": "cancellationPromotesWithoutOvertaking",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.721",
+    "status": "passed"
+  },
+  {
+    "name": "ongoingCheckinIsProgressNotFinalRate",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.043",
+    "status": "passed"
+  },
+  {
+    "name": "duplicateRequest",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.78",
+    "status": "passed"
+  },
+  {
+    "name": "expiredConfirmationRace",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.979",
+    "status": "passed"
+  },
+  {
+    "name": "lastSeatRace",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.732",
+    "status": "passed"
+  },
+  {
+    "name": "repeatedBusinessEventIsDeduplicated",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.806",
+    "status": "passed"
+  },
+  {
+    "name": "luaRateLimitAndUnavailable",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.928",
+    "status": "passed"
+  },
+  {
+    "name": "checkinAndCancelRace",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.673",
+    "status": "passed"
+  },
+  {
+    "name": "expiryIsIdempotent",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.927",
+    "status": "passed"
+  },
+  {
+    "name": "doubleCheckin",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.767",
+    "status": "passed"
+  },
+  {
+    "name": "oldRequestCannotRecreateCancelledQualification",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.915",
+    "status": "passed"
+  },
+  {
+    "name": "statisticsAndReviewAreDatabaseDerived",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.138",
+    "status": "passed"
+  },
+  {
+    "name": "concurrentWaitlistSequence",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.804",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRollsBackAndRetries",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.872",
+    "status": "passed"
+  },
+  {
+    "name": "unauthorizedVenue",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.183",
+    "status": "passed"
+  },
+  {
+    "name": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.221",
+    "status": "passed"
+  },
+  {
+    "name": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.965",
+    "status": "passed"
+  },
+  {
+    "name": "actualWorkerJvmExitAfterCommitBeforeAckRedeliversAndDeduplicates",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "6.692",
+    "status": "passed"
+  },
+  {
+    "name": "productionQuorumTopologyCanBeRedeclaredWithoutParameterConflict",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.146",
+    "status": "passed"
+  },
+  {
+    "name": "realReturnInFirstEventDoesNotBlockLaterEventAndRecovers",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.521",
+    "status": "passed"
+  },
+  {
+    "name": "markerDatabaseFailureAfterConfirmRetainsStableEventForRetry",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.246",
+    "status": "passed"
+  },
+  {
+    "name": "malformedJsonIsRetainedInDeadLetter",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "1.99",
+    "status": "passed"
+  },
+  {
+    "name": "persistentFailureHasThreeDelayedRetriesThenDeadLetterAndManualReplay",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "5.708",
+    "status": "passed"
+  },
+  {
+    "name": "actualListenerRestartRecoversQueuedEvent",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "2.989",
+    "status": "passed"
+  },
+  {
+    "name": "transientDatabaseFailureActuallyRetriesAfterDelayThenRecovers",
+    "classname": "cn.culturehub.RabbitReliabilityLocalTest",
+    "time": "4.024",
+    "status": "passed"
+  },
+  {
+    "name": "boundedRetriesReachDeadQueue",
+    "classname": "cn.culturehub.ManualAckTest",
+    "time": "1.157",
+    "status": "passed"
+  },
+  {
+    "name": "ackOnlyAfterConsumerReturns",
+    "classname": "cn.culturehub.ManualAckTest",
+    "time": "0.003",
+    "status": "passed"
+  },
+  {
+    "name": "failedTransactionRequiresConfirmedRetryBeforeAck",
+    "classname": "cn.culturehub.ManualAckTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "poisonIsIsolatedWithoutRetry",
+    "classname": "cn.culturehub.ManualAckTest",
+    "time": "0.0",
+    "status": "passed"
+  },
+  {
+    "name": "failedRecoverySendNeverAcknowledgesOriginal",
+    "classname": "cn.culturehub.ManualAckTest",
+    "time": "1.016",
+    "status": "passed"
+  },
+  {
+    "name": "listenerRestartRecoversQueuedEvent",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "duplicateDeliveryAndReplayPersistOnce",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "transientDatabaseFailureRetries",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "manualDeadLetterReplayPreservesEventId",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "poisonMessageIsRetainedInDeadLetter",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "retryExhaustionIsDeadLettered",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  },
+  {
+    "name": "commitBeforeLostAckRedeliversSafely",
+    "classname": "cn.culturehub.WorkerRabbitTest",
+    "time": "0.0",
+    "status": "skipped"
+  }
+]

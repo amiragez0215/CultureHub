@@ -31,7 +31,7 @@ AI_VECTORSTORE=none
 
 完整本地部署：安装 Docker Desktop（Linux 容器）与 Compose，在根目录复制 `.env.example` 为 `.env`，配置密码和密钥，然后执行 `docker compose up --build -d`。完整 Compose 的前端端口为 8089，API 为 8080。
 
-开发调试：先准备 MySQL、Redis、Kafka、XXL-JOB 和 Chroma，设置环境变量，再用 Maven 构建。分别运行 ApiApplication 与 WorkerApplication；前端在 web 目录执行 npm ci 和 npm run dev。Vite 默认端口通常为 5173；以终端实际输出为准。IDE 只负责编辑和调试，不代替数据库及消息等基础服务。
+开发调试：先准备 MySQL、Redis、RabbitMQ、XXL-JOB 和 Chroma，设置环境变量，再用 Maven 构建。分别运行 ApiApplication 与 WorkerApplication；前端在 web 目录执行 npm ci 和 npm run dev。Vite 默认端口通常为 5173；以终端实际输出为准。IDE 只负责编辑和调试，不代替数据库及消息等基础服务。
 
 当前聊天期间的本机预览地址为 `http://127.0.0.1:15173/`，API 为 18080，使用临时独立数据库。它与 Compose 标准端口不同，预览进程停止后不会自动恢复。
 

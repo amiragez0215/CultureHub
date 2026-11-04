@@ -49,7 +49,7 @@ XXL-JOB 脚本也只保留表结构：控制台管理员、schedule_lock 记录�
 
     mvn -s settings.xml package
 
-运行主 API 的 ApiApplication 和 Worker 的 WorkerApplication，前端在 web 目录运行 npm ci 与 npm run dev。先配置 MySQL、Redis、Kafka 等依赖，IDE 不代替基础服务。
+运行主 API 的 ApiApplication 和 Worker 的 WorkerApplication，前端在 web 目录运行 npm ci 与 npm run dev。先配置 MySQL、Redis、RabbitMQ 等依赖，IDE 不代替基础服务。
 
 ## AI
 
@@ -57,7 +57,7 @@ XXL-JOB 脚本也只保留表结构：控制台管理员、schedule_lock 记录�
 
 ## 验证边界
 
-原开发环境完成了后端构建、前端构建、真实 MySQL/Redis 核心测试及 HTTP 冒烟，并完成 DeepSeek 真实聊天的导览、策划和复盘联调。密钥不随源码分享，接收者需使用自己的凭据。完整 Compose、真实 Kafka 链路与 Embedding/Chroma 效果仍需在对应环境执行验证；不能把源码或单个模型测试等同于全环境验收通过。
+原开发环境完成了后端构建、前端构建、真实 MySQL/Redis 核心测试及 HTTP 冒烟，并完成 DeepSeek 真实聊天的导览、策划和复盘联调。密钥不随源码分享，接收者需使用自己的凭据。本分支 RabbitMQ 真实链路待独立验收；原验证记录是迁移前基线，完整 Compose 与 Embedding/Chroma 效果仍需在对应环境执行验证；不能把源码或单个模型测试等同于全环境验收通过。
 
 普通单元测试不需要 Docker；无 Docker 时容器测试会跳过。配置专用本地 MySQL/Redis 时也能执行核心集成测试，见技术增强导读。不要在真实业务数据库上启用会清表的本地测试模式。
 '''

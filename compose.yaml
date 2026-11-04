@@ -2,7 +2,10 @@ name: culturehub
 x-app: &app
   DB_URL: jdbc:mysql://mysql:3306/culturehub?useUnicode=true&characterEncoding=UTF-8&connectionTimeZone=Asia/Shanghai
   DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
-  KAFKA_BOOTSTRAP: kafka:9092
+  RABBIT_HOST: rabbitmq
+  RABBIT_VHOST: ${RABBIT_VHOST:-/}
+  RABBIT_USER: ${RABBIT_USER:-culturehub}
+  RABBIT_PASSWORD: ${RABBIT_PASSWORD:?Set RABBIT_PASSWORD in .env}
   TZ: Asia/Shanghai
 services:
   mysql:
@@ -23,26 +26,18 @@ services:
       interval: 5s
       retries: 20
     ports: ["127.0.0.1:6379:6379"]
-  kafka:
-    image: apache/kafka:3.9.1
-    hostname: kafka
-    ports: ["127.0.0.1:29092:29092"]
+  rabbitmq:
+    image: rabbitmq:4.1.4-management
+    hostname: rabbitmq
+    ports: ["127.0.0.1:${RABBIT_AMQP_PORT:-5672}:5672", "127.0.0.1:${RABBIT_MANAGEMENT_PORT:-15672}:15672"]
     environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://:9092,EXTERNAL://:29092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_LOG_DIRS: /var/lib/kafka/data
-    volumes: ["kafka-data:/var/lib/kafka/data"]
+      RABBITMQ_DEFAULT_VHOST: ${RABBIT_VHOST:-/}
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER:-culturehub}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD:?Set RABBIT_PASSWORD in .env}
+    volumes: ["rabbitmq-data:/var/lib/rabbitmq"]
     healthcheck:
-      test: [CMD-SHELL, /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list]
-      interval: 10s
+      test: [CMD, rabbitmq-diagnostics, -q, ping]
+      interval: 5s
       retries: 30
   chroma:
     image: chromadb/chroma:1.0.0
@@ -81,18 +76,17 @@ services:
     depends_on:
       mysql: {condition: service_healthy}
       redis: {condition: service_healthy}
-      kafka: {condition: service_healthy}
   worker:
     build: {context: ., dockerfile: deploy/Dockerfile.java, args: {MODULE: culturehub-notification-worker}}
     environment: *app
     depends_on:
       mysql: {condition: service_healthy}
-      kafka: {condition: service_healthy}
+      rabbitmq: {condition: service_healthy}
   web:
     build: ./web
     ports: ["127.0.0.1:8089:80"]
     depends_on: [api]
 volumes:
   mysql-data:
-  kafka-data:
+  rabbitmq-data:
   chroma-data:

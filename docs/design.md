@@ -12,7 +12,7 @@ Redis Lua 只限新建资格。Redis 不可用返回 503，不新增本地锁或
 
 ## 消息
 
-业务与 Outbox 同事务。发布器在事务外等待 Kafka 确认，然后标记 PUBLISHED；标记失败保留 PENDING，允许重发。通知事件 ID/用户/类型唯一，通知行就是幂等结果，无独立 Inbox。Worker 数据库事务提交后监听器才返回，Offset 由 RECORD 模式推进；中间崩溃会重放。
+业务与 Outbox 同事务。发布器以既有 next_attempt_at/attempt_count 条件更新抢占短租约，事务外等待 RabbitMQ Confirm，并检查 mandatory Return 后标记 PUBLISHED。标记失败/租约过期允许相同event_id重发。通知事件ID/用户/类型唯一，通知行即幂等结果，无独立Inbox。Worker在数据库事务提交后手动ACK；可恢复失败经已确认的持久化重试副本后ACK，最多3次，之后隔离至DLQ。确认副本失败时保留原未ACK消息，关闭通道并按恢复间隔重建，不无限即时requeue。
 
 普通失败有限重试后发 DLT；DLT 发送结果必须确认，否则保留原消息重试。没有端到端 Exactly Once 承诺。Outbox 一直保留，业务键也是提醒去重依据，不自动清理破坏幂等记录。
 

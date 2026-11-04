@@ -1,0 +1,117 @@
+{
+  "commit": "5e5c509f590776caf25e0751543990b979fba9e8",
+  "worktreeWasClean": true,
+  "protectedFiles": {
+    "scripts\\perf\\burst.js": "a4df66f039f8d1dbd322195b79ef797c7fddf64192980be7a246d3df1b0583f0",
+    "scripts\\perf\\effects.py": "67326b262c649b713dbc028fa7a44aa58d5e0b8e4069de28b503420f8b652a67",
+    "scripts\\perf\\plans.py": "82d875384d6243047648b177080a901396aa11bd552b70a5359fabf96a57238a",
+    "scripts\\perf\\README.md": "e8cb6ced376da1085d5fee9104b54f12d768dcc375c8c2966671064f77d268de",
+    "scripts\\perf\\report.py": "8b64934ecae0a5822bba528b6c3954bab43e5a9c7b118aaa23f33522d03f58d0",
+    "scripts\\perf\\run.py": "157cd8c51943591c489e83e852eef22b27a9e698d86e28510ecf59e5e49b375e",
+    "scripts\\perf\\start.ps1": "a7462c72f7f873ebb08b028a29af7191d58cf23d362cf29d075c7d3c79e95cd4",
+    "docs\\evidence\\performance-faults.json": "8dfc1a94c80b568d85aec240357806b5c85ecc74b9fb437c8718348b7f6c6e32",
+    "docs\\evidence\\performance.json": "64d4615c75d8ea8c55b0247d1703cdf10b25b6da2fe0a0e92b7bc1164b7c8aaf",
+    "docs\\performance-report.md": "39f42ac1ce74a5c095fb7d551d80872355b5687a928cf6b937cf0e0b903e36e6",
+    "docs\\experiment-results.md": "5c85806d30c773720b4c467b85137521767fcd8e9d2f4904a076226cd32ac15d"
+  },
+  "tests": [
+    {
+      "name": "cn.culturehub.AiStreamControllerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiBoundaryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "tests": "21",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiValidationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.CatalogLocalTest",
+      "tests": "27",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ContainerBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "15"
+    },
+    {
+      "name": "cn.culturehub.InputValidationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.LocalBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.OptimizationContainerTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "23"
+    },
+    {
+      "name": "cn.culturehub.OptimizationLocalTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ProposalContainerTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "30"
+    },
+    {
+      "name": "cn.culturehub.ProposalLocalTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "2"
+    },
+    {
+      "name": "cn.culturehub.WorkerKafkaTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "4"
+    }
+  ]
+}

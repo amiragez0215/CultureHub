@@ -1,0 +1,154 @@
+{
+  "baselineCommit": "5e5c509f590776caf25e0751543990b979fba9e8",
+  "baselineWorktreeClean": true,
+  "branch": "migration/rabbitmq",
+  "currentTotals": {
+    "tests": 272,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 113,
+    "passed": 159
+  },
+  "suites": [
+    {
+      "name": "cn.culturehub.AiStreamControllerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiBoundaryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "tests": "21",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.AiValidationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.CatalogLocalTest",
+      "tests": "27",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ContainerBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "15"
+    },
+    {
+      "name": "cn.culturehub.InputValidationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.LocalBookingTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.OptimizationContainerTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "23"
+    },
+    {
+      "name": "cn.culturehub.OptimizationLocalTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.OutboxRabbitLocalTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.ProposalContainerTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "30"
+    },
+    {
+      "name": "cn.culturehub.ProposalLocalTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "3"
+    },
+    {
+      "name": "cn.culturehub.RabbitConfirmTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.RabbitEndToEndContainerTest",
+      "tests": "18",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "18"
+    },
+    {
+      "name": "cn.culturehub.RabbitEndToEndLocalTest",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "17"
+    },
+    {
+      "name": "cn.culturehub.ManualAckTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "cn.culturehub.WorkerRabbitTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "7"
+    }
+  ],
+  "protectedPerformanceHashesUnchanged": true,
+  "allPriorEvidenceUnchanged": true,
+  "archiveVerified": true,
+  "outOfScopeChanges": [],
+  "realRabbitIntegrationVerified": false,
+  "reason": "No Docker, no RabbitMQ/Erlang runtime, localhost:5672 unreachable. Real broker suites skipped; controlled transport replies are not real broker tests.",
+  "finalCommitAllowed": false
+}

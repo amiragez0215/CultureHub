@@ -6,7 +6,9 @@ import xml.etree.ElementTree as ET
 root = Path(__file__).resolve().parents[1]
 names = {
     "LocalBookingTest", "AiValidationTest", "AiBoundaryTest", "InputValidationTest",
-    "ContainerBookingTest", "PublisherIntegrationTest", "WorkerKafkaTest",
+    "ContainerBookingTest", "PublisherIntegrationTest", "WorkerRabbitTest",
+    "RabbitConfirmTest", "ManualAckTest", "OutboxRabbitLocalTest",
+    "RabbitEndToEndContainerTest", "RabbitEndToEndLocalTest",
     "AiGuideGraphTest", "ProposalLocalTest", "ProposalContainerTest",
 }
 results = []

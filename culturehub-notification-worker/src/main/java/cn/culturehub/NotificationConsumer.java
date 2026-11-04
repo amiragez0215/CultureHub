@@ -2,7 +2,6 @@ package cn.culturehub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -21,10 +20,6 @@ public class NotificationConsumer {
     this.j = j;
   }
 
-  @KafkaListener(
-      id = "notifications",
-      topics = Event.TOPIC,
-      groupId = "culturehub-notifications-v1")
   public void consume(String raw) throws Exception {
     Event e = j.readValue(raw, Event.class);
     e.validate();

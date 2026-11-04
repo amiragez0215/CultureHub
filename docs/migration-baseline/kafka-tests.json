@@ -1,0 +1,16 @@
+{
+  "commit": "5e5c509f590776caf25e0751543990b979fba9e8",
+  "authorization": "User explicitly approved exact archival before scenario migration",
+  "tests": [
+    {
+      "source": "culturehub-business/src/test/java/cn/culturehub/PublisherIntegrationTest.java",
+      "archive": "docs/migration-baseline/PublisherIntegrationTest.java.txt",
+      "sha256": "089b357e9b732b04f8abbe4e5231b9d3042f7542a313ab2e0b1da5dc003e0c24"
+    },
+    {
+      "source": "culturehub-notification-worker/src/test/java/cn/culturehub/WorkerKafkaTest.java",
+      "archive": "docs/migration-baseline/WorkerKafkaTest.java.txt",
+      "sha256": "43a750cb1d3b5085d905b0dc4932c9dbdc899158557879830c29e279cad5beae"
+    }
+  ]
+}

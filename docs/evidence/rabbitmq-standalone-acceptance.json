@@ -1,0 +1,85 @@
+{
+  "startedAt": "2026-11-04T04:38:23.099838+00:00",
+  "schema": "culturehub_rabbit_acceptance",
+  "broker": "RabbitMQ 4.1.4 / OTP 27.3.4.1",
+  "amqpPort": 5673,
+  "vhost": "culturehub_acceptance",
+  "scheduler": "Real XXL executor; Python periodic HTTP trigger (no Admin)",
+  "checks": [
+    {
+      "name": "RabbitMQ completely stopped before API startup",
+      "passed": true
+    },
+    {
+      "name": "Real API started without Broker",
+      "passed": true
+    },
+    {
+      "name": "HTTP registration",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "HTTP login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Real HTTP booking commits while RabbitMQ is down",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Booking and Outbox committed together",
+      "passed": true
+    },
+    {
+      "name": "Global health detects missing RabbitMQ",
+      "passed": true
+    },
+    {
+      "name": "Core readiness remains UP",
+      "passed": true
+    },
+    {
+      "name": "Real failed Broker attempt retained with error and backoff",
+      "passed": true
+    },
+    {
+      "name": "Scheduled Publisher recovered and standalone Worker persisted notification",
+      "passed": true
+    },
+    {
+      "name": "Recovery preserves event_id",
+      "passed": true
+    },
+    {
+      "name": "Repeated published event consumed idempotently",
+      "passed": true
+    },
+    {
+      "name": "Notification visible through actual HTTP API",
+      "passed": true
+    },
+    {
+      "name": "Actual durable production queues are Quorum",
+      "passed": true,
+      "queues": {
+        "culturehub.notification.events.v1.dlt": "quorum",
+        "culturehub.notifications.v1": "quorum",
+        "culturehub.notifications.v1.retry": "quorum"
+      }
+    },
+    {
+      "name": "No scheduling protocol failures",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "passed": true,
+  "mysqlVersion": "8.0.27",
+  "eventId": "c2f0a90a-244e-4fc4-9a7d-e8acec1725d5",
+  "serviceProcessesStopped": true,
+  "servicePortsClosed": true,
+  "finishedAt": "2026-11-04T04:39:23.097275+00:00"
+}

@@ -4,6 +4,8 @@ CultureHub 面向博物馆、文化馆、社区文化中心等公共文化场所
 
 项目基于 **Java 17、Spring Boot 3 和 Vue 3**，采用模块化单体主 API 与独立通知 Worker。Java 负责业务规则与数据一致性，Spring AI 提供导览推荐、活动策划和评价分析能力。
 
+> RabbitMQ 迁移分支已完成本机真实 Broker 与故障恢复验收；main 尚未合并。测试结果、环境限制和复现入口见 [验收报告](docs/rabbitmq-test-report.md)。
+
 ## 目录
 
 - [项目功能](#项目功能)
@@ -46,7 +48,7 @@ CultureHub 面向博物馆、文化馆、社区文化中心等公共文化场所
 | 后端 | Java 17、Spring Boot 3、Spring Security、JWT |
 | 数据访问 | MyBatis-Plus、JdbcTemplate、MySQL 8 |
 | 缓存与并发 | Redis、Lua、MySQL 事务与行锁 |
-| 消息与调度 | Kafka、Spring Kafka、Transactional Outbox、XXL-JOB |
+| 消息与调度 | RabbitMQ、Spring AMQP、Transactional Outbox、XXL-JOB |
 | AI | Spring AI、Spring AI Alibaba Graph、Chroma |
 | 前端 | Vue 3、Vite |
 | 测试与部署 | JUnit 5、Testcontainers、Docker Compose |
@@ -62,8 +64,8 @@ flowchart LR
     AI --> Model[聊天与 Embedding 模型]
     AI --> Chroma[(Chroma 知识检索)]
     Job[XXL-JOB] -->|超时维护 / 提醒 / Outbox 发布| API
-    API -->|Outbox 事件发布| Kafka[Kafka]
-    Kafka --> Worker[Notification Worker]
+    API -->|Outbox 事件发布| RabbitMQ[RabbitMQ]
+    RabbitMQ --> Worker[Notification Worker]
     Worker -->|幂等持久化站内通知| DB
 ```
 
@@ -85,7 +87,7 @@ CultureHub/
 ├── culturehub-contracts/             # 业务事件契约
 ├── culturehub-business/              # 业务服务、事务、缓存、消息、任务与 AI
 ├── culturehub-api/                   # HTTP 接口、认证配置、演示数据初始化
-├── culturehub-notification-worker/   # Kafka 消费、通知持久化、死信处理
+├── culturehub-notification-worker/   # RabbitMQ 消费、通知持久化、死信处理
 ├── web/                             # Vue 3 用户端与管理端
 ├── deploy/                          # 数据库 DDL、初始化与迁移脚本
 ├── scripts/                         # 初始化、验证和源码打包工具
@@ -134,11 +136,11 @@ npm run dev
 | 场馆管理员 | `manager1` — `manager8` | 同上 |
 | 普通用户 | `user`、`demo01` — `demo23` | 同上 |
 
-基础演示模式关闭任务执行器。异步通知需要另行配置 Kafka 并启动 Worker；定时调度需要 XXL-JOB。详细步骤见[本地运行与演示说明](docs/learning-and-demo.md)。
+基础演示模式关闭任务执行器。异步通知需要另行配置 RabbitMQ 并启动 Worker；定时调度需要 XXL-JOB。详细步骤见[本地运行与演示说明](docs/learning-and-demo.md)。
 
 ### Docker Compose
 
-仓库提供 MySQL、Redis、Kafka、XXL-JOB、Chroma、API、Worker 和前端的 Compose 配置。配置好 `.env` 后执行：
+仓库提供 MySQL、Redis、RabbitMQ、XXL-JOB、Chroma、API、Worker 和前端的 Compose 配置。配置好 `.env` 后执行：
 
 ```sh
 docker compose up --build -d
@@ -164,7 +166,7 @@ npm run build
 
 普通单元测试不依赖 Docker，容器集成测试在 Docker 不可用时跳过。也支持专用本地 MySQL/Redis 集成测试，启用方式及清表范围见[技术增强说明](docs/technical-enhancement.md#复测与学习)。
 
-已执行后端构建、单元测试、真实 MySQL/Redis 核心业务测试、前端交互与构建、DeepSeek 业务联调。完整 Kafka 故障恢复、XXL-JOB Admin 调度、Embedding/Chroma 检索质量和大规模压测尚未验收，详见[验证记录](docs/verification.md)及 [AI 连接容错回归](docs/ai-connection-fix.md)。
+已执行后端构建、单元测试、真实 MySQL/Redis 核心业务测试、前端交互与构建、DeepSeek 业务联调；本分支另已完成本机真实 RabbitMQ 单节点链路及故障恢复验收，见 [消息验收报告](docs/rabbitmq-test-report.md)。Docker Compose、三节点 Quorum 故障、XXL-JOB Admin 调度及 Embedding/Chroma 检索质量未验收。原阶段记录保留在[验证记录](docs/verification.md)及 [AI 连接容错回归](docs/ai-connection-fix.md)。
 
 ## 文档导航
 

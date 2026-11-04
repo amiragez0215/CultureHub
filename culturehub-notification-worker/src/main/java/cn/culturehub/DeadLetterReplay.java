@@ -1,47 +1,51 @@
 package cn.culturehub;
 
-import java.time.Duration;
-import java.util.*;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.support.DefaultMessagePropertiesConverter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-/**
- * Explicit operator action only: fixes must be applied before replay. Event IDs remain unchanged.
- */
+/** Explicit bounded operator action. Fix the cause first; never changes event_id. */
 @Component
 @ConditionalOnProperty(name = "culture.replay-dlt", havingValue = "true")
 public class DeadLetterReplay implements CommandLineRunner {
-  final KafkaProperties config;
-  final KafkaTemplate<String, String> producer;
+  final RabbitTemplate template;
+  final RabbitTransport transport;
 
-  public DeadLetterReplay(KafkaProperties c, KafkaTemplate<String, String> p) {
-    config = c;
-    producer = p;
+  public DeadLetterReplay(RabbitTemplate template, RabbitTransport transport) {
+    this.template = template;
+    this.transport = transport;
   }
 
-  public void run(String... args) throws Exception {
-    var props = new HashMap<String, Object>();
-    props.put("bootstrap.servers", config.getBootstrapServers());
-    props.put("group.id", "culturehub-manual-dlt-replay");
-    props.put("enable.auto.commit", false);
-    props.put("auto.offset.reset", "earliest");
-    props.put("key.deserializer", StringDeserializer.class);
-    props.put("value.deserializer", StringDeserializer.class);
-    try (var consumer = new KafkaConsumer<String, String>(props)) {
-      consumer.subscribe(List.of(Event.DLT));
-      for (int i = 0; i < 10; i++) {
-        var records = consumer.poll(Duration.ofSeconds(1));
-        for (var record : records)
-          producer
-              .send(Event.TOPIC, record.key(), record.value())
-              .get(10, java.util.concurrent.TimeUnit.SECONDS);
-        if (!records.isEmpty()) consumer.commitSync();
-      }
+  public void run(String... args) {
+    for (int i = 0; i < 100; i++) {
+      Boolean found =
+          template.execute(
+              channel -> {
+                var delivery = channel.basicGet(RabbitTopology.DLQ, false);
+                if (delivery == null) return false;
+                try {
+                  var props =
+                      new DefaultMessagePropertiesConverter()
+                          .toMessageProperties(
+                              delivery.getProps(), delivery.getEnvelope(), "UTF-8");
+                  props.setHeader("x-retry-attempt", 0);
+                  props.setHeader("x-manual-replay", true);
+                  // Generic routing is deliberately limited to the existing notification binding.
+                  transport.send(
+                      RabbitTopology.EXCHANGE,
+                      "notification.replay",
+                      new Message(delivery.getBody(), props));
+                  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                  return true;
+                } catch (Exception error) {
+                  channel.abort();
+                  throw new IllegalStateException("DLQ replay retained", error);
+                }
+              });
+      if (!Boolean.TRUE.equals(found)) break;
     }
   }
 }
