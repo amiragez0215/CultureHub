@@ -46,6 +46,7 @@ xxl.job.accessToken: ${XXL_JOB_TOKEN:local-job-token}
 xxl.job.executor.address: ${XXL_EXECUTOR_ADDRESS:}
 server.port: 8080
 culture.jobs.enabled: ${JOBS_ENABLED:false}
+culture.ai.guide-v2.enabled: ${AI_GUIDE_V2_ENABLED:true}
 mybatis-plus.configuration.call-setters-on-nulls: true
 
 spring.rabbitmq.host: ${RABBIT_HOST:localhost}

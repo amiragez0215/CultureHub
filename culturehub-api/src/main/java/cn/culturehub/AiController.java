@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 public class AiController {
+  @org.springframework.beans.factory.annotation.Value("${culture.ai.guide-v2.enabled:false}")
+  boolean v2Enabled;
+
+  void legacyOnly() {
+    if (v2Enabled) throw new Problem("AI_FEATURE_RETIRED", "V2 专注活动规划与智能预约，此旧版 AI 功能未开放", 410);
+  }
+
   final AiService ai;
   final AiGuideGraph guide;
   final AiBookingProposalService proposals;
@@ -80,6 +87,7 @@ public class AiController {
 
   @PostMapping("/admin/ai/activity-plans")
   Object plan(@Valid @RequestBody PlanInput input) {
+    legacyOnly();
     return ai.plan(
         Map.of(
             "venue_id",
@@ -96,6 +104,7 @@ public class AiController {
 
   @PostMapping("/admin/ai/reports")
   Object report(@Valid @RequestBody ReportInput input) {
+    legacyOnly();
     return input.activityId() != null
         ? ai.activityReport(input.activityId())
         : ai.report(input.sessionId());
@@ -103,6 +112,7 @@ public class AiController {
 
   @GetMapping("/admin/ai/reports")
   Object latest(@RequestParam long sessionId) {
+    legacyOnly();
     return ai.latest(sessionId);
   }
 

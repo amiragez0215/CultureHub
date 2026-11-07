@@ -66,7 +66,7 @@
     aria-label="管理模块"
   >
     <button
-      v-for="[key,name] in [['manage','活动与场次'],['venues','场馆管理'],['grants','管理员授权'],['check','签到核销'],['stats','运营报表'],['plan','智能策划'],['report','智能复盘']]"
+      v-for="[key,name] in [['manage','活动与场次'],['venues','场馆管理'],['grants','管理员授权'],['check','签到核销'],['stats','运营报表']]"
       v-show="key!=='grants'||platform"
       :class="{active:section===key}"
       @click="form={};go(key)"
@@ -577,6 +577,7 @@
     ><button class="primary" :disabled="busy">查询运营报表</button>
   </form>
   <section v-if="page==='guide'" class="chat-panel">
+    <button :disabled="busy||guideStreaming||guideProposal?.status==='PROCESSING'" @click="restoreGuidePlan">恢复最近规划</button>
     <div class="section-heading"><h2>文化活动助手</h2><button :disabled="busy||guideProposal?.status==='PROCESSING'" @click="newGuideConversation">开始新对话</button></div>
     <p class="muted">
       先描述时间、兴趣和人群，再选择具体场次，最后明确确认。当前账号仅预约一个名额，不支持代报多人。发送新问题会使尚未确认的旧方案失效。
@@ -585,6 +586,17 @@
       <strong>{{m.role}}</strong>
       <span class="badge" v-if="m.type">{{label(m.type)}}</span>
       <p class="preserve-lines">{{m.text}}</p>
+      <section v-if="m.plan" class="guide-session-card">
+        <h3>活动安排 · 第 {{m.plan.planVersion}} 版</h3>
+        <ol><li v-for="item in m.plan.scheduleItems" :key="item.sessionId">场次 {{item.sessionId}}：{{date(item.startAt)}} 至 {{date(item.endAt)}}</li></ol>
+        <p>{{m.plan.recommendationReasons.join('、')}}</p>
+        <small>仅为规划，每场分别确认；未锁定名额，不支持代约家人。</small>
+      </section>
+      <details v-if="m.evidence?.length"><summary>场馆规则与证据</summary>
+        <div v-for="e in m.evidence" :key="e.questionId"><p>{{e.questionId}} · {{({SUPPORTED:'有证据支持',INSUFFICIENT:'证据不足',CONFLICTING:'来源冲突',UNAVAILABLE:'知识库不可用'})[e.status]}}</p>
+          <p v-for="fact in e.supportedFacts" :key="fact" class="preserve-lines">{{fact}}</p><p>{{e.failureReason}}</p>
+        </div>
+      </details>
       <div v-for="a in m.cards" :key="a.candidateId" class="guide-session-card">
         <h3>{{a.title}}</h3>
         <p>{{a.venueName}} · {{date(a.startAt)}} — {{date(a.endAt)}}</p>

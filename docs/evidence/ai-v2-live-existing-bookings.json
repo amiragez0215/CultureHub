@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-11-07T05:41:41.159554+00:00",
+  "attemptedRealModel": true,
+  "successfulRealResponses": 4,
+  "provider": "existing external configuration",
+  "readOnlyNoBookingConfirmed": true,
+  "tokenCostMeasured": false,
+  "subjectiveQualityScored": false,
+  "results": [
+    {
+      "version": "V1",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 4.484,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        47
+      ],
+      "plan": null,
+      "usage": null,
+      "explanation": "根据实时查询，明天（2026-11-08）只有一场可报名的文化活动入选：传统建筑的力学智慧，属于讲座类，在城市科学文化馆举行，面向所有人群，通过模型拼搭讲解斗拱与拱桥的受力原理。该场次当前显示可报名，但剩余名额非常紧张，建议尽快自行确认。人群分类仅供参考，未做精确年龄资格认证，不承诺适龄。本次仅作推荐，未执行任何预约、取消或候补操作。",
+      "error": null
+    },
+    {
+      "version": "V1",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 5.0,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        47
+      ],
+      "plan": null,
+      "usage": null,
+      "explanation": "明天（2026-11-08）经实时查询仅返回 1 个候选场次：城市科学文化馆的「传统建筑的力学智慧」（讲座，面向全年龄）。由于同一场馆内没有第二个场次，因此无法组成两个时间不冲突的活动组合，本轮无法满足“必须两个”的要求。该场次剩余名额很少，人群分类仅作参考、未做精确年龄资格认证；如需参加，请另行独立确认并自行预约，此处不代为预约。",
+      "error": null
+    },
+    {
+      "version": "V2",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 2.797,
+      "phase": "FAILED",
+      "candidateSessionIds": [],
+      "plan": null,
+      "usage": {
+        "toolCalls": 2,
+        "llmCalls": 1,
+        "completionTokens": 115,
+        "promptTokens": 1031
+      },
+      "explanation": "当前约束下未能生成经过验证的方案，请调整条件后重试。",
+      "error": null
+    },
+    {
+      "version": "V2",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 1.265,
+      "phase": "FAILED",
+      "candidateSessionIds": [],
+      "plan": null,
+      "usage": {
+        "toolCalls": 2,
+        "llmCalls": 1,
+        "completionTokens": 112,
+        "promptTokens": 1041
+      },
+      "explanation": "当前约束下未能生成经过验证的方案，请调整条件后重试。",
+      "error": null
+    }
+  ]
+}

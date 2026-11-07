@@ -1,0 +1,72 @@
+{
+  "llmCalls": 0,
+  "v1Measured": false,
+  "realModel": false,
+  "evaluationType": "DETERMINISTIC_JAVA_NOT_MODEL_QUALITY",
+  "results": [
+    {
+      "optimizerNanos": 20219300,
+      "actualCount": 1,
+      "case": "single",
+      "expectedCount": 1,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 567800,
+      "actualCount": 2,
+      "case": "pair",
+      "expectedCount": 2,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 544200,
+      "actualCount": 0,
+      "case": "overlap",
+      "expectedCount": 0,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 119100,
+      "actualCount": 0,
+      "case": "gap",
+      "expectedCount": 0,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 191000,
+      "actualCount": 0,
+      "case": "hard-two",
+      "expectedCount": 0,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 181100,
+      "actualCount": 1,
+      "case": "soft-two",
+      "expectedCount": 1,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 370000,
+      "actualCount": 0,
+      "case": "three",
+      "expectedCount": 0,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 79900,
+      "actualCount": 0,
+      "case": "existing-conflict",
+      "expectedCount": 0,
+      "passed": true
+    },
+    {
+      "optimizerNanos": 35700,
+      "actualCount": 0,
+      "case": "empty",
+      "expectedCount": 0,
+      "passed": true
+    }
+  ],
+  "tokenCostMeasured": false
+}

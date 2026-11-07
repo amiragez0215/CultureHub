@@ -1,0 +1,72 @@
+[
+  {
+    "file": "venue-rules.md",
+    "scope": "GLOBAL",
+    "knowledgeType": "BACKGROUND",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "古城民俗体验馆.md",
+    "scope": "VENUE",
+    "venueName": "古城民俗体验馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "城市科学文化馆.md",
+    "scope": "VENUE",
+    "venueName": "城市科学文化馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "市文化博物馆.md",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "江南非遗传习馆.md",
+    "scope": "VENUE",
+    "venueName": "江南非遗传习馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "河畔美术馆.md",
+    "scope": "VENUE",
+    "venueName": "河畔美术馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "湖畔公共图书馆.md",
+    "scope": "VENUE",
+    "venueName": "湖畔公共图书馆",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "社区文化艺术中心.md",
+    "scope": "VENUE",
+    "venueName": "社区文化艺术中心",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "青少年阅读中心.md",
+    "scope": "VENUE",
+    "venueName": "青少年阅读中心",
+    "knowledgeType": "VENUE_RULE",
+    "version": "2.0-demo"
+  },
+  {
+    "file": "activity-city-memory.md",
+    "scope": "ACTIVITY",
+    "venueName": "市文化博物馆",
+    "activityTitle": "博物馆里的城市记忆",
+    "knowledgeType": "ACTIVITY_BACKGROUND",
+    "version": "2.0-demo"
+  }
+]

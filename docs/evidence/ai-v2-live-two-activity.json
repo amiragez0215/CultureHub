@@ -1,0 +1,140 @@
+{
+  "recordedAt": "2026-11-07T06:04:41.780162+00:00",
+  "database": "culturehub_ai_v2_eval",
+  "attemptedRealModel": true,
+  "successfulRealResponses": 4,
+  "provider": "existing external configuration",
+  "readOnlyNoBookingConfirmed": true,
+  "tokenCostMeasured": false,
+  "subjectiveQualityScored": false,
+  "results": [
+    {
+      "version": "V1",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 4.218,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        1,
+        2
+      ],
+      "plan": null,
+      "usage": null,
+      "explanation": "以下为真实场次。尚未提交预约，请选择场次后再明确确认。",
+      "error": null
+    },
+    {
+      "version": "V1",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 2.813,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        1,
+        2
+      ],
+      "plan": null,
+      "usage": null,
+      "explanation": "在2026-11-08当天，可选的场次共有两个，且同属“文化规划验收场馆”：上午的剪纸艺术体验与下午的城市历史讲座，时间上不重叠，满足“同一场馆、两个活动、时间不冲突”的要求。以上仅为推荐，未进行任何预约；请你在选择后自行独立确认并完成预约。人群分类仅供参考，未做精确年龄资格认证。",
+      "error": null
+    },
+    {
+      "version": "V2",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 3.75,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        1
+      ],
+      "plan": {
+        "planId": "e35606d9-fdcb-4c61-990e-0116836437f7",
+        "planVersion": 1,
+        "title": "文化活动计划",
+        "orderedSessionIds": [
+          1
+        ],
+        "scheduleItems": [
+          {
+            "sessionId": 1,
+            "startAt": "2026-11-08T10:00:00",
+            "endAt": "2026-11-08T12:00:00"
+          }
+        ],
+        "recommendationReasons": [
+          "同一场馆",
+          "时间不冲突",
+          "满足已核验的业务条件"
+        ],
+        "evidenceReferences": [],
+        "unresolvedConditions": [],
+        "warnings": [
+          "一个账号一个名额",
+          "尚未预约",
+          "库存为快照"
+        ],
+        "generatedAt": "2026-11-07T14:04:34.870356"
+      },
+      "usage": {
+        "llmCalls": 2,
+        "completionTokens": 273,
+        "promptTokens": 2295,
+        "toolCalls": 2
+      },
+      "explanation": "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。",
+      "error": null
+    },
+    {
+      "version": "V2",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 3.203,
+      "phase": "RECOMMENDATION",
+      "candidateSessionIds": [
+        1,
+        2
+      ],
+      "plan": {
+        "planId": "308d5b4e-d7f1-4c7b-97a2-1615f546ee54",
+        "planVersion": 1,
+        "title": "文化活动计划",
+        "orderedSessionIds": [
+          1,
+          2
+        ],
+        "scheduleItems": [
+          {
+            "sessionId": 1,
+            "startAt": "2026-11-08T10:00:00",
+            "endAt": "2026-11-08T12:00:00"
+          },
+          {
+            "sessionId": 2,
+            "startAt": "2026-11-08T14:00:00",
+            "endAt": "2026-11-08T16:00:00"
+          }
+        ],
+        "recommendationReasons": [
+          "同一场馆",
+          "时间不冲突",
+          "满足已核验的业务条件"
+        ],
+        "evidenceReferences": [],
+        "unresolvedConditions": [
+          "偏好匹配证据不足",
+          "公开知识咨询证据不足"
+        ],
+        "warnings": [
+          "一个账号一个名额",
+          "尚未预约",
+          "库存为快照"
+        ],
+        "generatedAt": "2026-11-07T14:04:38.478895"
+      },
+      "usage": {
+        "llmCalls": 2,
+        "completionTokens": 368,
+        "promptTokens": 2269,
+        "toolCalls": 2
+      },
+      "explanation": "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。",
+      "error": null
+    }
+  ]
+}

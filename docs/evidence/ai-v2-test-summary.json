@@ -1,0 +1,289 @@
+{
+  "baselineCommit": "7d112761696fcaea8c2350aa0a4dd374cd0cf60d",
+  "baseline": {
+    "tests": 298,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 96,
+    "passed": 202
+  },
+  "current": {
+    "tests": 353,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 96,
+    "passed": 257
+  },
+  "suites": [
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.AiStreamControllerTest",
+      "time": "7.722",
+      "tests": "6",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ai.guide.GuideChallengeTest",
+      "time": "0.502",
+      "tests": "1",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "time": "3.631",
+      "tests": "9",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "time": "0.078",
+      "tests": "9",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "time": "0.179",
+      "tests": "9",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ai.guide.GuideRoutingTest",
+      "time": "6.796",
+      "tests": "2",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.AiBoundaryTest",
+      "time": "0.828",
+      "tests": "4",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.AiGuideGraphTest",
+      "time": "1.148",
+      "tests": "21",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.AiValidationTest",
+      "time": "0.222",
+      "tests": "2",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.CatalogLocalTest",
+      "time": "36.564",
+      "tests": "27",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ContainerBookingTest",
+      "time": "0.001",
+      "tests": "15",
+      "errors": "0",
+      "skipped": "15",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.GuideV2LocalTest",
+      "time": "39.21",
+      "tests": "25",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.InputValidationTest",
+      "time": "0.005",
+      "tests": "3",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.LocalBookingTest",
+      "time": "15.403",
+      "tests": "15",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.OptimizationContainerTest",
+      "time": "0.002",
+      "tests": "23",
+      "errors": "0",
+      "skipped": "23",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.OptimizationLocalTest",
+      "time": "25.889",
+      "tests": "23",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.OutboxRabbitLocalTest",
+      "time": "23.75",
+      "tests": "21",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ProposalContainerTest",
+      "time": "0.001",
+      "tests": "30",
+      "errors": "0",
+      "skipped": "30",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ProposalLocalTest",
+      "time": "36.142",
+      "tests": "30",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.PublisherIntegrationTest",
+      "time": "0.001",
+      "tests": "3",
+      "errors": "0",
+      "skipped": "3",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.RabbitConfirmTest",
+      "time": "0.208",
+      "tests": "3",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.RabbitEndToEndContainerTest",
+      "time": "0.001",
+      "tests": "18",
+      "errors": "0",
+      "skipped": "18",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.RabbitEndToEndLocalTest",
+      "time": "33.635",
+      "tests": "17",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.RabbitReliabilityLocalTest",
+      "time": "61.351",
+      "tests": "25",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.ManualAckTest",
+      "time": "8.394",
+      "tests": "5",
+      "errors": "0",
+      "skipped": "0",
+      "failures": "0"
+    },
+    {
+      "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd",
+      "version": "3.0.2",
+      "name": "cn.culturehub.WorkerRabbitTest",
+      "time": "0.001",
+      "tests": "7",
+      "errors": "0",
+      "skipped": "7",
+      "failures": "0"
+    }
+  ],
+  "protectedSourceCount": 30,
+  "protectedSourceUnchanged": true,
+  "modelEvidence": [
+    "ai-v2-live-existing-bookings.json",
+    "ai-v2-live-model.json",
+    "ai-v2-live-two-activity.json"
+  ],
+  "challengeCases": 9,
+  "realChromaVerified": false,
+  "dockerAvailable": false
+}

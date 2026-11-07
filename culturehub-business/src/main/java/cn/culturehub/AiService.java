@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AiService {
+  @org.springframework.beans.factory.annotation.Autowired(required=false)
+  cn.culturehub.ai.guide.GuideKnowledge guideKnowledge;
   final ObjectProvider<ChatModel> models;
   final ObjectProvider<VectorStore> vectors;
   final Store s;
@@ -261,6 +263,7 @@ public class AiService {
   }
 
   public Object reindex() throws Exception {
+    if(guideKnowledge!=null)return guideKnowledge.reindex();
     a.platformOnly();
     VectorStore v = vectors.getIfAvailable();
     if (v == null) throw new Problem("AI_UNAVAILABLE", "Embedding 或 Chroma 尚未配置", 503);

@@ -14,6 +14,11 @@ public class GuideQueryService {
   }
 
   public List<Map<String, Object>> search(AiGuideGraph.Preferences p, long user) {
+    return search(p, user, 20);
+  }
+
+  public List<Map<String, Object>> search(AiGuideGraph.Preferences p, long user, int limit) {
+    Problem.require(limit >= 1 && limit <= 120, "INVALID_TOOL_INPUT", "候选查询上限为120");
     LocalDateTime now = s.now();
     LocalDate from = p.fromDate() == null ? now.toLocalDate() : LocalDate.parse(p.fromDate());
     LocalDate to = p.toDate() == null ? from.plusDays(30) : LocalDate.parse(p.toDate());
@@ -23,7 +28,9 @@ public class GuideQueryService {
         new StringBuilder(
             "select x.id sessionId,a.id activityId,a.title,a.category,a.audience,a.description,v.id"
                 + " venueId,v.name venueName,v.address,x.start_at startAt,x.end_at"
-                + " endAt,x.registration_end_at registrationEndAt,x.capacity-x.occupied_count"
+                + " endAt,x.registration_start_at registrationStartAt,x.status"
+                + " sessionStatus,a.status activityStatus,v.status"
+                + " venueStatus,x.registration_end_at registrationEndAt,x.capacity-x.occupied_count"
                 + " remaining,exists(select 1 from participation w where w.session_id=x.id and"
                 + " w.status='WAITING') waitlistPriority,current_timestamp(6) asOf from"
                 + " activity_session x join activity a on a.id=x.activity_id join venue v on"
@@ -64,8 +71,28 @@ public class GuideQueryService {
       sql.append(" and v.name like ?");
       args.add("%" + p.venue() + "%");
     }
-    sql.append(" order by x.start_at,x.id limit 20");
-    return s.db.queryForList(sql.toString(), args.toArray()).stream().map(this::card).toList();
+    sql.append(" order by x.start_at,x.id limit " + limit);
+    return (limit == 20 ? s.db : boundedReader())
+        .queryForList(sql.toString(), args.toArray()).stream().map(this::card).toList();
+  }
+
+  public List<Map<String, Object>> activeBookings(long user) {
+    var rows =
+        boundedReader()
+            .queryForList(
+                "select p.id,p.session_id sessionId,p.status,x.start_at startAt,x.end_at endAt from"
+                    + " participation p join activity_session x on x.id=p.session_id where"
+                    + " p.user_id=? and p.status in ('OFFERED','RESERVED','CHECKED_IN') and"
+                    + " x.end_at>current_timestamp(6) order by x.start_at,p.id limit 201",
+                user);
+    Problem.require(rows.size() <= 200, "AI_TOOL_LIMIT", "已有参与记录超出本轮规划读取上限");
+    return rows;
+  }
+
+  private org.springframework.jdbc.core.JdbcTemplate boundedReader() {
+    var reader = new org.springframework.jdbc.core.JdbcTemplate(s.db.getDataSource());
+    reader.setQueryTimeout(5);
+    return reader;
   }
 
   public Map<String, Object> current(long session) {

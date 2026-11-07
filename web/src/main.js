@@ -698,13 +698,13 @@ export const App = {
           try {
             await streamGuide("/api/v1/ai/conversations/"+activeConversation+"/messages/stream",token.value,text,controller.signal,(event,value)=>{
               if(owner!==guideOwner||activeConversation!==conversation.value)return;
-              if(event==="status")guideProgress.value=({CONNECTED:"已连接，正在理解需求…",IntentExtract:"正在理解需求…",InformationRetrieve:"正在查询活动与公开知识…",ProposalGenerate:"正在整理推荐…",ProposalVerify:"正在核验真实场次…",DecisionGate:"正在生成活动说明…",EXPLANATION_FALLBACK:"说明连接中断，正在展示已核验的真实活动…"})[value.node]||"正在处理…";
+              if(event==="status")guideProgress.value=({"CONNECTED": "正在连接", "IntentExtract": "正在理解需求", "InformationNeedPlan": "正在拆分信息需求", "ToolPlan": "正在规划查询", "ToolExecute": "正在查询真实场次与已有预约", "ToolCheck": "正在检查业务结果", "RetrievalPlan": "正在制定知识检索计划", "Retrieve": "正在检索场馆知识", "Rerank": "正在重排知识片段", "EvidenceGrade": "正在核对知识证据", "InformationGate": "正在检查信息充分性", "CandidateOptimize": "正在计算活动组合", "ProposalGenerate": "正在生成规划", "ProposalVerifier": "正在验证规划", "RepairRouter": "正在定向修复", "DecisionGate": "方案已核验，等待选择", "InformationRetrieve": "正在查询活动", "ProposalVerify": "正在核验场次"})[value.node]||"正在处理";
               if(event==="delta")live.text+=value.text||"";
               if(event==="proposal")live.cards=value.candidates||[];
               if(event==="error")throw Object.assign(new Error(value.message||"导览暂不可用"),{code:value.code});
               if(event==="done"){
                 completed=true;live.text=value.explanation;live.type=value.type;
-                live.cards=value.candidates||[];live.current=true;live.sources=value.sources;live.knowledgeNotice=value.knowledgeNotice;
+                live.cards=value.candidates||[];live.current=true;live.sources=value.sources;live.knowledgeNotice=value.knowledgeNotice;live.plan=value.plan;live.evidence=value.evidence||[];
               }
             });
             if(owner!==guideOwner||activeConversation!==conversation.value)return;
@@ -768,6 +768,20 @@ export const App = {
     async function rejectGuideProposal() {
       const owner = guideOwner;
       await run(async () => {const value=await api("/ai/booking-proposals/" + guideProposal.value.id + "/reject", "POST", {});if(owner===guideOwner)applyGuideProposal(value);});
+    }
+    async function restoreGuidePlan() {
+      await run(async()=>{
+        const owner=guideOwner;
+        const recent=await api('/ai/conversations');
+        if(owner!==guideOwner)return;
+        if(!recent.length){toast.value='没有可恢复的有效规划';return;}
+        const id=recent[0].id;
+        const saved=await api('/ai/conversations/'+id+'/saved-plan');
+        if(owner!==guideOwner)return;
+        stopGuide();conversation.value=id;
+        messages.value=[{role:'文化助手',text:saved.explanation,plan:saved.plan,cards:saved.candidates||[],current:true}];
+        guideProposal.value=saved.bookingProposal||null;
+      });
     }
     async function newGuideConversation() {
       const owner = guideOwner;
@@ -1068,7 +1082,7 @@ export const App = {
       saveReview,
       check,
       chat,
-      stopGuide,guideStreaming,guideProgress,
+      stopGuide,guideStreaming,guideProgress,restoreGuidePlan,
       plan,
       report,
       stats,

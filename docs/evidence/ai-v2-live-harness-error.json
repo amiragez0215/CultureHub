@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-11-07T05:34:31.232780+00:00",
+  "realModel": false,
+  "provider": "existing external configuration",
+  "readOnlyNoBookingConfirmed": true,
+  "tokenCostMeasured": false,
+  "subjectiveQualityScored": false,
+  "results": [
+    {
+      "version": "V1",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 0.063,
+      "error": "TypeError"
+    },
+    {
+      "version": "V1",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 0.016,
+      "error": "TypeError"
+    },
+    {
+      "version": "V2",
+      "question": "请查找明天可以报名的文化活动，时间和类别都可以。",
+      "elapsedSeconds": 0.031,
+      "error": "TypeError"
+    },
+    {
+      "version": "V2",
+      "question": "请在明天安排两个同一场馆且时间不冲突的活动，必须两个，没有合适组合请明确说明。",
+      "elapsedSeconds": 0.015,
+      "error": "TypeError"
+    }
+  ],
+  "failureReason": "Test harness used GET rather than POST to create conversation; failed before any model call"
+}

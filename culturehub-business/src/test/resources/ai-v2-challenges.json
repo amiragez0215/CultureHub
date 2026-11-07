@@ -1,0 +1,11 @@
+[
+ {"id":"single","count":1,"preferred":false,"windows":[[10,11]],"expectedCount":1},
+ {"id":"pair","count":2,"preferred":false,"windows":[[10,11],[12,13]],"expectedCount":2},
+ {"id":"overlap","count":2,"preferred":false,"windows":[[10,12],[11,13]],"expectedCount":0},
+ {"id":"gap","count":2,"preferred":false,"windows":[[10,11],[11,12]],"expectedCount":0},
+ {"id":"hard-two","count":2,"preferred":false,"windows":[[10,11]],"expectedCount":0},
+ {"id":"soft-two","count":2,"preferred":true,"windows":[[10,11]],"expectedCount":1},
+ {"id":"three","count":3,"preferred":false,"windows":[[10,11],[12,13],[14,15]],"expectedCount":0},
+ {"id":"existing-conflict","count":1,"preferred":false,"windows":[[10,11]],"existingConflict":true,"expectedCount":0},
+ {"id":"empty","count":1,"preferred":false,"windows":[],"expectedCount":0}
+]

@@ -24,6 +24,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AiGuideGraph {
+  @org.springframework.beans.factory.annotation.Autowired(required = false)
+  cn.culturehub.ai.guide.GuideAgentV2 agentV2;
+
+  @org.springframework.beans.factory.annotation.Value("${culture.ai.guide-v2.enabled:false}")
+  boolean v2Enabled;
+
   public record Preferences(
       String fromDate,
       String toDate,
@@ -34,7 +40,8 @@ public class AiGuideGraph {
       String keyword,
       String venue,
       Integer childAge,
-      Integer minimumRemaining) {
+      Integer minimumRemaining)
+      implements java.io.Serializable {
     public Preferences(
         String fromDate,
         String toDate,
@@ -85,6 +92,10 @@ public class AiGuideGraph {
   final Map<String, TurnEvents> observers = new ConcurrentHashMap<>();
 
   public void checkConversation(String id) {
+    if (v2Enabled && agentV2 != null) {
+      agentV2.check(id);
+      return;
+    }
     owned(id);
   }
 
@@ -151,6 +162,7 @@ public class AiGuideGraph {
   }
 
   public String conversation() {
+    if (v2Enabled && agentV2 != null) return agentV2.conversation();
     long owner = access.user();
     synchronized (conversations) {
       conversations
@@ -189,6 +201,7 @@ public class AiGuideGraph {
   }
 
   public Map<String, Object> message(String id, String message, TurnEvents observer) {
+    if (v2Enabled && agentV2 != null) return agentV2.message(id, message, observer);
     if (message == null || message.isBlank() || message.length() > 2000)
       throw new Problem("INVALID_QUESTION", "问题长度需为 1—2000 字", 400);
     var c = owned(id);
@@ -296,6 +309,7 @@ public class AiGuideGraph {
   }
 
   public Map<String, Object> select(String conversation, String candidate, String mode) {
+    if (v2Enabled && agentV2 != null) return agentV2.select(conversation, candidate, mode);
     var c = owned(conversation);
     synchronized (c) {
       Problem.require(!c.busy, "CONVERSATION_BUSY", "请等待当前回复");
@@ -316,6 +330,7 @@ public class AiGuideGraph {
   }
 
   public Map<String, Object> confirm(String id) {
+    if (v2Enabled && agentV2 != null) return agentV2.confirm(id);
     String conversation = proposals.conversation(id);
     var c = conversations.get(conversation);
     boolean live =
