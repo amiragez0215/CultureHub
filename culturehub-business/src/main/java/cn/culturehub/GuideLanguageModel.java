@@ -41,7 +41,9 @@ public class GuideLanguageModel implements GuideLanguage {
           state.identity.turnId(),
           state.currentPlanVersion,
           state.identity.currentTime(),
-          state.activityCombinations,
+          state.activityCombinations.isEmpty()
+              ? java.util.List.of()
+              : java.util.List.of(state.activityCombinations.get(state.evidenceCandidateIndex)),
           state.evidenceGrade,
           state.unresolvedKnowledge
         },

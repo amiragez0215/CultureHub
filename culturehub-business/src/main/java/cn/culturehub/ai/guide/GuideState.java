@@ -174,6 +174,16 @@ public final class GuideState {
       String failureReason)
       implements java.io.Serializable {}
 
+  public record EvidenceBinding(
+      Long sessionId,
+      Long venueId,
+      Long activityId,
+      String questionId,
+      boolean required,
+      GradeStatus status,
+      List<String> evidenceIds)
+      implements java.io.Serializable {}
+
   public record Combination(List<Session> sessions, double score, List<String> reasons)
       implements java.io.Serializable {}
 
@@ -221,6 +231,8 @@ public final class GuideState {
     public List<Evidence> retrievedDocuments = new ArrayList<>(),
         rerankedDocuments = new ArrayList<>();
     public List<Grade> evidenceGrade = new ArrayList<>();
+    public List<EvidenceBinding> evidenceBindings = new ArrayList<>();
+    public int evidenceCandidateIndex;
     public List<String> supportedClaims = new ArrayList<>(),
         unresolvedKnowledge = new ArrayList<>();
     public List<Session> rankedCandidates = new ArrayList<>();

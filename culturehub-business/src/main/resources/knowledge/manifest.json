@@ -3,63 +3,105 @@
     "file": "venue-rules.md",
     "scope": "GLOBAL",
     "knowledgeType": "BACKGROUND",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "global-participation",
+    "source": "CultureHub 模拟知识 / venue-rules.md",
+    "visibility": "PUBLIC",
+    "active": true
   },
   {
     "file": "古城民俗体验馆.md",
     "scope": "VENUE",
     "venueName": "古城民俗体验馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "folklore-venue",
+    "source": "CultureHub 模拟知识 / 古城民俗体验馆.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "城市科学文化馆.md",
     "scope": "VENUE",
     "venueName": "城市科学文化馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "science-venue",
+    "source": "CultureHub 模拟知识 / 城市科学文化馆.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "市文化博物馆.md",
     "scope": "VENUE",
     "venueName": "市文化博物馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "city-museum",
+    "source": "CultureHub 模拟知识 / 市文化博物馆.md",
+    "visibility": "PUBLIC",
+    "active": true
   },
   {
     "file": "江南非遗传习馆.md",
     "scope": "VENUE",
     "venueName": "江南非遗传习馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "opera-venue",
+    "source": "CultureHub 模拟知识 / 江南非遗传习馆.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "河畔美术馆.md",
     "scope": "VENUE",
     "venueName": "河畔美术馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "riverside-art",
+    "source": "CultureHub 模拟知识 / 河畔美术馆.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "湖畔公共图书馆.md",
     "scope": "VENUE",
     "venueName": "湖畔公共图书馆",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "lakeside-library",
+    "source": "CultureHub 模拟知识 / 湖畔公共图书馆.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "社区文化艺术中心.md",
     "scope": "VENUE",
     "venueName": "社区文化艺术中心",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "community-arts",
+    "source": "CultureHub 模拟知识 / 社区文化艺术中心.md",
+    "visibility": "PUBLIC",
+    "active": true
   },
   {
     "file": "青少年阅读中心.md",
     "scope": "VENUE",
     "venueName": "青少年阅读中心",
     "knowledgeType": "VENUE_RULE",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "youth-reading",
+    "source": "CultureHub 模拟知识 / 青少年阅读中心.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
   },
   {
     "file": "activity-city-memory.md",
@@ -67,6 +109,104 @@
     "venueName": "市文化博物馆",
     "activityTitle": "博物馆里的城市记忆",
     "knowledgeType": "ACTIVITY_BACKGROUND",
-    "version": "2.0-demo"
+    "version": "2.1-demo",
+    "documentId": "city-memory",
+    "source": "CultureHub 模拟知识 / activity-city-memory.md",
+    "visibility": "PUBLIC",
+    "active": true,
+    "optionalDemoCatalog": true
+  },
+  {
+    "file": "museum-child-policy.md",
+    "documentId": "museum-child-policy",
+    "source": "CultureHub 模拟知识 / museum-child-policy.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true
+  },
+  {
+    "file": "community-child-policy.md",
+    "documentId": "community-child-policy",
+    "source": "CultureHub 模拟知识 / community-child-policy.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "社区文化艺术中心",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true
+  },
+  {
+    "file": "museum-child-outreach.md",
+    "documentId": "museum-child-outreach",
+    "source": "CultureHub 模拟知识 / museum-child-outreach.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true
+  },
+  {
+    "file": "museum-child-expired.md",
+    "documentId": "museum-child-expired",
+    "source": "CultureHub 模拟知识 / museum-child-expired.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "expiresOn": "2020-01-01"
+  },
+  {
+    "file": "museum-guardian-policy.md",
+    "documentId": "museum-guardian-policy",
+    "source": "CultureHub 模拟知识 / museum-guardian-policy.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "GUARDIAN_RULE",
+    "visibility": "PUBLIC",
+    "active": true
+  },
+  {
+    "file": "museum-sunday-opening.md",
+    "documentId": "museum-sunday-opening",
+    "source": "CultureHub 模拟知识 / museum-sunday-opening.md",
+    "version": "2.1-demo",
+    "scope": "VENUE",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "OPENING_HOURS",
+    "visibility": "PUBLIC",
+    "active": true
+  },
+  {
+    "file": "paper-cutting-background.md",
+    "documentId": "paper-cutting-background",
+    "source": "CultureHub 模拟知识 / paper-cutting-background.md",
+    "version": "2.1-demo",
+    "scope": "ACTIVITY",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "ACTIVITY_BACKGROUND",
+    "visibility": "PUBLIC",
+    "active": true,
+    "activityTitle": "非遗剪纸体验",
+    "optionalDemoCatalog": true
+  },
+  {
+    "file": "paper-cutting-age.md",
+    "documentId": "paper-cutting-age",
+    "source": "CultureHub 模拟知识 / paper-cutting-age.md",
+    "version": "2.1-demo",
+    "scope": "ACTIVITY",
+    "venueName": "市文化博物馆",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "activityTitle": "非遗剪纸体验",
+    "optionalDemoCatalog": true
   }
 ]

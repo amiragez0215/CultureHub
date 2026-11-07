@@ -4,14 +4,14 @@ import static cn.culturehub.ai.guide.GuideState.*;
 
 import cn.culturehub.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.util.*;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.*;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -20,71 +20,49 @@ import reactor.core.scheduler.Schedulers;
 @Service
 public class GuideKnowledge {
   final ObjectProvider<VectorStore> vectors;
-  final Store store;
   final Access access;
-  volatile Map<String, String> trustedChunks;
-  Map<String, Map<String, Object>> trustedMetadata;
+  final GuideKnowledgeIndex index;
+  final ObjectMapper json;
+  final StringRedisTemplate redis;
+  final String indexKey;
 
-  boolean trustedChunk(Document document) {
+  GuideKnowledgeIndex.Snapshot activeSnapshot() {
+    if (redis == null) return null;
+    String value = redis.opsForValue().get(indexKey);
+    if (value == null) return null;
     try {
-      if (trustedChunks == null)
-        synchronized (this) {
-          if (trustedChunks == null) {
-            var registry = new HashMap<String, String>();
-            var metadata = new HashMap<String, Map<String, Object>>();
-            var resources = new PathMatchingResourcePatternResolver();
-            var manifest =
-                new ObjectMapper()
-                    .readTree(
-                        resources
-                            .getResource("classpath:knowledge/manifest.json")
-                            .getInputStream());
-            for (var entry : manifest) {
-              String file = entry.get("file").asText(), version = entry.get("version").asText();
-              Map<String, Object> attributes;
-              try {
-                attributes = scopeMetadata(entry);
-              } catch (Problem missing) {
-                continue;
-              }
-              metadata.put(file + ":" + version, attributes);
-              String id =
-                  UUID.nameUUIDFromBytes((file + ":" + version).getBytes(StandardCharsets.UTF_8))
-                      .toString();
-              int index = 0;
-              String text =
-                  resources
-                      .getResource("classpath:knowledge/" + file)
-                      .getContentAsString(StandardCharsets.UTF_8);
-              for (var chunk : new TokenTextSplitter().apply(List.of(new Document(text))))
-                registry.put(file + ":" + version + ":" + id + ":" + index++, chunk.getText());
-            }
-            trustedMetadata = Map.copyOf(metadata);
-            trustedChunks = Map.copyOf(registry);
-          }
-        }
-      var m = document.getMetadata();
-      String key = m.get("source") + ":" + m.get("version") + ":" + m.get("chunkId");
-      var expected = trustedMetadata.get(m.get("source") + ":" + m.get("version"));
-      if (expected == null
-          || expected.entrySet().stream()
-              .anyMatch(
-                  e ->
-                      !Objects.equals(e.getValue(), m.get(e.getKey()))
-                          && !(e.getValue() instanceof Number a
-                              && m.get(e.getKey()) instanceof Number b
-                              && a.longValue() == b.longValue()))) return false;
-      return Objects.equals(trustedChunks.get(key), document.getText())
-          && m.get("chunkId").toString().startsWith(m.get("documentId") + ":");
-    } catch (Exception failure) {
-      return false;
+      var snapshot = json.readValue(value, GuideKnowledgeIndex.Snapshot.class);
+      if (!snapshot.generation().matches("[0-9a-f-]{36}"))
+        throw new IllegalArgumentException("Invalid generation");
+      return snapshot;
+    } catch (Exception invalid) {
+      throw new Problem("RAG_INDEX_INVALID", "知识索引登记不可读取", 503);
     }
   }
 
+  boolean trustedChunk(Document document) {
+    var snapshot = activeSnapshot();
+    return snapshot != null && snapshot.trusts(document);
+  }
+
   public GuideKnowledge(ObjectProvider<VectorStore> vectors, Store store, Access access) {
+    this(vectors, store, access, new ObjectMapper(), null, "culturehub");
+  }
+
+  @Autowired
+  public GuideKnowledge(
+      ObjectProvider<VectorStore> vectors,
+      Store store,
+      Access access,
+      ObjectMapper json,
+      StringRedisTemplate redis,
+      @Value("${spring.ai.vectorstore.chroma.collection-name:culturehub}") String collection) {
     this.vectors = vectors;
-    this.store = store;
     this.access = access;
+    this.json = json;
+    this.redis = redis;
+    this.index = new GuideKnowledgeIndex(store, json);
+    this.indexKey = "culturehub:guide:knowledge-index:" + collection;
   }
 
   public List<RetrievalQuery> plan(Turn s) {
@@ -109,11 +87,20 @@ public class GuideKnowledge {
   public List<Evidence> retrieve(Turn state) {
     VectorStore vector = vectors.getIfAvailable();
     if (vector == null) throw new Problem("RAG_UNAVAILABLE", "知识库未配置", 503);
+    var snapshot = activeSnapshot();
+    if (snapshot == null) return List.of();
     var result = new LinkedHashMap<String, Evidence>();
     int length = 0;
     for (var query : state.retrievalPlan) {
       var n = query.need();
-      String filter = "visibility == 'PUBLIC' && schemaVersion == 2 && active == true";
+      String filter =
+          "guideVisibility == 'PUBLIC' && schemaVersion == "
+              + GuideKnowledgeIndex.SCHEMA
+              + " && active == true && indexNamespace == '"
+              + GuideKnowledgeIndex.NAMESPACE
+              + "' && indexGeneration == '"
+              + snapshot.generation()
+              + "'";
       filter +=
           n.activityId() != null
               ? " && scope == 'ACTIVITY' && activityId == "
@@ -138,7 +125,8 @@ public class GuideKnowledge {
               .block(Duration.ofSeconds(8));
       if (docs == null) continue;
       for (var doc : docs) {
-        Evidence evidence = validate(doc, n, state.identity.currentTime().toLocalDate());
+        if (!snapshot.trusts(doc)) continue;
+        Evidence evidence = validateScoped(doc, n, state.identity.currentTime().toLocalDate());
         if (evidence == null
             || result.containsKey(evidence.chunkId())
             || length + evidence.text().length() > 12000) continue;
@@ -150,11 +138,16 @@ public class GuideKnowledge {
   }
 
   public Evidence validate(Document d, RetrievalNeed n, LocalDate now) {
+    return trustedChunk(d) ? validateScoped(d, n, now) : null;
+  }
+
+  private Evidence validateScoped(Document d, RetrievalNeed n, LocalDate now) {
     var m = d.getMetadata();
-    if (!(m.get("schemaVersion") instanceof Number) || !trustedChunk(d)) return null;
-    if (!"PUBLIC".equals(m.get("visibility"))
+    if (!(m.get("schemaVersion") instanceof Number)) return null;
+    if (!"PUBLIC".equals(m.get("guideVisibility"))
         || !Boolean.TRUE.equals(m.get("active"))
-        || !Objects.equals(((Number) m.getOrDefault("schemaVersion", 0)).intValue(), 2))
+        || !Objects.equals(
+            ((Number) m.getOrDefault("schemaVersion", 0)).intValue(), GuideKnowledgeIndex.SCHEMA))
       return null;
     for (String key :
         List.of("documentId", "chunkId", "source", "version", "scope", "knowledgeType"))
@@ -293,78 +286,27 @@ public class GuideKnowledge {
     return results;
   }
 
-  Map<String, Object> scopeMetadata(com.fasterxml.jackson.databind.JsonNode entry) {
-    String scope = entry.get("scope").asText();
-    var tags = new LinkedHashMap<String, Object>();
-    tags.put("scope", scope);
-    tags.put("knowledgeType", entry.get("knowledgeType").asText());
-    tags.put("active", entry.path("active").asBoolean(true));
-    if (entry.hasNonNull("expiresOn"))
-      tags.put("expiresOn", LocalDate.parse(entry.get("expiresOn").asText()).toString());
-    if (scope.equals("VENUE")) {
-      var venues =
-          store.db.queryForList(
-              "select id from venue where name=? and status='OPEN'",
-              entry.get("venueName").asText());
-      Problem.require(venues.size() == 1, "KNOWLEDGE_SCOPE_MISSING", "知识场馆尚未初始化或名称不唯一");
-      tags.put("venueId", Store.id(venues.get(0), "id"));
-    } else if (scope.equals("ACTIVITY")) {
-      var rows =
-          store.db.queryForList(
-              "select a.id,a.venue_id from activity a join venue v on v.id=a.venue_id where"
-                  + " a.title=? and v.name=? and a.status='PUBLISHED' and v.status='OPEN'",
-              entry.get("activityTitle").asText(),
-              entry.get("venueName").asText());
-      Problem.require(rows.size() == 1, "KNOWLEDGE_SCOPE_MISSING", "知识活动尚未初始化或名称不唯一");
-      tags.put("activityId", Store.id(rows.get(0), "id"));
-      tags.put("venueId", Store.id(rows.get(0), "venue_id"));
-    } else Problem.require(scope.equals("GLOBAL"), "KNOWLEDGE_INVALID", "知识作用域无效");
-    return tags;
-  }
-
   public Object reindex() throws Exception {
     access.platformOnly();
     var vector = vectors.getIfAvailable();
-    if (vector == null) throw new Problem("RAG_UNAVAILABLE", "Embedding/Chroma 未配置", 503);
-    var docs = new ArrayList<Document>();
-    var resources = new PathMatchingResourcePatternResolver();
-    var metadata =
-        new ObjectMapper()
-            .readTree(resources.getResource("classpath:knowledge/manifest.json").getInputStream());
-    for (var entry : metadata) {
-      String file = entry.get("file").asText();
-      Problem.require(file.matches("[^/\\\\]+\\.md"), "KNOWLEDGE_INVALID", "知识文件名无效");
-      var attrs = new LinkedHashMap<String, Object>(scopeMetadata(entry));
-      attrs.put("visibility", "PUBLIC");
-      attrs.put("schemaVersion", 2);
-      attrs.put("source", file);
-      attrs.put("version", entry.get("version").asText());
-      String documentId =
-          UUID.nameUUIDFromBytes(
-                  (file + ":" + attrs.get("version")).getBytes(StandardCharsets.UTF_8))
-              .toString();
-      attrs.put("documentId", documentId);
-      String text =
-          resources
-              .getResource("classpath:knowledge/" + file)
-              .getContentAsString(StandardCharsets.UTF_8);
-      int index = 0;
-      for (var chunk : new TokenTextSplitter().apply(List.of(new Document(text, attrs)))) {
-        var tags = new LinkedHashMap<>(attrs);
-        String id = documentId + ":" + index++;
-        tags.put("chunkId", id);
-        docs.add(new Document(id, chunk.getText(), tags));
-      }
+    if (vector == null || redis == null)
+      throw new Problem("RAG_UNAVAILABLE", "Embedding、Chroma 或知识索引登记未配置", 503);
+    var staged = index.stage();
+    // A unique generation stays invisible until every Chroma write succeeds.
+    // Failure or timeout cannot publish it, even if a remote upsert finishes later.
+    String registry = json.writeValueAsString(staged.snapshot());
+    try {
+      Mono.fromRunnable(() -> vector.add(staged.documents()))
+          .subscribeOn(Schedulers.boundedElastic())
+          .block(Duration.ofSeconds(60));
+    } catch (RuntimeException unavailable) {
+      throw new Problem("RAG_INDEX_WRITE_FAILED", "知识索引写入失败，仍使用上一已发布版本", 503);
     }
-    // Validate the entire manifest before changing the index. Chroma itself has no cross-call
-    // transaction.
-    Mono.fromRunnable(
-            () -> {
-              vector.delete("visibility == 'PUBLIC'");
-              vector.add(docs);
-            })
-        .subscribeOn(Schedulers.boundedElastic())
-        .block(Duration.ofSeconds(60));
-    return Map.of("chunks", docs.size(), "schemaVersion", 2);
+    redis.opsForValue().set(indexKey, registry);
+    return Map.of(
+        "chunks", staged.documents().size(),
+        "schemaVersion", GuideKnowledgeIndex.SCHEMA,
+        "generation", staged.snapshot().generation(),
+        "skippedDemoCatalog", staged.skipped());
   }
 }

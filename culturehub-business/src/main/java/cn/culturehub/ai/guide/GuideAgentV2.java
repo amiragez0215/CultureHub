@@ -99,6 +99,7 @@ public class GuideAgentV2 {
           "sources",
           state.rerankedDocuments.stream().map(e -> e.source() + "#" + e.chunkId()).toList());
       result.put("evidence", state.evidenceGrade);
+      result.put("evidenceBindings", state.evidenceBindings);
       result.put("knowledgeNotice", String.join("；", state.unresolvedKnowledge));
       result.put(
           "preferences",

@@ -98,7 +98,9 @@ public class GuideGraphV2 {
                   ? "repair"
                   : s.toolCheckResult.status() == ResultStatus.EMPTY
                       ? "stop"
-                      : s.retrievalNeeds.isEmpty() ? "gate" : "rag",
+                      : s.requirements.intentType() != IntentType.VENUE_QA
+                          ? "optimize"
+                          : s.retrievalNeeds.isEmpty() ? "gate" : "rag",
           Map.of(
               "repair",
               "RepairRouter",
@@ -107,7 +109,17 @@ public class GuideGraphV2 {
               "gate",
               "InformationGate",
               "rag",
-              "RetrievalPlan"));
+              "RetrievalPlan",
+              "optimize",
+              "CandidateOptimize"));
+      route(
+          g,
+          "CandidateOptimize",
+          s ->
+              s.activityCombinations.isEmpty()
+                  ? "repair"
+                  : s.retrievalNeeds.isEmpty() ? "gate" : "rag",
+          Map.of("repair", "RepairRouter", "gate", "InformationGate", "rag", "RetrievalPlan"));
       g.addEdge("RetrievalPlan", "Retrieve");
       g.addEdge("Retrieve", "Rerank");
       g.addEdge("Rerank", "EvidenceGrade");
@@ -118,25 +130,8 @@ public class GuideGraphV2 {
           s ->
               s.failureType != Failure.NONE
                   ? "repair"
-                  : s.phase.equals("KNOWLEDGE_BLOCKED")
-                      ? "stop"
-                      : s.requirements.intentType() == IntentType.VENUE_QA
-                          ? "generate"
-                          : "optimize",
-          Map.of(
-              "repair",
-              "RepairRouter",
-              "stop",
-              END,
-              "generate",
-              "ProposalGenerate",
-              "optimize",
-              "CandidateOptimize"));
-      route(
-          g,
-          "CandidateOptimize",
-          s -> s.activityCombinations.isEmpty() ? "repair" : "generate",
-          Map.of("repair", "RepairRouter", "generate", "ProposalGenerate"));
+                  : s.phase.equals("KNOWLEDGE_BLOCKED") ? "stop" : "generate",
+          Map.of("repair", "RepairRouter", "stop", END, "generate", "ProposalGenerate"));
       route(
           g,
           "ProposalGenerate",
@@ -273,40 +268,8 @@ public class GuideGraphV2 {
           s.repairTarget =
               s.failureType == Failure.TOOL_EXECUTION_FAILED ? "ToolExecute" : "ToolPlan";
           if (s.toolCheckResult.status() == ResultStatus.EMPTY) s.phase = "NO_RESULTS";
-          if (s.failureType == Failure.NONE) {
-            boolean qa = s.requirements.intentType() == IntentType.VENUE_QA;
-            boolean age = s.requirements.hardConstraints().childAge() != null;
-            var ids = new TreeSet<Long>();
-            s.candidateSessions.forEach(c -> ids.add(c.venueId()));
-            s.toolResults.forEach(r -> r.venues().forEach(v -> ids.add(v.venueId())));
-            var needs = new ArrayList<RetrievalNeed>();
-            if (qa || age)
-              for (long id : ids.stream().limit(6).toList())
-                needs.add(
-                    new RetrievalNeed(
-                        "rules:" + id,
-                        s.identity.latestUserMessage(),
-                        id,
-                        null,
-                        age ? "AGE_RULE" : "VENUE_RULE",
-                        qa
-                            || s.identity.latestUserMessage().contains("必须")
-                            || s.identity.latestUserMessage().contains("确认")));
-            s.retrievalNeeds = needs;
-            if (!qa && s.identity.latestUserMessage().matches("(?s).*(背景|历史|介绍).*")) {
-              var seen = new HashSet<Long>();
-              for (var candidate : s.candidateSessions)
-                if (needs.size() < 6 && seen.add(candidate.activityId()))
-                  needs.add(
-                      new RetrievalNeed(
-                          "activity:" + candidate.activityId(),
-                          "活动背景：" + candidate.title(),
-                          candidate.venueId(),
-                          candidate.activityId(),
-                          "ACTIVITY_BACKGROUND",
-                          false));
-            }
-          }
+          if (s.failureType == Failure.NONE && s.requirements.intentType() == IntentType.VENUE_QA)
+            GuideEvidenceScope.reset(s);
         }
         case "RetrievalPlan" -> {
           s.retrievalPlan = rag.plan(s);
@@ -346,21 +309,20 @@ public class GuideGraphV2 {
         case "InformationGate" -> {
           s.failureType = Failure.NONE;
           s.phase = "INFORMATION_READY";
-          boolean blocked =
-              s.retrievalNeeds.stream()
-                  .anyMatch(
-                      n ->
-                          n.required()
-                              && s.evidenceGrade.stream()
-                                  .noneMatch(
-                                      g ->
-                                          g.questionId().equals(n.questionId())
-                                              && g.status() == GradeStatus.SUPPORTED));
-          if (blocked) {
+          s.evidenceBindings = GuideEvidenceScope.bind(s);
+          var blocked =
+              s.evidenceBindings.stream()
+                  .filter(
+                      binding -> binding.required() && binding.status() != GradeStatus.SUPPORTED)
+                  .toList();
+          if (!blocked.isEmpty()) {
             s.phase = "KNOWLEDGE_BLOCKED";
-            if (s.evidenceGrade.stream().noneMatch(g -> g.status() == GradeStatus.UNAVAILABLE)
+            if (blocked.stream().noneMatch(b -> b.status() == GradeStatus.UNAVAILABLE)
                 && s.repairCounters.getOrDefault("RetrievalPlan", 0) < 1) {
-              s.failureType = Failure.RETRIEVAL_INSUFFICIENT;
+              s.failureType =
+                  blocked.stream().anyMatch(b -> b.status() == GradeStatus.CONFLICTING)
+                      ? Failure.EVIDENCE_CONFLICT
+                      : Failure.RETRIEVAL_INSUFFICIENT;
               s.repairTarget = "RetrievalPlan";
             }
           }
@@ -368,6 +330,8 @@ public class GuideGraphV2 {
         case "CandidateOptimize" -> {
           s.failureType = Failure.NONE;
           s.activityCombinations = planner.optimize(s);
+          s.evidenceCandidateIndex = 0;
+          GuideEvidenceScope.reset(s);
           if (s.activityCombinations.isEmpty()) {
             s.failureType = Failure.NO_VALID_COMBINATION;
             s.repairTarget = "CandidateOptimize";
@@ -393,6 +357,7 @@ public class GuideGraphV2 {
         }
         case "RepairRouter" -> {
           s.repairTarget = planner.repair(s);
+          if ("RetrievalPlan".equals(s.repairTarget)) GuideEvidenceScope.advance(s);
         }
         case "DecisionGate" -> s.phase = "VERIFIED";
         default -> throw new IllegalArgumentException("Unknown node");

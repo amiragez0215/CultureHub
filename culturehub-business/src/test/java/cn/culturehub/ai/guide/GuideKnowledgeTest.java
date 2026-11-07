@@ -53,12 +53,12 @@ class GuideKnowledgeTest {
             "AGE_RULE",
             "version",
             "2",
-            "visibility",
+            "guideVisibility",
             "PUBLIC",
             "active",
             true,
             "schemaVersion",
-            2,
+            GuideKnowledgeIndex.SCHEMA,
             "venueId",
             1L));
   }

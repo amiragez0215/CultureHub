@@ -179,13 +179,10 @@ public class GuidePlanner {
               true));
     if (s.requirements.intentType() != IntentType.VENUE_QA) {
       boolean knownCombination =
-          s.activityCombinations.stream()
-              .anyMatch(
-                  c ->
-                      c.sessions().stream()
-                          .map(Session::sessionId)
-                          .toList()
-                          .equals(p.orderedSessionIds()));
+          GuideEvidenceScope.selected(s).stream()
+              .map(Session::sessionId)
+              .toList()
+              .equals(p.orderedSessionIds());
       if (!knownCombination)
         errors.add(
             new Violation(
@@ -269,10 +266,20 @@ public class GuidePlanner {
                   true));
       }
     }
+    var bindings = GuideEvidenceScope.bind(s);
     Set<String> allowed = new HashSet<>();
-    s.evidenceGrade.stream()
-        .filter(g -> g.status() == GradeStatus.SUPPORTED)
-        .forEach(g -> allowed.addAll(g.evidenceIds()));
+    bindings.stream()
+        .filter(b -> b.status() == GradeStatus.SUPPORTED)
+        .forEach(b -> allowed.addAll(b.evidenceIds()));
+    if (bindings.stream().anyMatch(b -> b.required() && b.status() != GradeStatus.SUPPORTED))
+      errors.add(
+          new Violation(
+              Failure.RETRIEVAL_INSUFFICIENT,
+              "evidenceBindings",
+              p.orderedSessionIds(),
+              "必要规则没有对应场次的有效证据",
+              "RetrievalPlan",
+              true));
     if (!allowed.containsAll(p.evidenceReferences()))
       errors.add(
           new Violation(
