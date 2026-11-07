@@ -1,0 +1,208 @@
+{
+  "fixture": "identical synthetic Java inputs, no LLM or network",
+  "firstCommit": "b5b45681e624bb642397d21e5677b5929ac29681",
+  "first": {
+    "tools:search": [
+      "SEARCH_SESSIONS",
+      "MY_ACTIVE_BOOKINGS"
+    ],
+    "tools:detail": [
+      "SEARCH_SESSIONS",
+      "MY_ACTIVE_BOOKINGS"
+    ],
+    "tools:venue": [
+      "VENUE_INFORMATION"
+    ],
+    "tools:plan": [
+      "SEARCH_SESSIONS",
+      "MY_ACTIVE_BOOKINGS"
+    ],
+    "venue-empty": "SUCCESS",
+    "mysql-timeout": "FAILED",
+    "recall-order": [
+      "related",
+      "direct"
+    ],
+    "reranked-order": [
+      "direct",
+      "related"
+    ],
+    "related-only-grade": "SUPPORTED",
+    "direct-grade": "SUPPORTED",
+    "wrong-entity-evidence-accepted": true
+  },
+  "second": {
+    "tools:search": [
+      "SEARCH_SESSIONS"
+    ],
+    "tools:detail": [
+      "SESSION_DETAILS"
+    ],
+    "tools:venue": [
+      "VENUE_INFORMATION"
+    ],
+    "tools:plan": [
+      "SEARCH_SESSIONS",
+      "MY_ACTIVE_BOOKINGS"
+    ],
+    "venue-empty": "EMPTY",
+    "mysql-timeout": "FAILED",
+    "recall-order": [
+      "related",
+      "direct"
+    ],
+    "reranked-order": [
+      "direct",
+      "related"
+    ],
+    "related-only-grade": "INSUFFICIENT",
+    "direct-grade": "SUPPORTED",
+    "wrong-entity-evidence-accepted": false
+  },
+  "existingOptimizerChallenge": {
+    "first": {
+      "realModel": false,
+      "v1Measured": false,
+      "llmCalls": 0,
+      "tokenCostMeasured": false,
+      "results": [
+        {
+          "expectedCount": 1,
+          "case": "single",
+          "actualCount": 1,
+          "optimizerNanos": 8151600,
+          "passed": true
+        },
+        {
+          "expectedCount": 2,
+          "case": "pair",
+          "actualCount": 2,
+          "optimizerNanos": 149100,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "overlap",
+          "actualCount": 0,
+          "optimizerNanos": 76900,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "gap",
+          "actualCount": 0,
+          "optimizerNanos": 79300,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "hard-two",
+          "actualCount": 0,
+          "optimizerNanos": 33001,
+          "passed": true
+        },
+        {
+          "expectedCount": 1,
+          "case": "soft-two",
+          "actualCount": 1,
+          "optimizerNanos": 90400,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "three",
+          "actualCount": 0,
+          "optimizerNanos": 115700,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "existing-conflict",
+          "actualCount": 0,
+          "optimizerNanos": 80400,
+          "passed": true
+        },
+        {
+          "expectedCount": 0,
+          "case": "empty",
+          "actualCount": 0,
+          "optimizerNanos": 34900,
+          "passed": true
+        }
+      ],
+      "evaluationType": "DETERMINISTIC_JAVA_NOT_MODEL_QUALITY"
+    },
+    "second": {
+      "tokenCostMeasured": false,
+      "results": [
+        {
+          "passed": true,
+          "expectedCount": 1,
+          "case": "single",
+          "actualCount": 1,
+          "optimizerNanos": 9410100
+        },
+        {
+          "passed": true,
+          "expectedCount": 2,
+          "case": "pair",
+          "actualCount": 2,
+          "optimizerNanos": 275701
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "overlap",
+          "actualCount": 0,
+          "optimizerNanos": 73399
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "gap",
+          "actualCount": 0,
+          "optimizerNanos": 104000
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "hard-two",
+          "actualCount": 0,
+          "optimizerNanos": 26200
+        },
+        {
+          "passed": true,
+          "expectedCount": 1,
+          "case": "soft-two",
+          "actualCount": 1,
+          "optimizerNanos": 58599
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "three",
+          "actualCount": 0,
+          "optimizerNanos": 73300
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "existing-conflict",
+          "actualCount": 0,
+          "optimizerNanos": 34601
+        },
+        {
+          "passed": true,
+          "expectedCount": 0,
+          "case": "empty",
+          "actualCount": 0,
+          "optimizerNanos": 15900
+        }
+      ],
+      "evaluationType": "DETERMINISTIC_JAVA_NOT_MODEL_QUALITY",
+      "realModel": false,
+      "v1Measured": false,
+      "llmCalls": 0
+    }
+  }
+}

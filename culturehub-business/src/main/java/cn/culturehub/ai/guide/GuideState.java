@@ -101,6 +101,7 @@ public final class GuideState {
   public record ToolArguments(Long sessionId, String keyword, Preferences filters)
       implements java.io.Serializable {}
 
+  @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
   public record ToolCall(
       ToolName name,
       ToolArguments arguments,

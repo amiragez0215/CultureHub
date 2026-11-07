@@ -1,0 +1,426 @@
+{
+  "recordedAt": "2026-11-07T12:35:45.490370+00:00",
+  "database": "culturehub_ai_round2_eval",
+  "realChatModel": true,
+  "realChromaAndEmbedding": true,
+  "participationBefore": 0,
+  "participationAfter": 0,
+  "runs": [
+    {
+      "round": "first",
+      "jarSha256": "8e921725625e5914cd49985ac49aa1d914a19fad3806190e1a7583ff49e483f5",
+      "indexedChunks": 10,
+      "cases": [
+        {
+          "case": "simple-search",
+          "question": "请在市文化博物馆推荐一个文化活动，时间不限。",
+          "expectedCatalogSessionIds": [
+            1,
+            2
+          ],
+          "phase": "RECOMMENDATION",
+          "answer": "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。",
+          "ids": [
+            1
+          ],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [
+            "同一场馆",
+            "时间不冲突",
+            "满足已核验的业务条件"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "InformationGate",
+            "CandidateOptimize",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "RepairRouter",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "llmCalls": 3,
+            "completionTokens": 484,
+            "promptTokens": 3568,
+            "toolCalls": 2
+          },
+          "seconds": 4.906
+        },
+        {
+          "case": "two-activities",
+          "question": "请在市文化博物馆安排明天的两个活动，必须两个，同一场馆，时间不冲突。",
+          "expectedCatalogSessionIds": [
+            1,
+            2
+          ],
+          "phase": "RECOMMENDATION",
+          "answer": "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。",
+          "ids": [
+            1,
+            2
+          ],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [
+            "同一场馆",
+            "时间不冲突",
+            "满足已核验的业务条件"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "InformationGate",
+            "CandidateOptimize",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "llmCalls": 2,
+            "completionTokens": 374,
+            "promptTokens": 2265,
+            "toolCalls": 2
+          },
+          "seconds": 2.75
+        },
+        {
+          "case": "session-details",
+          "question": "请查询场次编号 1 的详情，只查询。",
+          "expectedCatalogSessionIds": [
+            1
+          ],
+          "sseOrder": [
+            "status",
+            "error"
+          ],
+          "sseNodes": [
+            "CONNECTED"
+          ],
+          "streamErrors": [
+            "AI_FAILED"
+          ],
+          "phase": null,
+          "answer": null,
+          "ids": [],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [],
+          "nodes": null,
+          "usage": null,
+          "seconds": 0.047
+        },
+        {
+          "case": "missing-venue",
+          "question": "不存在的文化馆几点开门？",
+          "expectedCatalogSessionIds": [],
+          "phase": "RECOMMENDATION",
+          "answer": "请查看下方公开知识来源；无法确认的规则请向场馆核实。",
+          "ids": [],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "llmCalls": 2,
+            "completionTokens": 271,
+            "promptTokens": 1927,
+            "toolCalls": 1
+          },
+          "seconds": 2.672
+        },
+        {
+          "case": "verified-age",
+          "question": "请在市文化博物馆推荐非遗剪纸体验，必须确认8岁儿童能不能参加。",
+          "expectedCatalogSessionIds": [
+            1
+          ],
+          "phase": "KNOWLEDGE_BLOCKED",
+          "answer": "现有证据不足以确认您要求的场馆规则，未将该条件标记为满足。",
+          "ids": [],
+          "detailIds": [],
+          "evidence": [
+            {
+              "status": "INSUFFICIENT",
+              "ids": []
+            }
+          ],
+          "reasons": [],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "RetrievalPlan",
+            "Retrieve",
+            "Rerank",
+            "EvidenceGrade",
+            "InformationGate",
+            "RepairRouter",
+            "RetrievalPlan",
+            "Retrieve",
+            "Rerank",
+            "EvidenceGrade",
+            "InformationGate"
+          ],
+          "usage": {
+            "llmCalls": 1,
+            "completionTokens": 114,
+            "promptTokens": 1036,
+            "toolCalls": 2
+          },
+          "seconds": 1.109
+        }
+      ]
+    },
+    {
+      "round": "second",
+      "jarSha256": "3fec461c03a29f99d4360fb58b13f898af8a96b70a032e268fd6be87ca174ec4",
+      "indexedChunks": 18,
+      "cases": [
+        {
+          "case": "simple-search",
+          "question": "请在市文化博物馆推荐一个文化活动，时间不限。",
+          "expectedCatalogSessionIds": [
+            1,
+            2
+          ],
+          "phase": "RECOMMENDATION",
+          "answer": "已生成可行活动安排。每场可以分别选择确认，当前尚未预约。",
+          "ids": [
+            1
+          ],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [
+            "《非遗剪纸体验》属于非遗体验"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "CandidateOptimize",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "completionTokens": 274,
+            "nativeToolCalls": 0,
+            "promptTokens": 2280,
+            "toolCalls": 1,
+            "llmCalls": 2
+          },
+          "seconds": 2.609
+        },
+        {
+          "case": "two-activities",
+          "question": "请在市文化博物馆安排明天的两个活动，必须两个，同一场馆，时间不冲突。",
+          "expectedCatalogSessionIds": [
+            1,
+            2
+          ],
+          "phase": "RECOMMENDATION",
+          "answer": "已生成可行活动安排。每场可以分别选择确认，当前尚未预约。",
+          "ids": [
+            1,
+            2
+          ],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [
+            "《非遗剪纸体验》属于非遗体验",
+            "《非遗剪纸体验》安排在2026-11-08 10:00–12:00，符合你的时间范围",
+            "《博物馆里的城市记忆》属于文化讲座",
+            "《博物馆里的城市记忆》安排在2026-11-08 14:00–16:00，符合你的时间范围",
+            "推荐依据：《非遗剪纸体验》与《博物馆里的城市记忆》同在市文化博物馆，中间留有120分钟衔接时间"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "CandidateOptimize",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "completionTokens": 437,
+            "nativeToolCalls": 0,
+            "promptTokens": 2473,
+            "toolCalls": 2,
+            "llmCalls": 2
+          },
+          "seconds": 2.672
+        },
+        {
+          "case": "session-details",
+          "question": "请查询场次编号 1 的详情，只查询。",
+          "expectedCatalogSessionIds": [
+            1
+          ],
+          "sseOrder": [
+            "status",
+            "status",
+            "status",
+            "delta",
+            "status",
+            "status",
+            "status",
+            "status",
+            "status",
+            "status",
+            "status",
+            "status",
+            "proposal",
+            "done"
+          ],
+          "sseNodes": [
+            "CONNECTED",
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate",
+            "DecisionGate"
+          ],
+          "streamErrors": [],
+          "phase": "RECOMMENDATION",
+          "answer": "已查询指定的公开场次。",
+          "ids": [],
+          "detailIds": [
+            1
+          ],
+          "evidence": [],
+          "reasons": [
+            "场馆知识查询"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "completionTokens": 131,
+            "nativeToolCalls": 1,
+            "promptTokens": 1349,
+            "toolCalls": 1,
+            "llmCalls": 2
+          },
+          "seconds": 2.36
+        },
+        {
+          "case": "missing-venue",
+          "question": "不存在的文化馆几点开门？",
+          "expectedCatalogSessionIds": [],
+          "phase": "NO_RESULTS",
+          "answer": "未找到指定场馆，请核对场馆名称。",
+          "ids": [],
+          "detailIds": [],
+          "evidence": [],
+          "reasons": [],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck"
+          ],
+          "usage": {
+            "completionTokens": 106,
+            "nativeToolCalls": 0,
+            "promptTokens": 1051,
+            "toolCalls": 1,
+            "llmCalls": 1
+          },
+          "seconds": 0.812
+        },
+        {
+          "case": "verified-age",
+          "question": "请在市文化博物馆推荐非遗剪纸体验，必须确认8岁儿童能不能参加。",
+          "expectedCatalogSessionIds": [
+            1
+          ],
+          "phase": "RECOMMENDATION",
+          "answer": "已生成可行活动安排。每场可以分别选择确认，当前尚未预约。",
+          "ids": [
+            1
+          ],
+          "detailIds": [],
+          "evidence": [
+            {
+              "status": "SUPPORTED",
+              "ids": [
+                "paper-cutting-age:2.1-demo:0"
+              ]
+            }
+          ],
+          "reasons": [
+            "推荐依据：《非遗剪纸体验》属于非遗体验",
+            "剪纸活动适合 6～12 岁儿童，须有家长陪同"
+          ],
+          "nodes": [
+            "IntentExtract",
+            "InformationNeedPlan",
+            "ToolPlan",
+            "ToolExecute",
+            "ToolCheck",
+            "CandidateOptimize",
+            "RetrievalPlan",
+            "Retrieve",
+            "Rerank",
+            "EvidenceGrade",
+            "InformationGate",
+            "ProposalGenerate",
+            "ProposalVerifier",
+            "DecisionGate"
+          ],
+          "usage": {
+            "completionTokens": 326,
+            "nativeToolCalls": 0,
+            "promptTokens": 2340,
+            "toolCalls": 1,
+            "llmCalls": 2
+          },
+          "seconds": 2.328
+        }
+      ]
+    }
+  ]
+}

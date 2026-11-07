@@ -1,0 +1,10 @@
+{
+  "registeredViaVue": true,
+  "sseProgressObserved": true,
+  "verifiedPlanAndCatalogCardRendered": true,
+  "pendingProposalCreated": true,
+  "proposalRejectedWithoutBooking": true,
+  "apiStartedWithChromaPortClosed": true,
+  "verifiedMySqlParticipationRows": 0,
+  "verifiedBrowserProposalStatus": "REJECTED"
+}

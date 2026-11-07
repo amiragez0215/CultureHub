@@ -1,5 +1,7 @@
 # CultureHub｜公共文化场馆活动预约与智能运营平台
 
+> **AI V2 第二轮** 已补齐按场次核验知识、定向工具补查和真实 Chroma 验收。见 [整改说明](docs/ai-v2-round2.md) 和 [第二轮验收报告](docs/ai-v2-round2-test-report.md)。
+
 > **AI V2 分支**：新增文化活动规划与智能预约 Agent。已有数据库请先执行 `deploy/migrations/20261107-ai-guide-v2.sql`。见 [架构与迁移说明](docs/ai-v2.md) 和 [验收报告](docs/ai-v2-test-report.md)。`AI_GUIDE_V2_ENABLED=false` 可切回原导览对照；下方 AI2/AI3 介绍为 V1 历史功能。
 
 CultureHub 面向博物馆、文化馆、社区文化中心等公共文化场所，提供从活动发布、场次预约、候补补位到签到核销、用户评价和运营复盘的完整业务流程。

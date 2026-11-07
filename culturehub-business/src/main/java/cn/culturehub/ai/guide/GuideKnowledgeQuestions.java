@@ -29,7 +29,7 @@ final class GuideKnowledgeQuestions {
               (age == null ? "儿童" : age + "岁儿童") + "的参与年龄范围及适用条件",
               "AGE_RULE",
               qa || explicitAge || explicit || required(questions, "age"),
-              activity));
+              activity || questions.containsKey("age") && questions.get("age").activityScoped()));
     if (text.matches("(?s).*(陪同|陪伴|监护人|单独入场|独自入场|独自参加|单独参加).*")) {
       boolean independent = text.matches("(?s).*(单独|独自).*");
       questions.put(

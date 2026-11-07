@@ -1,0 +1,690 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><module name="culturehub-notification-worker"><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ManualAckTest" time="6.491" tests="5" errors="0" skipped="0" failures="0">
+  <testcase name="boundedRetriesReachDeadQueue" classname="cn.culturehub.ManualAckTest" time="1.163" />
+  <testcase name="ackOnlyAfterConsumerReturns" classname="cn.culturehub.ManualAckTest" time="0.006" />
+  <testcase name="failedTransactionRequiresConfirmedRetryBeforeAck" classname="cn.culturehub.ManualAckTest" time="0.002" />
+  <testcase name="poisonIsIsolatedWithoutRetry" classname="cn.culturehub.ManualAckTest" time="0.002" />
+  <testcase name="failedRecoverySendNeverAcknowledgesOriginal" classname="cn.culturehub.ManualAckTest" time="1.012" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.WorkerRabbitTest" time="0.001" tests="7" errors="0" skipped="7" failures="0">
+  <testcase name="listenerRestartRecoversQueuedEvent" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="duplicateDeliveryAndReplayPersistOnce" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="transientDatabaseFailureRetries" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="manualDeadLetterReplayPreservesEventId" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="poisonMessageIsRetainedInDeadLetter" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="retryExhaustionIsDeadLettered" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="commitBeforeLostAckRedeliversSafely" classname="cn.culturehub.WorkerRabbitTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite></module><module name="culturehub-business"><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideChallengeTest" time="0.249" tests="1" errors="0" skipped="0" failures="0">
+  <testcase name="repeatableDeterministicChallengeSet" classname="cn.culturehub.ai.guide.GuideChallengeTest" time="0.226" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideChromaLocalTest" time="8.393" tests="1" errors="0" skipped="0" failures="0">
+  <testcase name="manifestToEmbeddingToScopedGrade" classname="cn.culturehub.ai.guide.GuideChromaLocalTest" time="8.391">
+    </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideEvidenceScopeTest" time="0.515" tests="3" errors="0" skipped="0" failures="0">
+  <testcase name="optionalUnknownDoesNotBlockAndBackgroundIsBoundPerActivity" classname="cn.culturehub.ai.guide.GuideEvidenceScopeTest" time="0.019" />
+  <testcase name="seventhVenueCannotBorrowEvidenceAndRepairOnlyChecksReplacement" classname="cn.culturehub.ai.guide.GuideEvidenceScopeTest" time="0.489">
+    </testcase>
+  <testcase name="verifierRejectsSameVenueEvidenceForTheWrongActivityAndConflictingRequiredRules" classname="cn.culturehub.ai.guide.GuideEvidenceScopeTest" time="0.003" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideInteractionTest" time="0.053" tests="3" errors="0" skipped="0" failures="0">
+  <testcase name="latestCorrectionsRetainOtherConstraintsAndUseTheActualPreviousVenue" classname="cn.culturehub.ai.guide.GuideInteractionTest" time="0.003" />
+  <testcase name="narrationUsesBusinessFactsAndRejectsInventedOrMismatchedReferences" classname="cn.culturehub.ai.guide.GuideInteractionTest" time="0.003" />
+  <testcase name="graphPassesRecentMessagesOnlyToUnderstanding" classname="cn.culturehub.ai.guide.GuideInteractionTest" time="0.044">
+    </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideKnowledgeIndexTest" time="2.628" tests="2" errors="0" skipped="0" failures="0">
+  <testcase name="rejectsIncompleteMetadataAndMissingRequiredCatalog" classname="cn.culturehub.ai.guide.GuideKnowledgeIndexTest" time="0.253" />
+  <testcase name="failedStageCannotChangeRegistryAndNeverDeletesOtherData" classname="cn.culturehub.ai.guide.GuideKnowledgeIndexTest" time="2.374" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.044" tests="9" errors="0" skipped="0" failures="0">
+  <testcase name="missingSourceRejected" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.002" />
+  <testcase name="contradictionIsNotSupported" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+  <testcase name="injectionRejected" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+  <testcase name="familyTagIsNotAgeProof" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+  <testcase name="wrongVenueRejected" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+  <testcase name="forgedSourceCannotBecomeOfficialEvidence" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.0" />
+  <testcase name="expiredRejected" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+  <testcase name="sameVenueDifferentActivityIsNotValidEvidence" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.0" />
+  <testcase name="lexicalRerankIsIndependentOfRecallOrder" classname="cn.culturehub.ai.guide.GuideKnowledgeTest" time="0.001" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.027" tests="9" errors="0" skipped="0" failures="0">
+  <testcase name="relativeTomorrowUsesBusinessClock" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.0" />
+  <testcase name="zeroMeansUnspecifiedOnlyWhenUserDidNotRequestZero" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.001" />
+  <testcase name="omittedHistoricalHardConstraintSurvives" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.001" />
+  <testcase name="excessiveCountFailsClosed" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.001" />
+  <testcase name="familyDoesNotBecomeMultipleReservations" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.001" />
+  <testcase name="ordinalRevisionDoesNotResetHardCountOrDuration" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.001" />
+  <testcase name="emptyIsNotFailure" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.012" />
+  <testcase name="missingBookingsRequiresToolPlanRepair" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.0" />
+  <testcase name="toolFailureIsDistinct" classname="cn.culturehub.ai.guide.GuidePhaseOneTest" time="0.008" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuidePlanningTest" time="0.007" tests="9" errors="0" skipped="0" failures="0">
+  <testcase name="verifierFindsCollisionEvenWhenOptimizerOutputWasCorrupted" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="preferredCountCanDowngrade" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="existingBookingConflicts" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="boundedRepairStops" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="necessaryGapAndTotalDuration" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.0" />
+  <testcase name="overlappingPairRejected" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.0" />
+  <testcase name="outputClaimCannotDeclareBookingSuccess" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="hallucinatedIdsAndTimesFail" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.001" />
+  <testcase name="hardCountNeverDowngrades" classname="cn.culturehub.ai.guide.GuidePlanningTest" time="0.0" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideRoundComparisonTest" time="0.007" tests="1" errors="0" skipped="0" failures="0">
+  <testcase name="recordMatchedDeterministicCases" classname="cn.culturehub.ai.guide.GuideRoundComparisonTest" time="0.006" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.018" tests="5" errors="0" skipped="0" failures="0">
+  <testcase name="choosesToolsFromNeedsAndDistinguishesAnUnknownVenue" classname="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.004" />
+  <testcase name="staleOrChangedArgumentsInvalidateOnlyTheirOwnFacts" classname="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.001" />
+  <testcase name="incompleteOrTimedOutDetailIsTheOnlyReplannedNeed" classname="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.006" />
+  <testcase name="conditionalRuleDoesNotProveIndependentAdmission" classname="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.001" />
+  <testcase name="parsesSpecificQuestionsAndOnlyRelevantRuleCanAnswer" classname="cn.culturehub.ai.guide.GuideRoundTwoNodesTest" time="0.002" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ai.guide.GuideRoutingTest" time="0.121" tests="2" errors="0" skipped="0" failures="0">
+  <testcase name="independentChainsAndTargetedGenerationRepairVisitAllFifteenNodes" classname="cn.culturehub.ai.guide.GuideRoutingTest" time="0.078">
+    </testcase>
+  <testcase name="globalRuleQuerySkipsToolsAndFailsClosedWhenChromaMissing" classname="cn.culturehub.ai.guide.GuideRoutingTest" time="0.042">
+    </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.AiBoundaryTest" time="0.59" tests="4" errors="0" skipped="0" failures="0">
+  <testcase name="reportWithoutReviewsUsesJavaMetricsAndNoModel" classname="cn.culturehub.AiBoundaryTest" time="0.406">
+    </testcase>
+  <testcase name="planPermissionCheckedBeforeModel" classname="cn.culturehub.AiBoundaryTest" time="0.008" />
+  <testcase name="invalidReviewReferenceCannotOverwriteExistingReport" classname="cn.culturehub.AiBoundaryTest" time="0.137" />
+  <testcase name="disabledCredentialAndOverflowDurationAreRejected" classname="cn.culturehub.AiBoundaryTest" time="0.038" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.AiGuideGraphTest" time="0.708" tests="21" errors="0" skipped="0" failures="0">
+  <testcase name="unavailableKnowledgeDegradesToRealData" classname="cn.culturehub.AiGuideGraphTest" time="0.088">
+    </testcase>
+  <testcase name="selectionRequiresOwnedFreshCandidateAndStillDoesNotBook" classname="cn.culturehub.AiGuideGraphTest" time="0.032">
+    </testcase>
+  <testcase name="streamingProviderFailureReleasesConversationAndNoBooking" classname="cn.culturehub.AiGuideGraphTest" time="0.066">
+    </testcase>
+  <testcase name="toolBudgetFailurePropagatesThroughTheRealSpringToolManager" classname="cn.culturehub.AiGuideGraphTest" time="0.021">
+    </testcase>
+  <testcase name="optionalExplanationConnectionResetKeepsVerifiedCardsWithoutBooking" classname="cn.culturehub.AiGuideGraphTest" time="0.035">
+    </testcase>
+  <testcase name="endedOrUnpublishedCandidateCannotBeConfirmed" classname="cn.culturehub.AiGuideGraphTest" time="0.04">
+    </testcase>
+  <testcase name="realStreamPublisherProducesMultipleSafeChunksBeforeVerifiedCards" classname="cn.culturehub.AiGuideGraphTest" time="0.032">
+    </testcase>
+  <testcase name="venueInformationDoesNotDemandAnActivityDate" classname="cn.culturehub.AiGuideGraphTest" time="0.023">
+    </testcase>
+  <testcase name="noModelDoesNotPreventGraphConstructionButRequestIsUnavailable" classname="cn.culturehub.AiGuideGraphTest" time="0.005" />
+  <testcase name="vagueQuestionClarifiesWithoutQueryOrBooking" classname="cn.culturehub.AiGuideGraphTest" time="0.013">
+    </testcase>
+  <testcase name="unavailableKnowledgeProviderAlsoDegradesSafely" classname="cn.culturehub.AiGuideGraphTest" time="0.024">
+    </testcase>
+  <testcase name="foreignConversationIsRejected" classname="cn.culturehub.AiGuideGraphTest" time="0.006" />
+  <testcase name="toolFailureFailsWithoutWriteAndWithoutLoop" classname="cn.culturehub.AiGuideGraphTest" time="0.018">
+    </testcase>
+  <testcase name="minimumRemainingIsVerifiedAndExplainsSinglePersonBoundary" classname="cn.culturehub.AiGuideGraphTest" time="0.028">
+    </testcase>
+  <testcase name="streamCancellationStopsUpstreamAndNeverExposesCandidates" classname="cn.culturehub.AiGuideGraphTest" time="0.056">
+    </testcase>
+  <testcase name="streamingTimeoutHasExplicitErrorCode" classname="cn.culturehub.AiGuideGraphTest" time="0.013">
+    </testcase>
+  <testcase name="expiredMemoryCannotStartAnotherTurn" classname="cn.culturehub.AiGuideGraphTest" time="0.006" />
+  <testcase name="changedDateReplacesPreferenceAndInvalidatesOldCandidate" classname="cn.culturehub.AiGuideGraphTest" time="0.054">
+    </testcase>
+  <testcase name="inventedSessionIsRejectedAndRetryIsBounded" classname="cn.culturehub.AiGuideGraphTest" time="0.031">
+    </testcase>
+  <testcase name="emptySearchDoesNotAskModelToInventCandidates" classname="cn.culturehub.AiGuideGraphTest" time="0.017">
+    </testcase>
+  <testcase name="modelCannotClaimSuccessWithoutConfirmation" classname="cn.culturehub.AiGuideGraphTest" time="0.02">
+    </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.AiValidationTest" time="0.178" tests="2" errors="0" skipped="0" failures="0">
+  <testcase name="structuredPlanHasValidatedDuration" classname="cn.culturehub.AiValidationTest" time="0.175" />
+  <testcase name="badEventRejected" classname="cn.culturehub.AiValidationTest" time="0.001" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.CatalogLocalTest" time="23.869" tests="27" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.CatalogLocalTest" time="0.891">
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.CatalogLocalTest" time="0.806" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.CatalogLocalTest" time="0.721" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.CatalogLocalTest" time="0.868" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.CatalogLocalTest" time="0.773" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.CatalogLocalTest" time="0.788" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.CatalogLocalTest" time="0.857" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.CatalogLocalTest" time="0.794" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.CatalogLocalTest" time="0.803" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.CatalogLocalTest" time="0.785" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.CatalogLocalTest" time="0.835" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.CatalogLocalTest" time="0.82" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.CatalogLocalTest" time="0.916" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.CatalogLocalTest" time="0.819" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.CatalogLocalTest" time="0.691" />
+  <testcase name="hotDisplayUsesOneMgetAndOneVisibilityQuery" classname="cn.culturehub.CatalogLocalTest" time="0.864" />
+  <testcase name="cacheFailureFallsBackToBatchDatabase" classname="cn.culturehub.CatalogLocalTest" time="0.749" />
+  <testcase name="mapperGeneratedIdNullableUpdateAndJdbcShareTransaction" classname="cn.culturehub.CatalogLocalTest" time="0.874" />
+  <testcase name="batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix" classname="cn.culturehub.CatalogLocalTest" time="1.014" />
+  <testcase name="publicCacheColdHotPartialMissAndOrder" classname="cn.culturehub.CatalogLocalTest" time="0.838" />
+  <testcase name="batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates" classname="cn.culturehub.CatalogLocalTest" time="1.189" />
+  <testcase name="guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges" classname="cn.culturehub.CatalogLocalTest" time="0.798" />
+  <testcase name="invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase" classname="cn.culturehub.CatalogLocalTest" time="0.794" />
+  <testcase name="dynamicFiltersDatesCountAndPrivilegeAreConsistent" classname="cn.culturehub.CatalogLocalTest" time="0.884" />
+  <testcase name="lambdaEntityReadsAndMapNullsPreserveContract" classname="cn.culturehub.CatalogLocalTest" time="0.869" />
+  <testcase name="activityJoinDoesNotMultiplyPaginationRows" classname="cn.culturehub.CatalogLocalTest" time="0.658" />
+  <testcase name="historyResultMapMaintainsNullableQueueAndOwnerIsolation" classname="cn.culturehub.CatalogLocalTest" time="0.739" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ContainerBookingTest" time="0.001" tests="15" errors="0" skipped="15" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.ContainerBookingTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.GuideNativeToolTest" time="0.015" tests="2" errors="0" skipped="0" failures="0">
+  <testcase name="nativeResponseInvokesTheSpringCallbackExactlyOnce" classname="cn.culturehub.GuideNativeToolTest" time="0.013" />
+  <testcase name="injectedNameOrIdentityIsRejectedBeforeJavaQueries" classname="cn.culturehub.GuideNativeToolTest" time="0.002" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.GuideV2LocalTest" time="26.159" tests="27" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.GuideV2LocalTest" time="0.884" />
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.GuideV2LocalTest" time="0.715" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.GuideV2LocalTest" time="0.78" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.GuideV2LocalTest" time="0.824" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.GuideV2LocalTest" time="0.772" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.GuideV2LocalTest" time="0.857" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.GuideV2LocalTest" time="0.638" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.GuideV2LocalTest" time="0.789" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.GuideV2LocalTest" time="0.882" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.GuideV2LocalTest" time="0.706" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.GuideV2LocalTest" time="0.83" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.GuideV2LocalTest" time="0.785" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.GuideV2LocalTest" time="0.738" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.GuideV2LocalTest" time="0.873" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.GuideV2LocalTest" time="0.64" />
+  <testcase name="sseEmitsProgressBeforeVerifiedPlanAndCancellationDoesNotPersistIt" classname="cn.culturehub.GuideV2LocalTest" time="1.249">
+    </testcase>
+  <testcase name="concurrentConfirmationsCreateOnlyOneQualification" classname="cn.culturehub.GuideV2LocalTest" time="1.669">
+    </testcase>
+  <testcase name="nativeCheckpointRestoresCursorWithoutRepeatingIntent" classname="cn.culturehub.GuideV2LocalTest" time="0.91">
+    </testcase>
+  <testcase name="newBookingAfterProposalBlocksConflictingConfirmation" classname="cn.culturehub.GuideV2LocalTest" time="1.098">
+    </testcase>
+  <testcase name="changedPlanInvalidatesPendingAndRetainsVersions" classname="cn.culturehub.GuideV2LocalTest" time="1.29">
+    </testcase>
+  <testcase name="reconstructingAgentAfterRedisLossRecoversSavedPlanAndPendingProposal" classname="cn.culturehub.GuideV2LocalTest" time="1.35">
+    </testcase>
+  <testcase name="concurrentRevisionAndConfirmationRespectClaimBoundary" classname="cn.culturehub.GuideV2LocalTest" time="1.072">
+    </testcase>
+  <testcase name="cancelledGraphNeverCreatesParticipation" classname="cn.culturehub.GuideV2LocalTest" time="0.776" />
+  <testcase name="realGraphCreatesPlanButNeverBooksUntilExplicitConfirmation" classname="cn.culturehub.GuideV2LocalTest" time="1.506">
+    </testcase>
+  <testcase name="conversationOwnershipSurvivesMemoryLoss" classname="cn.culturehub.GuideV2LocalTest" time="0.968">
+    </testcase>
+  <testcase name="twoRealSessionsArePlannedButConfirmedIndependently" classname="cn.culturehub.GuideV2LocalTest" time="1.53">
+    </testcase>
+  <testcase name="recentConversationIsBoundedExpiresAndCannotCrossAccounts" classname="cn.culturehub.GuideV2LocalTest" time="0.927" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.InputValidationTest" time="0.002" tests="3" errors="0" skipped="0" failures="0">
+  <testcase name="invalidPaginationAndBlankText" classname="cn.culturehub.InputValidationTest" time="0.001" />
+  <testcase name="timeAndCodesAreValidated" classname="cn.culturehub.InputValidationTest" time="0.0" />
+  <testcase name="missingAndWrongInputsAre400" classname="cn.culturehub.InputValidationTest" time="0.0" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.LocalBookingTest" time="9.79" tests="15" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.LocalBookingTest" time="0.682" />
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.LocalBookingTest" time="0.607" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.LocalBookingTest" time="0.655" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.LocalBookingTest" time="0.693" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.LocalBookingTest" time="0.618" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.LocalBookingTest" time="0.647" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.LocalBookingTest" time="0.575" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.LocalBookingTest" time="0.628" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.LocalBookingTest" time="0.702" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.LocalBookingTest" time="0.672" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.LocalBookingTest" time="0.659" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.LocalBookingTest" time="0.691" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.LocalBookingTest" time="0.65" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.LocalBookingTest" time="0.694" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.LocalBookingTest" time="0.584" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.OptimizationContainerTest" time="0.001" tests="23" errors="0" skipped="23" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="hotDisplayUsesOneMgetAndOneVisibilityQuery" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="cacheFailureFallsBackToBatchDatabase" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="mapperGeneratedIdNullableUpdateAndJdbcShareTransaction" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="publicCacheColdHotPartialMissAndOrder" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase" classname="cn.culturehub.OptimizationContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.OptimizationLocalTest" time="15.979" tests="23" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.OptimizationLocalTest" time="0.651" />
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.OptimizationLocalTest" time="0.607" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.OptimizationLocalTest" time="0.662" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.OptimizationLocalTest" time="0.689" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.OptimizationLocalTest" time="0.626" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.OptimizationLocalTest" time="0.647" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.OptimizationLocalTest" time="0.553" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.OptimizationLocalTest" time="0.634" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.OptimizationLocalTest" time="0.688" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.OptimizationLocalTest" time="0.651" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.OptimizationLocalTest" time="0.68" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.OptimizationLocalTest" time="0.7" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.OptimizationLocalTest" time="0.667" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.OptimizationLocalTest" time="0.69" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.OptimizationLocalTest" time="0.627" />
+  <testcase name="hotDisplayUsesOneMgetAndOneVisibilityQuery" classname="cn.culturehub.OptimizationLocalTest" time="0.638" />
+  <testcase name="cacheFailureFallsBackToBatchDatabase" classname="cn.culturehub.OptimizationLocalTest" time="0.641" />
+  <testcase name="mapperGeneratedIdNullableUpdateAndJdbcShareTransaction" classname="cn.culturehub.OptimizationLocalTest" time="0.692" />
+  <testcase name="batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix" classname="cn.culturehub.OptimizationLocalTest" time="0.878" />
+  <testcase name="publicCacheColdHotPartialMissAndOrder" classname="cn.culturehub.OptimizationLocalTest" time="0.76" />
+  <testcase name="batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates" classname="cn.culturehub.OptimizationLocalTest" time="1.138" />
+  <testcase name="guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges" classname="cn.culturehub.OptimizationLocalTest" time="0.76" />
+  <testcase name="invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase" classname="cn.culturehub.OptimizationLocalTest" time="0.688" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.OutboxRabbitLocalTest" time="14.767" tests="21" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.665" />
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.648" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.607" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.615" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.556" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.64" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.628" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.672" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.695" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.638" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.664" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.667" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.685" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.65" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.588" />
+  <testcase name="realNotificationFailureRollsBackAndControlledRetryRecovers" classname="cn.culturehub.OutboxRabbitLocalTest" time="1.749" />
+  <testcase name="realNotificationTransactionCommitsBeforeAckAndDeduplicates" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.615" />
+  <testcase name="abandonedLeaseIsRecoveredWithoutNewEvent" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.628" />
+  <testcase name="firstPersistentFailureDoesNotBlockBatchAndBackoffRecovers" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.815">
+    </testcase>
+  <testcase name="brokerFailureDoesNotRollbackReservationAndStableEventRecovers" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.693">
+    </testcase>
+  <testcase name="concurrentPublishersClaimOnlyOnceAndDoNotHoldTransaction" classname="cn.culturehub.OutboxRabbitLocalTest" time="0.634" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ProposalContainerTest" time="0.001" tests="30" errors="0" skipped="30" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="proposalExpiryCannotExceedRegistrationEnd" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="concurrentConfirmationsCreateExactlyOneQualification" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredLeaseRetriesSameRequestAndConverges" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="newSelectionSupersedesPendingButNotProcessing" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="redisFailureRemainsRecoverableAndDoesNotWriteQualification" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="fullAtConfirmationDoesNotImplicitlyWaitlist" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unconfirmedProposalAndRejectionNeverBook" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredOrLostConversationCannotStartBooking" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="foreignProposalCannotBeReadConfirmedOrRejected" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="confirmationBooksThroughOriginalEntryAndOutbox" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="confirmedResultReflectsLaterCancellationWithoutRebooking" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="ongoingLeaseCannotBeRejectedOrRunAgain" classname="cn.culturehub.ProposalContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.ProposalLocalTest" time="22.797" tests="30" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.ProposalLocalTest" time="0.669" />
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.ProposalLocalTest" time="0.618" />
+  <testcase name="duplicateRequest" classname="cn.culturehub.ProposalLocalTest" time="0.637" />
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.ProposalLocalTest" time="0.683" />
+  <testcase name="lastSeatRace" classname="cn.culturehub.ProposalLocalTest" time="0.644" />
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.ProposalLocalTest" time="0.641" />
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.ProposalLocalTest" time="0.573" />
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.ProposalLocalTest" time="0.647" />
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.ProposalLocalTest" time="0.707" />
+  <testcase name="doubleCheckin" classname="cn.culturehub.ProposalLocalTest" time="0.68" />
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.ProposalLocalTest" time="0.696" />
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.ProposalLocalTest" time="0.685" />
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.ProposalLocalTest" time="0.709" />
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.ProposalLocalTest" time="0.676" />
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.ProposalLocalTest" time="0.619" />
+  <testcase name="proposalExpiryCannotExceedRegistrationEnd" classname="cn.culturehub.ProposalLocalTest" time="0.66" />
+  <testcase name="concurrentConfirmationsCreateExactlyOneQualification" classname="cn.culturehub.ProposalLocalTest" time="0.946">
+    </testcase>
+  <testcase name="expiredLeaseRetriesSameRequestAndConverges" classname="cn.culturehub.ProposalLocalTest" time="0.887">
+    </testcase>
+  <testcase name="repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot" classname="cn.culturehub.ProposalLocalTest" time="0.691" />
+  <testcase name="newSelectionSupersedesPendingButNotProcessing" classname="cn.culturehub.ProposalLocalTest" time="0.783" />
+  <testcase name="rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking" classname="cn.culturehub.ProposalLocalTest" time="0.784" />
+  <testcase name="redisFailureRemainsRecoverableAndDoesNotWriteQualification" classname="cn.culturehub.ProposalLocalTest" time="1.02">
+    </testcase>
+  <testcase name="fullAtConfirmationDoesNotImplicitlyWaitlist" classname="cn.culturehub.ProposalLocalTest" time="1.111">
+    </testcase>
+  <testcase name="crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire" classname="cn.culturehub.ProposalLocalTest" time="0.873" />
+  <testcase name="unconfirmedProposalAndRejectionNeverBook" classname="cn.culturehub.ProposalLocalTest" time="0.807" />
+  <testcase name="expiredOrLostConversationCannotStartBooking" classname="cn.culturehub.ProposalLocalTest" time="0.908" />
+  <testcase name="foreignProposalCannotBeReadConfirmedOrRejected" classname="cn.culturehub.ProposalLocalTest" time="0.683" />
+  <testcase name="confirmationBooksThroughOriginalEntryAndOutbox" classname="cn.culturehub.ProposalLocalTest" time="0.927">
+    </testcase>
+  <testcase name="confirmedResultReflectsLaterCancellationWithoutRebooking" classname="cn.culturehub.ProposalLocalTest" time="1.038">
+    </testcase>
+  <testcase name="ongoingLeaseCannotBeRejectedOrRunAgain" classname="cn.culturehub.ProposalLocalTest" time="0.787" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.PublisherIntegrationTest" time="0.001" tests="3" errors="0" skipped="3" failures="0">
+  <testcase name="brokerSendFailureRetainsEvent" classname="cn.culturehub.PublisherIntegrationTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="unroutableConfirmDoesNotMarkPublished" classname="cn.culturehub.PublisherIntegrationTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="successThenMarkerFailureRetainsRetry" classname="cn.culturehub.PublisherIntegrationTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.RabbitConfirmTest" time="0.119" tests="3" errors="0" skipped="0" failures="0">
+  <testcase name="returnOverridesPositiveConfirm" classname="cn.culturehub.RabbitConfirmTest" time="0.118" />
+  <testcase name="negativeConfirmRejects" classname="cn.culturehub.RabbitConfirmTest" time="0.001" />
+  <testcase name="positiveConfirmAcceptsPersistentMessage" classname="cn.culturehub.RabbitConfirmTest" time="0.0" />
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.RabbitEndToEndContainerTest" time="0.001" tests="18" errors="0" skipped="18" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="unavailableBrokerDoesNotRollbackBookingAndRecovers" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+  <testcase name="actualBrokerStopAndRestartRetainsCommittedOutbox" classname="cn.culturehub.RabbitEndToEndContainerTest" time="0.0">
+    <skipped message="disabledWithoutDocker is true and Docker is not available" />
+  </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.RabbitEndToEndLocalTest" time="28.79" tests="17" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.759">
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.706">
+    </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.709">
+    </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.739">
+    </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.672">
+    </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.617">
+    </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.674">
+    </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.63">
+    </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.624">
+    </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.667">
+    </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.652">
+    </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.669">
+    </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.709">
+    </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.702">
+    </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.645">
+    </testcase>
+  <testcase name="bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.807">
+    </testcase>
+  <testcase name="unavailableBrokerDoesNotRollbackBookingAndRecovers" classname="cn.culturehub.RabbitEndToEndLocalTest" time="1.798">
+    </testcase>
+</testsuite><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.RabbitReliabilityLocalTest" time="53.838" tests="25" errors="0" skipped="0" failures="0">
+  <testcase name="cancellationPromotesWithoutOvertaking" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.653">
+    </testcase>
+  <testcase name="ongoingCheckinIsProgressNotFinalRate" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.697">
+    </testcase>
+  <testcase name="duplicateRequest" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.779">
+    </testcase>
+  <testcase name="expiredConfirmationRace" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.654">
+    </testcase>
+  <testcase name="lastSeatRace" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.637">
+    </testcase>
+  <testcase name="repeatedBusinessEventIsDeduplicated" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.633">
+    </testcase>
+  <testcase name="luaRateLimitAndUnavailable" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.623">
+    </testcase>
+  <testcase name="checkinAndCancelRace" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.64">
+    </testcase>
+  <testcase name="expiryIsIdempotent" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.608">
+    </testcase>
+  <testcase name="doubleCheckin" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.698">
+    </testcase>
+  <testcase name="oldRequestCannotRecreateCancelledQualification" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.694">
+    </testcase>
+  <testcase name="statisticsAndReviewAreDatabaseDerived" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.696">
+    </testcase>
+  <testcase name="concurrentWaitlistSequence" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.66">
+    </testcase>
+  <testcase name="failedTransactionRollsBackAndRetries" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.636">
+    </testcase>
+  <testcase name="unauthorizedVenue" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.647">
+    </testcase>
+  <testcase name="bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.807">
+    </testcase>
+  <testcase name="unavailableBrokerDoesNotRollbackBookingAndRecovers" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.945">
+    </testcase>
+  <testcase name="actualWorkerJvmExitAfterCommitBeforeAckRedeliversAndDeduplicates" classname="cn.culturehub.RabbitReliabilityLocalTest" time="5.028">
+    </testcase>
+  <testcase name="productionQuorumTopologyCanBeRedeclaredWithoutParameterConflict" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.757">
+    </testcase>
+  <testcase name="realReturnInFirstEventDoesNotBlockLaterEventAndRecovers" classname="cn.culturehub.RabbitReliabilityLocalTest" time="2.146">
+    </testcase>
+  <testcase name="markerDatabaseFailureAfterConfirmRetainsStableEventForRetry" classname="cn.culturehub.RabbitReliabilityLocalTest" time="2.137">
+    </testcase>
+  <testcase name="malformedJsonIsRetainedInDeadLetter" classname="cn.culturehub.RabbitReliabilityLocalTest" time="1.764">
+    </testcase>
+  <testcase name="persistentFailureHasThreeDelayedRetriesThenDeadLetterAndManualReplay" classname="cn.culturehub.RabbitReliabilityLocalTest" time="5.586">
+    </testcase>
+  <testcase name="actualListenerRestartRecoversQueuedEvent" classname="cn.culturehub.RabbitReliabilityLocalTest" time="2.878">
+    </testcase>
+  <testcase name="transientDatabaseFailureActuallyRetriesAfterDelayThenRecovers" classname="cn.culturehub.RabbitReliabilityLocalTest" time="3.816">
+    </testcase>
+</testsuite></module><module name="culturehub-api"><testsuite xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cn.culturehub.AiStreamControllerTest" time="5.552" tests="6" errors="0" skipped="0" failures="0">
+  <testcase name="channelCancellationIsIdempotentAndStopsFutureEmits" classname="cn.culturehub.AiStreamControllerTest" time="5.134">
+    </testcase>
+  <testcase name="disconnectedTransportClosesChannelAndCancellationSignal" classname="cn.culturehub.AiStreamControllerTest" time="0.055">
+    </testcase>
+  <testcase name="mvcStreamsEventsWithCapturedAuthenticationAndCleansWorkerContext" classname="cn.culturehub.AiStreamControllerTest" time="0.235">
+    </testcase>
+  <testcase name="saturatedWorkerPoolFailsFastInsteadOfQueueingUnboundedRequests" classname="cn.culturehub.AiStreamControllerTest" time="0.03">
+    </testcase>
+  <testcase name="authorizationAndValidationFailBeforeSseHeaders" classname="cn.culturehub.AiStreamControllerTest" time="0.057">
+    </testcase>
+  <testcase name="providerTimeoutIsAnErrorEventWithoutStackOrDone" classname="cn.culturehub.AiStreamControllerTest" time="0.017">
+    </testcase>
+</testsuite></module></testsuites>

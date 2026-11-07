@@ -1,0 +1,43 @@
+{
+  "firstV2": {
+    "tests": 353,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 96,
+    "passed": 257
+  },
+  "secondV2": {
+    "tests": 372,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 96,
+    "passed": 276
+  },
+  "modules": {
+    "culturehub-notification-worker": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 7,
+      "passed": 5
+    },
+    "culturehub-business": {
+      "tests": 354,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 89,
+      "passed": 265
+    },
+    "culturehub-api": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 6
+    }
+  },
+  "realChromaEvidence": [
+    "Chroma expected scoped policy documents recalled: 2/2; first museum recall: museum-child-outreach; rerank first: museum-child-policy",
+    "Chroma injected transport outage: UNAVAILABLE; generation kept; old corpus usable after recovery"
+  ]
+}

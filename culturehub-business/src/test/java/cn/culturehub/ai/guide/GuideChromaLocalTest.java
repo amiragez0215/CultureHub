@@ -33,13 +33,23 @@ import org.springframework.web.client.RestClient;
 class GuideChromaLocalTest {
   @Test
   void manifestToEmbeddingToScopedGrade() throws Exception {
+    var offline = new java.util.concurrent.atomic.AtomicBoolean();
     var requestFactory = new SimpleClientHttpRequestFactory();
     requestFactory.setConnectTimeout(2000);
     requestFactory.setReadTimeout(5000);
     var api =
         ChromaApi.builder()
             .baseUrl(System.getProperty("chroma.test.url", "http://127.0.0.1:18090"))
-            .restClientBuilder(RestClient.builder().requestFactory(requestFactory))
+            .restClientBuilder(
+                RestClient.builder()
+                    .requestFactory(requestFactory)
+                    .requestInterceptor(
+                        (request, body, execution) -> {
+                          if (offline.get())
+                            throw new java.io.IOException(
+                                "Acceptance: Chroma transport interrupted");
+                          return execution.execute(request, body);
+                        }))
             .build();
     var model =
         new OpenAiEmbeddingModel(
@@ -55,6 +65,8 @@ class GuideChromaLocalTest {
     String collection = "guide-round2-test-" + UUID.randomUUID();
     var vector =
         ChromaVectorStore.builder(api, model)
+            .tenantName("default_tenant")
+            .databaseName("default_database")
             .collectionName(collection)
             .initializeSchema(true)
             .build();
@@ -107,7 +119,9 @@ class GuideChromaLocalTest {
           List.of(
               new RetrievalNeed("museum", "儿童年龄规则", museum, null, "AGE_RULE", true),
               new RetrievalNeed("community", "儿童年龄规则", community, null, "AGE_RULE", true),
-              new RetrievalNeed("missing", "家长陪同要求", community, null, "GUARDIAN_RULE", true));
+              new RetrievalNeed("missing", "家长陪同要求", community, null, "GUARDIAN_RULE", true),
+              new RetrievalNeed(
+                  "other-activity", "活动背景", museum, 1000000L, "ACTIVITY_BACKGROUND", false));
       turn.retrievalPlan = rag.plan(turn);
       turn.retrievedDocuments = rag.retrieve(turn);
       assertTrue(
@@ -126,10 +140,51 @@ class GuideChromaLocalTest {
       assertTrue(grades.get(0).evidenceIds().stream().allMatch(id -> id.startsWith("museum-")));
       assertTrue(grades.get(1).evidenceIds().stream().allMatch(id -> id.startsWith("community-")));
       assertEquals(GradeStatus.INSUFFICIENT, grades.get(2).status());
+      assertEquals(GradeStatus.INSUFFICIENT, grades.get(3).status());
+      System.out.printf(
+          "Chroma expected scoped policy documents recalled: %d/2; first museum recall: %s; rerank"
+              + " first: %s%n",
+          turn.retrievedDocuments.stream()
+              .filter(
+                  d ->
+                      Set.of("museum-child-policy", "community-child-policy")
+                          .contains(d.documentId()))
+              .count(),
+          turn.retrievedDocuments.stream()
+              .filter(d -> "museum".equals(d.questionId()))
+              .findFirst()
+              .map(Evidence::documentId)
+              .orElse("none"),
+          turn.rerankedDocuments.stream()
+              .filter(d -> "museum".equals(d.questionId()))
+              .findFirst()
+              .map(Evidence::documentId)
+              .orElse("none"));
+      var generation = rag.activeSnapshot().generation();
+      offline.set(true);
+      assertEquals(
+          "RAG_INDEX_WRITE_FAILED", assertThrows(cn.culturehub.Problem.class, rag::reindex).code);
+      assertEquals(generation, rag.activeSnapshot().generation());
+      turn.deadlineEpochMillis = System.currentTimeMillis() + 30000;
+      turn.retrievedDocuments = rag.retrieve(turn);
+      turn.rerankedDocuments = rag.rerank(turn);
+      assertTrue(rag.grade(turn).stream().allMatch(g -> g.status() == GradeStatus.UNAVAILABLE));
+      offline.set(false);
+      turn.retrievedDocuments = rag.retrieve(turn);
+      turn.rerankedDocuments = rag.rerank(turn);
+      assertEquals(GradeStatus.SUPPORTED, rag.grade(turn).get(0).status());
+      System.out.println(
+          "Chroma injected transport outage: UNAVAILABLE; generation kept; old corpus usable after"
+              + " recovery");
     } finally {
+      offline.set(false);
       registry.delete(rag.indexKey);
       redis.destroy();
-      api.deleteCollection("default_tenant", "default_database", collection);
+      try {
+        api.deleteCollection("default_tenant", "default_database", collection);
+      } catch (org.springframework.web.client.HttpClientErrorException.NotFound alreadyRemoved) {
+        // Initialization may have failed before creating the test-only collection.
+      }
     }
   }
 }
