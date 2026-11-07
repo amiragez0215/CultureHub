@@ -48,6 +48,7 @@ public class GuideAgentV2 {
       state.requirements = prior == null ? null : prior.requirements;
       if (prior != null) {
         state.previousPlan = prior.proposal;
+        state.previousKnowledgeQuestions = prior.knowledgeQuestions;
         if (Duration.between(prior.identity.currentTime(), state.identity.currentTime())
                 .getSeconds()
             < 30) {
@@ -76,10 +77,15 @@ public class GuideAgentV2 {
                 state.requirements.intentType() == IntentType.VENUE_QA
                     ? "请查看下方公开知识来源；无法确认的规则请向场馆核实。"
                     : "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。";
-            case "CLARIFICATION" -> state.requirements.clarificationQuestion();
+            case "CLARIFICATION" ->
+                Objects.requireNonNullElse(
+                    state.requirements.clarificationQuestion(), "请说明要查询哪个场馆。");
             case "CANCELLED" -> "已停止本轮规划，未提交预约。";
             case "KNOWLEDGE_BLOCKED" -> "现有证据不足以确认您要求的场馆规则，未将该条件标记为满足。";
-            case "NO_RESULTS" -> "当前条件没有匹配的公开场次，可修改日期或活动条件。";
+            case "NO_RESULTS" ->
+                state.toolResults.stream().anyMatch(r -> "VENUE_NOT_FOUND".equals(r.errorType()))
+                    ? "未找到指定场馆，请核对场馆名称。"
+                    : "当前条件没有匹配的公开场次，可修改日期或活动条件。";
             default -> "当前约束下未能生成经过验证的方案，请调整条件后重试。";
           };
       persistence.remember(state, answer);
@@ -93,13 +99,17 @@ public class GuideAgentV2 {
               : state.phase.equals("CLARIFICATION") ? "CLARIFICATION" : "NO_RESULT");
       result.put("explanation", answer);
       result.put("candidates", candidates);
-      result.put("plan", state.proposal);
+      result.put("plan", state.phase.equals("VERIFIED") ? state.proposal : null);
       result.put("planVersion", version);
       result.put(
           "sources",
           state.rerankedDocuments.stream().map(e -> e.source() + "#" + e.chunkId()).toList());
       result.put("evidence", state.evidenceGrade);
       result.put("evidenceBindings", state.evidenceBindings);
+      result.put("businessAnswers", state.businessAnswers);
+      result.put(
+          "sessionDetails",
+          state.detailOnly && state.phase.equals("VERIFIED") ? state.candidateSessions : List.of());
       result.put("knowledgeNotice", String.join("；", state.unresolvedKnowledge));
       result.put(
           "preferences",
@@ -113,6 +123,8 @@ public class GuideAgentV2 {
               state.llmCalls,
               "toolCalls",
               state.toolCalls,
+              "nativeToolCalls",
+              state.nativeToolCalls,
               "promptTokens",
               state.promptTokens,
               "completionTokens",

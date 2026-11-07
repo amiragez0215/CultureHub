@@ -5,6 +5,12 @@ import static cn.culturehub.ai.guide.GuideState.*;
 import cn.culturehub.ai.guide.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.tool.function.FunctionToolCallback;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -41,13 +47,85 @@ public class GuideLanguageModel implements GuideLanguage {
           state.identity.turnId(),
           state.currentPlanVersion,
           state.identity.currentTime(),
-          state.activityCombinations.isEmpty()
+          state.detailOnly || state.activityCombinations.isEmpty()
               ? java.util.List.of()
               : java.util.List.of(state.activityCombinations.get(state.evidenceCandidateIndex)),
           state.evidenceGrade,
           state.unresolvedKnowledge
         },
         Proposal.class);
+  }
+
+  /** Java fixes the session before exposing the single read-only callback. */
+  public ToolResult sessionDetailsTool(Turn state, long sessionId, Supplier<ToolResult> read) {
+    var result = new AtomicReference<ToolResult>();
+    var callback =
+        FunctionToolCallback.builder(
+                "getSessionDetails",
+                (Map<?, ?> ignored) -> {
+                  result.set(read.get());
+                  return "已完成只读场次查询";
+                })
+            .description("读取当前请求已经确定的公开活动场次，无参数，只读。")
+            .inputType(Map.class)
+            .inputSchema("{\"type\":\"object\",\"properties\":{},\"additionalProperties\":false}")
+            .build();
+    ChatResponse response;
+    state.llmCalls++;
+    try {
+      response =
+          Mono.fromCallable(
+                  () ->
+                      ai.client()
+                          .prompt()
+                          .system("只能调用本轮提供的只读工具。调用时传空 JSON 对象。")
+                          .user("读取公开场次 " + sessionId + " 的详情。")
+                          .options(
+                              OpenAiChatOptions.builder()
+                                  .internalToolExecutionEnabled(false)
+                                  .toolChoice("auto")
+                                  .build())
+                          .toolCallbacks(callback)
+                          .call()
+                          .chatResponse())
+              .subscribeOn(Schedulers.boundedElastic())
+              .block(Duration.ofSeconds(8));
+    } catch (RuntimeException unavailable) {
+      return read.get();
+    }
+    if (response == null) return read.get();
+    recordUsage(state, response);
+    var calls =
+        response.getResults().stream().flatMap(g -> g.getOutput().getToolCalls().stream()).toList();
+    if (calls.isEmpty()) return read.get();
+    Problem.require(calls.size() == 1, "INVALID_TOOL_CALL", "工具调用数量超出允许范围");
+    var proposed = calls.get(0);
+    validateDetailCall(proposed.name(), proposed.arguments());
+    callback.call(proposed.arguments());
+    state.nativeToolCalls++;
+    return result.get();
+  }
+
+  void validateDetailCall(String name, String arguments) {
+    Problem.require("getSessionDetails".equals(name), "INVALID_TOOL_CALL", "工具不在本轮白名单中");
+    try {
+      var parsed = json.readTree(arguments);
+      Problem.require(
+          parsed != null && parsed.isObject() && parsed.isEmpty(),
+          "INVALID_TOOL_CALL",
+          "场次查询工具不接受模型提供的参数");
+    } catch (java.io.IOException | IllegalArgumentException invalid) {
+      throw new Problem("INVALID_TOOL_CALL", "工具参数格式不正确", 400);
+    }
+  }
+
+  private void recordUsage(Turn state, ChatResponse response) {
+    var usage = response.getMetadata().getUsage();
+    if (usage != null) {
+      if (usage.getPromptTokens() != null) state.promptTokens += usage.getPromptTokens();
+      if (usage.getCompletionTokens() != null)
+        state.completionTokens += usage.getCompletionTokens();
+    }
   }
 
   <T> T invoke(Turn state, String system, Object input, Class<T> type) {

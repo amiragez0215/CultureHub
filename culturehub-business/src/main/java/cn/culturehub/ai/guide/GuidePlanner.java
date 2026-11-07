@@ -144,6 +144,24 @@ public class GuidePlanner {
     }
   }
 
+  Proposal informationalProposal(Turn s) {
+    return new Proposal(
+        s.identity.turnId(),
+        s.currentPlanVersion,
+        "文化活动计划",
+        List.of(),
+        List.of(),
+        List.of("场馆知识查询"),
+        s.evidenceBindings.stream()
+            .filter(b -> b.status() == GradeStatus.SUPPORTED)
+            .flatMap(b -> b.evidenceIds().stream())
+            .distinct()
+            .toList(),
+        s.unresolvedKnowledge,
+        List.of(),
+        s.identity.currentTime());
+  }
+
   public Verification verify(Turn s, Proposal p) {
     var errors = new ArrayList<Violation>();
     if (p == null
@@ -177,7 +195,7 @@ public class GuidePlanner {
               "方案身份或版本不正确",
               "ProposalGenerate",
               true));
-    if (s.requirements.intentType() != IntentType.VENUE_QA) {
+    if (s.requirements.intentType() != IntentType.VENUE_QA && !s.detailOnly) {
       boolean knownCombination =
           GuideEvidenceScope.selected(s).stream()
               .map(Session::sessionId)
@@ -265,13 +283,22 @@ public class GuidePlanner {
                   "CandidateOptimize",
                   true));
       }
+    } else if (!p.orderedSessionIds().isEmpty() || !p.scheduleItems().isEmpty()) {
+      errors.add(
+          new Violation(
+              Failure.FACT_MISMATCH,
+              "scheduleItems",
+              p.orderedSessionIds(),
+              "只读咨询不能生成可确认预约的场次",
+              "ProposalGenerate",
+              true));
     }
     var bindings = GuideEvidenceScope.bind(s);
     Set<String> allowed = new HashSet<>();
     bindings.stream()
         .filter(b -> b.status() == GradeStatus.SUPPORTED)
         .forEach(b -> allowed.addAll(b.evidenceIds()));
-    if (bindings.stream().anyMatch(b -> b.required() && b.status() != GradeStatus.SUPPORTED))
+    if (bindings.stream().anyMatch(b -> b.required() && !b.satisfiesRequirement()))
       errors.add(
           new Violation(
               Failure.RETRIEVAL_INSUFFICIENT,

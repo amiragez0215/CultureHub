@@ -84,10 +84,12 @@ public class GuideGraphV2 {
           g,
           "InformationNeedPlan",
           s ->
-              s.toolCheckResult != null && s.toolCheckResult.status() == ResultStatus.SKIPPED
-                  ? "rag"
-                  : "tools",
-          Map.of("rag", "RetrievalPlan", "tools", "ToolPlan"));
+              s.phase.equals("CLARIFICATION")
+                  ? "stop"
+                  : s.toolCheckResult != null && s.toolCheckResult.status() == ResultStatus.SKIPPED
+                      ? "rag"
+                      : "tools",
+          Map.of("stop", END, "rag", "RetrievalPlan", "tools", "ToolPlan"));
       g.addEdge("ToolPlan", "ToolExecute");
       g.addEdge("ToolExecute", "ToolCheck");
       route(
@@ -98,7 +100,7 @@ public class GuideGraphV2 {
                   ? "repair"
                   : s.toolCheckResult.status() == ResultStatus.EMPTY
                       ? "stop"
-                      : s.requirements.intentType() != IntentType.VENUE_QA
+                      : s.requirements.intentType() != IntentType.VENUE_QA && !s.detailOnly
                           ? "optimize"
                           : s.retrievalNeeds.isEmpty() ? "gate" : "rag",
           Map.of(
@@ -219,20 +221,37 @@ public class GuideGraphV2 {
                   : "UNDERSTOOD";
         }
         case "InformationNeedPlan" -> {
-          boolean qa = s.requirements.intentType() == IntentType.VENUE_QA;
-          s.informationNeeds =
-              qa
-                  ? List.of(new Need("knowledge", "核对公开规则", "venueId（场馆规则适用）", true))
-                  : List.of(
-                      new Need("business", "公开场次、余量和本人资格", null, true),
-                      new Need("knowledge", "必要规则或活动背景", "venueId/activityId", false),
-                      new Need("planning", "同馆、时间、间隔、数量、已有预约冲突", "business", true));
-          if (qa && s.requirements.hardConstraints().venue() == null) {
+          var needs = GuideTools.needs(s);
+          s.detailOnly =
+              s.requirements.intentType() == IntentType.ACTIVITY_SEARCH
+                  && GuideTools.requestedSession(s.identity.latestUserMessage()) != null
+                  && !s.identity.latestUserMessage().matches("(?s).*(帮我预约|帮我报名|安排|规划).*");
+          s.knowledgeQuestions = GuideKnowledgeQuestions.plan(s);
+          var all = new ArrayList<>(needs);
+          for (var question : s.knowledgeQuestions)
+            all.add(
+                new Need(
+                    question.id(),
+                    question.question(),
+                    needs.isEmpty() ? null : needs.get(0).id(),
+                    question.required()));
+          if (s.requirements.intentType() != IntentType.VENUE_QA && !s.detailOnly)
+            all.add(new Need("planning", "按业务时间与硬条件核验组合", needs.get(0).id(), true));
+          s.informationNeeds = List.copyOf(all);
+          s.toolResults =
+              s.toolResults.stream()
+                  .filter(
+                      r ->
+                          needs.stream()
+                              .anyMatch(
+                                  n ->
+                                      n.id().equals(r.informationNeedId())
+                                          && n.arguments().equals(r.arguments())))
+                  .toList();
+          if (needs.isEmpty()) {
             s.toolCheckResult = new ToolCheckResult(ResultStatus.SKIPPED, Failure.NONE, List.of());
-            s.retrievalNeeds =
-                List.of(
-                    new RetrievalNeed(
-                        "global", s.identity.latestUserMessage(), null, null, "BACKGROUND", true));
+            GuideEvidenceScope.reset(s);
+            if (s.retrievalNeeds.isEmpty()) s.phase = "CLARIFICATION";
           }
         }
         case "ToolPlan" -> {
@@ -240,27 +259,13 @@ public class GuideGraphV2 {
           s.failureType = Failure.NONE;
         }
         case "ToolExecute" -> {
-          if (s.reuseBusinessFacts) break;
-          var previousResults = s.toolResults;
-          s.toolResults = new ArrayList<>();
-          s.candidateSessions = new ArrayList<>();
-          s.existingBookings = new ArrayList<>();
-          for (var call : s.toolPlan) {
-            var cached =
-                s.repairCounters.getOrDefault("business", 0) > 0
-                    ? previousResults.stream()
-                        .filter(
-                            r ->
-                                r.tool() == call.name()
-                                    && (r.status() == ResultStatus.SUCCESS
-                                        || r.status() == ResultStatus.EMPTY))
-                        .findFirst()
-                    : Optional.<ToolResult>empty();
-            var result = cached.orElseGet(() -> tools.execute(call, s));
-            s.toolResults.add(result);
-            s.candidateSessions.addAll(result.sessions());
-            s.existingBookings.addAll(result.bookings());
-          }
+          var results = new LinkedHashMap<String, ToolResult>();
+          s.toolResults.forEach(result -> results.put(result.informationNeedId(), result));
+          for (var call : s.toolPlan)
+            results.put(call.informationNeedId(), tools.execute(call, s).forCall(call));
+          s.toolResults = List.copyOf(results.values());
+          s.candidateSessions = s.toolResults.stream().flatMap(r -> r.sessions().stream()).toList();
+          s.existingBookings = s.toolResults.stream().flatMap(r -> r.bookings().stream()).toList();
         }
         case "ToolCheck" -> {
           s.toolCheckResult = tools.check(s);
@@ -268,7 +273,8 @@ public class GuideGraphV2 {
           s.repairTarget =
               s.failureType == Failure.TOOL_EXECUTION_FAILED ? "ToolExecute" : "ToolPlan";
           if (s.toolCheckResult.status() == ResultStatus.EMPTY) s.phase = "NO_RESULTS";
-          if (s.failureType == Failure.NONE && s.requirements.intentType() == IntentType.VENUE_QA)
+          if (s.failureType == Failure.NONE
+              && (s.requirements.intentType() == IntentType.VENUE_QA || s.detailOnly))
             GuideEvidenceScope.reset(s);
         }
         case "RetrievalPlan" -> {
@@ -278,29 +284,16 @@ public class GuideGraphV2 {
         case "Retrieve" -> {
           try {
             s.retrievedDocuments = rag.retrieve(s);
-            s.knowledgeStatus = ResultStatus.SUCCESS;
+            s.knowledgeStatus =
+                s.unavailableQuestions.isEmpty() ? ResultStatus.SUCCESS : ResultStatus.PARTIAL;
           } catch (Exception e) {
             s.knowledgeStatus = ResultStatus.FAILED;
             s.retrievedDocuments = List.of();
           }
         }
-        case "Rerank" ->
-            s.rerankedDocuments = rag.rerank(s.retrievedDocuments, s.identity.latestUserMessage());
+        case "Rerank" -> s.rerankedDocuments = rag.rerank(s);
         case "EvidenceGrade" -> {
-          if (s.knowledgeStatus == ResultStatus.FAILED)
-            s.evidenceGrade =
-                s.retrievalNeeds.stream()
-                    .map(
-                        n ->
-                            new Grade(
-                                n.questionId(),
-                                GradeStatus.UNAVAILABLE,
-                                List.of(),
-                                List.of(),
-                                List.of(n.question()),
-                                "知识检索不可用"))
-                    .toList();
-          else s.evidenceGrade = rag.grade(s);
+          s.evidenceGrade = rag.grade(s);
           s.supportedClaims =
               s.evidenceGrade.stream().flatMap(g -> g.supportedFacts().stream()).toList();
           s.unresolvedKnowledge =
@@ -312,8 +305,7 @@ public class GuideGraphV2 {
           s.evidenceBindings = GuideEvidenceScope.bind(s);
           var blocked =
               s.evidenceBindings.stream()
-                  .filter(
-                      binding -> binding.required() && binding.status() != GradeStatus.SUPPORTED)
+                  .filter(binding -> binding.required() && !binding.satisfiesRequirement())
                   .toList();
           if (!blocked.isEmpty()) {
             s.phase = "KNOWLEDGE_BLOCKED";
@@ -341,7 +333,10 @@ public class GuideGraphV2 {
         case "ProposalGenerate" -> {
           try {
             s.failureType = Failure.NONE;
-            s.proposal = language.generate(s);
+            s.proposal =
+                s.requirements.intentType() == IntentType.VENUE_QA || s.detailOnly
+                    ? planner.informationalProposal(s)
+                    : language.generate(s);
           } catch (Problem e) {
             s.failureType = Failure.OUTPUT_FORMAT_INVALID;
             s.repairTarget = "ProposalGenerate";
@@ -358,6 +353,7 @@ public class GuideGraphV2 {
         case "RepairRouter" -> {
           s.repairTarget = planner.repair(s);
           if ("RetrievalPlan".equals(s.repairTarget)) GuideEvidenceScope.advance(s);
+          if ("ToolExecute".equals(s.repairTarget)) s.toolPlan = tools.plan(s);
         }
         case "DecisionGate" -> s.phase = "VERIFIED";
         default -> throw new IllegalArgumentException("Unknown node");

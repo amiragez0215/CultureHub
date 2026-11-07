@@ -63,25 +63,14 @@ class GuideEvidenceScopeTest {
             call -> {
               Turn turn = call.getArgument(0);
               long venue = turn.retrievalNeeds.get(0).venueId();
-              return venue == 7 ? List.of() : List.of(evidence(venue, null, "AGE_RULE"));
-            });
-    when(rag.rerank(any(), any())).thenAnswer(call -> call.getArgument(0));
-    when(rag.grade(any()))
-        .thenAnswer(
-            call -> {
-              Turn turn = call.getArgument(0);
               var need = turn.retrievalNeeds.get(0);
-              return List.of(
-                  new Grade(
-                      need.questionId(),
-                      turn.retrievedDocuments.isEmpty()
-                          ? GradeStatus.INSUFFICIENT
-                          : GradeStatus.SUPPORTED,
-                      List.of(),
-                      turn.retrievedDocuments.stream().map(Evidence::chunkId).toList(),
-                      List.of(),
-                      null));
+              return venue == 7
+                  ? List.of()
+                  : List.of(evidence(venue, need.activityId(), "AGE_RULE"));
             });
+    when(rag.rerank(any(Turn.class)))
+        .thenAnswer(call -> ((Turn) call.getArgument(0)).retrievedDocuments);
+    when(rag.grade(any())).thenCallRealMethod();
     when(language.generate(any())).thenAnswer(call -> proposal(call.getArgument(0)));
     var result =
         new GuideGraphV2(new GuideIntent(), tools, rag, new GuidePlanner(), language)
@@ -89,7 +78,7 @@ class GuideEvidenceScopeTest {
     assertEquals(List.of(7L, 1L), venuesSearched);
     assertEquals("VERIFIED", result.phase);
     assertEquals(List.of(1L), result.proposal.orderedSessionIds());
-    assertEquals(List.of("chunk-1-null"), result.proposal.evidenceReferences());
+    assertEquals(List.of("chunk-1-1"), result.proposal.evidenceReferences());
     assertEquals(1, result.evidenceBindings.get(0).sessionId());
     assertEquals(1, result.visitedNodes.stream().filter("ToolExecute"::equals).count());
     verify(language, times(1)).generate(any());

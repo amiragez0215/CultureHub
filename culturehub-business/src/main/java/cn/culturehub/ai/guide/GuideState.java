@@ -82,11 +82,41 @@ public final class GuideState {
       Boolean wordingOnly)
       implements java.io.Serializable {}
 
-  public record Need(String id, String question, String dependency, boolean required)
+  public record Need(
+      String id,
+      String question,
+      String dependency,
+      boolean required,
+      ToolName tool,
+      ToolArguments arguments)
+      implements java.io.Serializable {
+    public Need(String id, String question, String dependency, boolean required) {
+      this(id, question, dependency, required, null, null);
+    }
+  }
+
+  public record ToolArguments(Long sessionId, String keyword, Preferences filters)
       implements java.io.Serializable {}
 
-  public record ToolCall(ToolName name, Long sessionId, String keyword)
-      implements java.io.Serializable {}
+  public record ToolCall(
+      ToolName name,
+      ToolArguments arguments,
+      String informationNeedId,
+      boolean required,
+      String dependency)
+      implements java.io.Serializable {
+    public ToolCall(ToolName name, Long sessionId, String keyword) {
+      this(name, new ToolArguments(sessionId, keyword, null), name.name(), true, null);
+    }
+
+    public Long sessionId() {
+      return arguments.sessionId();
+    }
+
+    public String keyword() {
+      return arguments.keyword();
+    }
+  }
 
   public record Session(
       long sessionId,
@@ -125,8 +155,34 @@ public final class GuideState {
       List<ExistingBooking> bookings,
       List<Venue> venues,
       LocalDateTime queriedAt,
-      String errorType)
-      implements java.io.Serializable {}
+      String errorType,
+      String informationNeedId,
+      ToolArguments arguments)
+      implements java.io.Serializable {
+    public ToolResult(
+        ToolName tool,
+        ResultStatus status,
+        List<Session> sessions,
+        List<ExistingBooking> bookings,
+        List<Venue> venues,
+        LocalDateTime queriedAt,
+        String errorType) {
+      this(tool, status, sessions, bookings, venues, queriedAt, errorType, tool.name(), null);
+    }
+
+    ToolResult forCall(ToolCall call) {
+      return new ToolResult(
+          tool,
+          status,
+          sessions,
+          bookings,
+          venues,
+          queriedAt,
+          errorType,
+          call.informationNeedId(),
+          call.arguments());
+    }
+  }
 
   public record ToolCheckResult(ResultStatus status, Failure failureType, List<String> missing)
       implements java.io.Serializable {}
@@ -138,6 +194,10 @@ public final class GuideState {
       Long activityId,
       String knowledgeType,
       boolean required)
+      implements java.io.Serializable {}
+
+  public record KnowledgeQuestion(
+      String id, String question, String type, boolean required, boolean activityScoped)
       implements java.io.Serializable {}
 
   public record RetrievalQuery(RetrievalNeed need, String rewrittenQuery, int topK)
@@ -155,8 +215,38 @@ public final class GuideState {
       LocalDate expiresOn,
       String text,
       double retrievalScore,
-      double rerankScore)
-      implements java.io.Serializable {}
+      double rerankScore,
+      String questionId)
+      implements java.io.Serializable {
+    public Evidence(
+        String documentId,
+        String chunkId,
+        Long venueId,
+        Long activityId,
+        String scope,
+        String source,
+        String knowledgeType,
+        String version,
+        LocalDate expiresOn,
+        String text,
+        double retrievalScore,
+        double rerankScore) {
+      this(
+          documentId,
+          chunkId,
+          venueId,
+          activityId,
+          scope,
+          source,
+          knowledgeType,
+          version,
+          expiresOn,
+          text,
+          retrievalScore,
+          rerankScore,
+          null);
+    }
+  }
 
   public enum GradeStatus {
     SUPPORTED,
@@ -165,14 +255,57 @@ public final class GuideState {
     UNAVAILABLE
   }
 
+  public enum Conclusion {
+    ALLOWED,
+    DENIED,
+    ACCOMPANIMENT_REQUIRED,
+    INDEPENDENT_ALLOWED,
+    OPEN,
+    CLOSED,
+    EXCERPT
+  }
+
+  public record Claim(
+      String questionId,
+      Long venueId,
+      Long activityId,
+      String knowledgeType,
+      Conclusion conclusion,
+      String statement,
+      String condition,
+      String evidenceId,
+      Integer minAge,
+      Integer maxAge)
+      implements java.io.Serializable {}
+
   public record Grade(
       String questionId,
       GradeStatus status,
       List<String> supportedFacts,
       List<String> evidenceIds,
       List<String> unresolvedQuestions,
-      String failureReason)
-      implements java.io.Serializable {}
+      String failureReason,
+      List<Claim> claims,
+      boolean satisfiesRequirement)
+      implements java.io.Serializable {
+    public Grade(
+        String questionId,
+        GradeStatus status,
+        List<String> supportedFacts,
+        List<String> evidenceIds,
+        List<String> unresolvedQuestions,
+        String failureReason) {
+      this(
+          questionId,
+          status,
+          supportedFacts,
+          evidenceIds,
+          unresolvedQuestions,
+          failureReason,
+          List.of(),
+          status == GradeStatus.SUPPORTED);
+    }
+  }
 
   public record EvidenceBinding(
       Long sessionId,
@@ -181,7 +314,8 @@ public final class GuideState {
       String questionId,
       boolean required,
       GradeStatus status,
-      List<String> evidenceIds)
+      List<String> evidenceIds,
+      boolean satisfiesRequirement)
       implements java.io.Serializable {}
 
   public record Combination(List<Session> sessions, double score, List<String> reasons)
@@ -221,6 +355,9 @@ public final class GuideState {
     public Identity identity;
     public Requirements requirements;
     public List<Need> informationNeeds = new ArrayList<>();
+    public List<KnowledgeQuestion> knowledgeQuestions = new ArrayList<>();
+    public List<KnowledgeQuestion> previousKnowledgeQuestions = new ArrayList<>();
+    public List<String> businessAnswers = new ArrayList<>();
     public List<ToolCall> toolPlan = new ArrayList<>();
     public List<ToolResult> toolResults = new ArrayList<>();
     public ToolCheckResult toolCheckResult;
@@ -230,6 +367,7 @@ public final class GuideState {
     public List<RetrievalQuery> retrievalPlan = new ArrayList<>();
     public List<Evidence> retrievedDocuments = new ArrayList<>(),
         rerankedDocuments = new ArrayList<>();
+    public Set<String> unavailableQuestions = new LinkedHashSet<>();
     public List<Grade> evidenceGrade = new ArrayList<>();
     public List<EvidenceBinding> evidenceBindings = new ArrayList<>();
     public int evidenceCandidateIndex;
@@ -244,7 +382,8 @@ public final class GuideState {
     public Map<String, Integer> repairCounters = new LinkedHashMap<>();
     public List<String> visitedNodes = new ArrayList<>();
     public boolean cancelled;
-    public int toolCalls, llmCalls, currentPlanVersion;
+    public boolean detailOnly;
+    public int toolCalls, llmCalls, nativeToolCalls, currentPlanVersion;
     public long promptTokens, completionTokens;
     public ResultStatus knowledgeStatus = ResultStatus.SKIPPED;
     public long deadlineEpochMillis;

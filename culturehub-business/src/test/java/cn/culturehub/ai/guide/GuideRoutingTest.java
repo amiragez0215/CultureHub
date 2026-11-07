@@ -25,7 +25,7 @@ class GuideRoutingTest {
             mock(org.springframework.beans.factory.ObjectProvider.class),
             mock(cn.culturehub.Store.class),
             mock(cn.culturehub.Access.class));
-    state.deadlineEpochMillis=System.currentTimeMillis()+90000;
+    state.deadlineEpochMillis = System.currentTimeMillis() + 90000;
     var result =
         new GuideGraphV2(new GuideIntent(), tools, rag, new GuidePlanner(), language)
             .execute(state, s -> {});
@@ -81,7 +81,7 @@ class GuideRoutingTest {
     when(tools.check(any())).thenCallRealMethod();
     when(rag.plan(any())).thenReturn(List.of());
     when(rag.retrieve(any())).thenReturn(List.of());
-    when(rag.rerank(any(), any())).thenReturn(List.of());
+    when(rag.rerank(any(Turn.class))).thenReturn(List.of());
     when(rag.grade(any()))
         .thenReturn(
             List.of(
@@ -115,7 +115,7 @@ class GuideRoutingTest {
                   GuidePlanningTest.NOW);
             });
     var graph = new GuideGraphV2(new GuideIntent(), tools, rag, new GuidePlanner(), language);
-    state.deadlineEpochMillis=System.currentTimeMillis()+90000;
+    state.deadlineEpochMillis = System.currentTimeMillis() + 90000;
     Turn output = graph.execute(state, s -> {});
     assertEquals("VERIFIED", output.phase);
     assertEquals(15, new HashSet<>(output.visitedNodes).size());

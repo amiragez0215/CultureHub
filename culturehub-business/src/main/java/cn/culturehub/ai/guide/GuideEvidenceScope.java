@@ -15,56 +15,69 @@ final class GuideEvidenceScope {
   }
 
   static List<RetrievalNeed> needs(Turn turn, List<Session> selected) {
-    String message = turn.identity.latestUserMessage();
-    if (turn.requirements.intentType() == IntentType.VENUE_QA) {
-      if (turn.requirements.hardConstraints().venue() == null)
-        return List.of(new RetrievalNeed("global", message, null, null, "BACKGROUND", true));
-      return turn.toolResults.stream()
-          .flatMap(r -> r.venues().stream())
-          .limit(1)
-          .map(
-              v ->
-                  new RetrievalNeed(
-                      "rules:" + v.venueId(), message, v.venueId(), null, "VENUE_RULE", true))
-          .toList();
-    }
-    if (selected.isEmpty()) return List.of();
+    var questions =
+        turn.knowledgeQuestions.isEmpty()
+            ? GuideKnowledgeQuestions.plan(turn)
+            : turn.knowledgeQuestions;
     var result = new ArrayList<RetrievalNeed>();
-    long venue = selected.get(0).venueId();
-    boolean age = turn.requirements.hardConstraints().childAge() != null;
-    if (age)
-      result.add(
-          new RetrievalNeed(
-              "rules:" + venue,
-              message,
-              venue,
-              null,
-              "AGE_RULE",
-              message.matches("(?s).*(必须|确认|能否|可否|能不能|可以参加吗).*")));
-    if (message.matches("(?s).*(背景|历史|来源).*"))
-      for (var session : selected)
-        result.add(
-            new RetrievalNeed(
-                "activity:" + session.activityId(),
-                "活动背景 " + session.title(),
-                venue,
-                session.activityId(),
-                "ACTIVITY_BACKGROUND",
-                false));
+    var venues = turn.toolResults.stream().flatMap(r -> r.venues().stream()).toList();
+    for (var question : questions) {
+      if (turn.requirements.intentType() == IntentType.VENUE_QA) {
+        if (venues.size() == 1) {
+          var venue = venues.get(0);
+          if (question.type().equals("OPENING_HOURS")
+              && GuideRuleAssessment.hours(question.question(), venue.openingHours()).isPresent())
+            continue;
+          var venueId = question.type().equals("BACKGROUND") ? null : venue.venueId();
+          result.add(need(question, venueId, null, venue.name()));
+        } else if (question.type().equals("BACKGROUND")
+            && turn.requirements.hardConstraints().venue() == null) {
+          result.add(need(question, null, null, ""));
+        }
+        continue;
+      }
+      if (selected.isEmpty()) continue;
+      if (question.activityScoped()) {
+        for (var session : selected)
+          result.add(need(question, session.venueId(), session.activityId(), session.title()));
+      } else {
+        var first = selected.get(0);
+        result.add(need(question, first.venueId(), null, first.venueName()));
+      }
+    }
     return List.copyOf(result);
+  }
+
+  private static RetrievalNeed need(
+      KnowledgeQuestion question, Long venue, Long activity, String name) {
+    return new RetrievalNeed(
+        question.id()
+            + ":"
+            + (venue == null ? "global" : venue)
+            + (activity == null ? "" : ":" + activity),
+        question.question() + (name.isBlank() ? "" : "（" + name + "）"),
+        venue,
+        activity,
+        question.type(),
+        question.required());
+  }
+
+  static List<Session> subjectSessions(Turn turn) {
+    return turn.detailOnly ? turn.candidateSessions : selected(turn);
   }
 
   static boolean scoped(Evidence evidence, RetrievalNeed need) {
     String scope =
         need.activityId() != null ? "ACTIVITY" : need.venueId() == null ? "GLOBAL" : "VENUE";
-    return scope.equals(evidence.scope())
+    return (evidence.questionId() == null || need.questionId().equals(evidence.questionId()))
+        && scope.equals(evidence.scope())
         && Objects.equals(evidence.venueId(), need.venueId())
         && Objects.equals(evidence.activityId(), need.activityId())
         && evidence.knowledgeType().equals(need.knowledgeType());
   }
 
   static List<EvidenceBinding> bind(Turn turn) {
-    var selected = selected(turn);
+    var selected = subjectSessions(turn);
     var bindings = new ArrayList<EvidenceBinding>();
     for (var need : turn.retrievalNeeds) {
       var grade =
@@ -82,8 +95,17 @@ final class GuideEvidenceScope {
               .distinct()
               .toList();
       var status = grade == null ? GradeStatus.INSUFFICIENT : grade.status();
-      if (status == GradeStatus.SUPPORTED && (ids.isEmpty() || !scopedIds.containsAll(ids)))
-        status = GradeStatus.INSUFFICIENT;
+      if (status == GradeStatus.SUPPORTED
+          && (ids.isEmpty()
+              || !scopedIds.containsAll(ids)
+              || grade.claims() == null
+              || grade.claims().isEmpty()
+              || grade.claims().stream()
+                  .anyMatch(
+                      c ->
+                          !claimMatches(c, need)
+                              || !scopedIds.contains(c.evidenceId())
+                              || !entails(turn, need, c)))) status = GradeStatus.INSUFFICIENT;
       if (selected.isEmpty()) {
         bindings.add(
             new EvidenceBinding(
@@ -93,7 +115,8 @@ final class GuideEvidenceScope {
                 need.questionId(),
                 need.required(),
                 status,
-                scopedIds));
+                scopedIds,
+                status == GradeStatus.SUPPORTED && grade.satisfiesRequirement()));
       } else {
         for (var session : selected) {
           if (!Objects.equals(need.venueId(), session.venueId())
@@ -106,18 +129,46 @@ final class GuideEvidenceScope {
                   need.questionId(),
                   need.required(),
                   status,
-                  scopedIds));
+                  scopedIds,
+                  status == GradeStatus.SUPPORTED && grade.satisfiesRequirement()));
         }
       }
     }
     return List.copyOf(bindings);
   }
 
+  static boolean claimMatches(Claim claim, RetrievalNeed need) {
+    return need.questionId().equals(claim.questionId())
+        && Objects.equals(need.venueId(), claim.venueId())
+        && Objects.equals(need.activityId(), claim.activityId())
+        && need.knowledgeType().equals(claim.knowledgeType());
+  }
+
+  private static boolean entails(Turn turn, RetrievalNeed need, Claim claim) {
+    Integer age = turn.requirements.hardConstraints().childAge();
+    return turn.rerankedDocuments.stream()
+        .filter(d -> claim.evidenceId().equals(d.chunkId()) && scoped(d, need))
+        .anyMatch(d -> GuideRuleAssessment.claims(need, d, age).contains(claim));
+  }
+
   static void reset(Turn turn) {
-    turn.retrievalNeeds = needs(turn, selected(turn));
+    turn.businessAnswers =
+        turn.toolResults.stream()
+            .flatMap(r -> r.venues().stream())
+            .flatMap(
+                v ->
+                    turn.knowledgeQuestions.stream()
+                        .filter(q -> q.type().equals("OPENING_HOURS"))
+                        .flatMap(
+                            q ->
+                                GuideRuleAssessment.hours(q.question(), v.openingHours()).stream()
+                                    .map(hours -> v.name() + "（场馆资料）：" + hours)))
+            .toList();
+    turn.retrievalNeeds = needs(turn, subjectSessions(turn));
     turn.retrievalPlan = List.of();
     turn.retrievedDocuments = List.of();
     turn.rerankedDocuments = List.of();
+    turn.unavailableQuestions = new LinkedHashSet<>();
     turn.evidenceGrade = List.of();
     turn.evidenceBindings = List.of();
     turn.supportedClaims = List.of();
@@ -128,7 +179,7 @@ final class GuideEvidenceScope {
   static boolean advance(Turn turn) {
     var blockedQuestions = new HashSet<String>();
     turn.evidenceBindings.stream()
-        .filter(b -> b.required() && b.status() != GradeStatus.SUPPORTED)
+        .filter(b -> b.required() && !b.satisfiesRequirement())
         .forEach(b -> blockedQuestions.add(b.questionId()));
     for (int i = turn.evidenceCandidateIndex + 1; i < turn.activityCombinations.size(); i++) {
       var next = needs(turn, turn.activityCombinations.get(i).sessions());

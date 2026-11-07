@@ -119,7 +119,7 @@ class GuideChromaLocalTest {
       assertTrue(
           turn.retrievedDocuments.stream()
               .noneMatch(d -> d.documentId().equals("museum-child-expired")));
-      turn.rerankedDocuments = rag.rerank(turn.retrievedDocuments, "儿童年龄规则");
+      turn.rerankedDocuments = rag.rerank(turn);
       var grades = rag.grade(turn);
       assertEquals(GradeStatus.SUPPORTED, grades.get(0).status());
       assertEquals(GradeStatus.SUPPORTED, grades.get(1).status());

@@ -102,7 +102,8 @@ class GuidePhaseOneTest {
   @Test
   void emptyIsNotFailure() {
     var state = new Turn();
-    state.requirements = intent.merge(null, patch(null), request("活动"), 10);
+    state.identity = request("活动");
+    state.requirements = intent.merge(null, patch(null), state.identity, 10);
     var tools = new GuideTools(mock(GuideQueryService.class));
     state.toolPlan = tools.plan(state);
     state.toolResults =
@@ -130,7 +131,8 @@ class GuidePhaseOneTest {
   @Test
   void missingBookingsRequiresToolPlanRepair() {
     var state = new Turn();
-    state.requirements = intent.merge(null, patch(null), request("活动"), 10);
+    state.identity = request("活动");
+    state.requirements = intent.merge(null, patch(null), state.identity, 10);
     var tools = new GuideTools(mock(GuideQueryService.class));
     state.toolPlan = tools.plan(state);
     assertEquals(Failure.TOOL_PLAN_INCOMPLETE, tools.check(state).failureType());
