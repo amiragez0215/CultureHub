@@ -169,6 +169,7 @@ final class GuideEvidenceScope {
     turn.retrievedDocuments = List.of();
     turn.rerankedDocuments = List.of();
     turn.unavailableQuestions = new LinkedHashSet<>();
+    turn.knowledgeGeneration = null;
     turn.evidenceGrade = List.of();
     turn.evidenceBindings = List.of();
     turn.supportedClaims = List.of();

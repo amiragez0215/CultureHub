@@ -82,6 +82,9 @@ public final class GuideState {
       Boolean wordingOnly)
       implements java.io.Serializable {}
 
+  public record ConversationExchange(String user, String assistant)
+      implements java.io.Serializable {}
+
   public record Need(
       String id,
       String question,
@@ -324,6 +327,18 @@ public final class GuideState {
   public record ScheduleItem(long sessionId, LocalDateTime startAt, LocalDateTime endAt)
       implements java.io.Serializable {}
 
+  public record RecommendationFact(String factId, Long sessionId, String statement)
+      implements java.io.Serializable {}
+
+  public enum NarrationStyle {
+    DIRECT,
+    EXPLAIN
+  }
+
+  public record RecommendationRef(
+      String factId, Long sessionId, String questionId, String evidenceId, NarrationStyle style)
+      implements java.io.Serializable {}
+
   public record Proposal(
       String planId,
       int planVersion,
@@ -334,8 +349,38 @@ public final class GuideState {
       List<String> evidenceReferences,
       List<String> unresolvedConditions,
       List<String> warnings,
-      LocalDateTime generatedAt)
-      implements java.io.Serializable {}
+      LocalDateTime generatedAt,
+      List<RecommendationRef> recommendationRefs)
+      implements java.io.Serializable {
+    public Proposal {
+      if (recommendationRefs == null) recommendationRefs = List.of();
+    }
+
+    public Proposal(
+        String planId,
+        int planVersion,
+        String title,
+        List<Long> orderedSessionIds,
+        List<ScheduleItem> scheduleItems,
+        List<String> recommendationReasons,
+        List<String> evidenceReferences,
+        List<String> unresolvedConditions,
+        List<String> warnings,
+        LocalDateTime generatedAt) {
+      this(
+          planId,
+          planVersion,
+          title,
+          orderedSessionIds,
+          scheduleItems,
+          recommendationReasons,
+          evidenceReferences,
+          unresolvedConditions,
+          warnings,
+          generatedAt,
+          List.of());
+    }
+  }
 
   public record Violation(
       Failure errorType,
@@ -351,6 +396,8 @@ public final class GuideState {
 
   public static class Turn implements java.io.Serializable {
     public Proposal previousPlan;
+    public String previousVenue;
+    public List<ConversationExchange> recentMessages = List.of();
     public boolean reuseBusinessFacts;
     public Identity identity;
     public Requirements requirements;
@@ -368,6 +415,7 @@ public final class GuideState {
     public List<Evidence> retrievedDocuments = new ArrayList<>(),
         rerankedDocuments = new ArrayList<>();
     public Set<String> unavailableQuestions = new LinkedHashSet<>();
+    public String knowledgeGeneration;
     public List<Grade> evidenceGrade = new ArrayList<>();
     public List<EvidenceBinding> evidenceBindings = new ArrayList<>();
     public int evidenceCandidateIndex;
@@ -375,6 +423,7 @@ public final class GuideState {
         unresolvedKnowledge = new ArrayList<>();
     public List<Session> rankedCandidates = new ArrayList<>();
     public List<Combination> activityCombinations = new ArrayList<>();
+    public List<RecommendationFact> recommendationFacts = new ArrayList<>();
     public Proposal proposal;
     public Verification verificationResult;
     public Failure failureType = Failure.NONE;

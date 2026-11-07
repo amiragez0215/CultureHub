@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class GuideIntent {
   public Requirements merge(Requirements previous, IntentPatch patch, Identity request, int gap) {
+    return merge(previous, patch, request, gap, null);
+  }
+
+  public Requirements merge(
+      Requirements previous, IntentPatch patch, Identity request, int gap, String previousVenue) {
     Problem.require(patch != null && patch.intentType() != null, "AI_OUTPUT_INVALID", "意图输出格式不完整");
     Preferences empty = new Preferences(null, null, null, null, null, null, null, null, null, null);
     Preferences old = previous == null ? empty : previous.hardConstraints();
@@ -29,6 +34,17 @@ public class GuideIntent {
       Problem.require(value == null || value.length() <= 120, "INVALID_PREFERENCES", "查询条件过长");
     String from = pick(p.fromDate(), old.fromDate()), to = pick(p.toDate(), old.toDate());
     String message = request.latestUserMessage();
+    boolean replaceFamily = message.matches("(?s).*(不要|不找|不看|不选)亲子(活动|类)?[^。！？]*(改成|换成).*");
+    String replacement = null;
+    if (replaceFamily) {
+      var matcher =
+          java.util.regex.Pattern.compile("(?:改成|换成)\\s*([^，。！？；,.!?]{1,20})").matcher(message);
+      if (matcher.find()) replacement = matcher.group(1).strip().replaceFirst("(?:活动|体验)$", "");
+    }
+    String venue = pick(p.venue(), old.venue());
+    if (previousVenue != null
+        && message.matches("(?s).*(还是|沿用|就选|保留).{0,12}(刚才|之前|原来|同一个).{0,8}(场馆|馆).*"))
+      venue = previousVenue;
     LocalDate date = null;
     if (message.contains("今天")) date = request.currentTime().toLocalDate();
     if (message.contains("明天")) date = request.currentTime().toLocalDate().plusDays(1);
@@ -54,10 +70,14 @@ public class GuideIntent {
             pick(p.toTime(), old.toTime()),
             message.matches("(?s).*(类别不限|类型不限|不限类别|不限类型).*")
                 ? null
-                : pick(p.category(), old.category()),
-            pick(p.audience(), old.audience()),
-            pick(p.keyword(), old.keyword()),
-            message.contains("场馆不限") ? null : pick(p.venue(), old.venue()),
+                : replaceFamily && (p.category() == null || "FAMILY".equals(p.category()))
+                    ? null
+                    : pick(p.category(), old.category()),
+            replaceFamily && (p.audience() == null || "FAMILY".equals(p.audience()))
+                ? null
+                : pick(p.audience(), old.audience()),
+            replaceFamily ? pick(replacement, p.keyword()) : pick(p.keyword(), old.keyword()),
+            message.contains("场馆不限") ? null : venue,
             p.childAge() == null ? old.childAge() : p.childAge(),
             p.minimumRemaining() == null ? old.minimumRemaining() : p.minimumRemaining());
     try {
@@ -93,6 +113,17 @@ public class GuideIntent {
     if (previous != null && !explicitCount) count = previous.requestedActivityCount();
     if (previous != null && !message.matches("(?s).*(分钟|小时|时长|一天|一下午).*"))
       duration = previous.planningDurationMinutes();
+    if (message.matches("(?s).*(总时间|总时长|整个行程|不超过|一共|时间预算|以内).*")) {
+      var hours =
+          java.util.regex.Pattern.compile("([0-9]{1,2}|[一二两三四五六七八九十])\\s*(?:个)?小时")
+              .matcher(message);
+      if (hours.find()) {
+        String number = hours.group(1).replace('两', '二');
+        duration =
+            (number.matches("[0-9]+") ? Integer.parseInt(number) : "一二三四五六七八九十".indexOf(number) + 1)
+                * 60;
+      }
+    }
     Problem.require(
         count >= 1 && count <= 3 && duration >= 1 && duration <= 1440,
         "INVALID_PREFERENCES",
@@ -109,6 +140,7 @@ public class GuideIntent {
     if (previous != null) soft.addAll(previous.softPreferences());
     if (patch.softPreferences() != null)
       soft.addAll(patch.softPreferences().stream().filter(Objects::nonNull).limit(10).toList());
+    if (replaceFamily) soft.removeIf(pv -> pv.contains("亲子") || "FAMILY".equals(pv));
     boolean preferred =
         patch.countPreferred() == null
             ? previous != null && previous.countPreferred()

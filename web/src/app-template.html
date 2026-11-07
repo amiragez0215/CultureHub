@@ -586,14 +586,24 @@
       <strong>{{m.role}}</strong>
       <span class="badge" v-if="m.type">{{label(m.type)}}</span>
       <p class="preserve-lines">{{m.text}}</p>
-      <section v-if="m.plan" class="guide-session-card">
+      <section v-if="m.plan?.scheduleItems?.length" class="guide-session-card">
         <h3>活动安排 · 第 {{m.plan.planVersion}} 版</h3>
         <ol><li v-for="item in m.plan.scheduleItems" :key="item.sessionId">场次 {{item.sessionId}}：{{date(item.startAt)}} 至 {{date(item.endAt)}}</li></ol>
-        <p>{{m.plan.recommendationReasons.join('、')}}</p>
+        <ul v-if="m.plan.recommendationReasons?.length">
+          <li v-for="reason in m.plan.recommendationReasons" :key="reason">{{reason}}</li>
+        </ul>
         <small>仅为规划，每场分别确认；未锁定名额，不支持代约家人。</small>
       </section>
+      <p v-for="fact in m.businessAnswers" :key="fact" class="preserve-lines">{{fact}}</p>
+      <section v-for="session in m.sessionDetails" :key="session.sessionId" class="guide-session-card">
+        <h3>{{session.title}} · 场次 {{session.sessionId}}</h3>
+        <p>{{session.venueName}} · {{date(session.startAt)}} 至 {{date(session.endAt)}}</p>
+        <p>报名窗口：{{date(session.registrationStartAt)}} 至 {{date(session.registrationEndAt)}}</p>
+        <p>查询时剩余 {{session.remaining}} 个名额 · {{date(session.asOf)}}</p>
+        <button @click="run(()=>detail({id:session.activityId}))">查看活动详情 →</button>
+      </section>
       <details v-if="m.evidence?.length"><summary>场馆规则与证据</summary>
-        <div v-for="e in m.evidence" :key="e.questionId"><p>{{e.questionId}} · {{({SUPPORTED:'有证据支持',INSUFFICIENT:'证据不足',CONFLICTING:'来源冲突',UNAVAILABLE:'知识库不可用'})[e.status]}}</p>
+        <div v-for="e in m.evidence" :key="e.questionId"><p>{{e.question || e.questionId}} · {{({SUPPORTED:'有证据支持',INSUFFICIENT:'证据不足',CONFLICTING:'来源冲突',UNAVAILABLE:'知识库不可用'})[e.status]}}</p>
           <p v-for="fact in e.supportedFacts" :key="fact" class="preserve-lines">{{fact}}</p><p>{{e.failureReason}}</p>
         </div>
       </details>

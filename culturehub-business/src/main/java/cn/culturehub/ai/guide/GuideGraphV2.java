@@ -208,12 +208,13 @@ public class GuideGraphV2 {
             s.phase = "CANCELLED";
             break;
           }
-          s.requirements = intent.merge(s.requirements, language.understand(s), s.identity, 10);
-          s.reuseBusinessFacts =
-              s.requirements.wordingOnly()
-                  && !s.candidateSessions.isEmpty()
-                  && s.identity.latestUserMessage().matches("(?s).*(文案|语气|简短|口语).*")
-                  && !s.identity.latestUserMessage().matches("(?s).*(明天|周|早|晚|场馆|必须|换活动).*");
+          try {
+            s.requirements =
+                intent.merge(
+                    s.requirements, language.understand(s), s.identity, 10, s.previousVenue);
+          } finally {
+            s.recentMessages = List.of();
+          }
           s.phase =
               s.requirements.clarificationQuestion() != null
                       && !s.requirements.clarificationQuestion().isBlank()
@@ -333,6 +334,7 @@ public class GuideGraphV2 {
         case "ProposalGenerate" -> {
           try {
             s.failureType = Failure.NONE;
+            s.recommendationFacts = GuideNarration.facts(s);
             s.proposal =
                 s.requirements.intentType() == IntentType.VENUE_QA || s.detailOnly
                     ? planner.informationalProposal(s)
@@ -355,7 +357,10 @@ public class GuideGraphV2 {
           if ("RetrievalPlan".equals(s.repairTarget)) GuideEvidenceScope.advance(s);
           if ("ToolExecute".equals(s.repairTarget)) s.toolPlan = tools.plan(s);
         }
-        case "DecisionGate" -> s.phase = "VERIFIED";
+        case "DecisionGate" -> {
+          s.proposal = GuideNarration.publish(s);
+          s.phase = "VERIFIED";
+        }
         default -> throw new IllegalArgumentException("Unknown node");
       }
     } finally {

@@ -46,12 +46,15 @@ public class GuideAgentV2 {
     try {
       Turn prior = persistence.previous(conversation);
       state.requirements = prior == null ? null : prior.requirements;
+      state.recentMessages = persistence.recent(conversation);
       if (prior != null) {
         state.previousPlan = prior.proposal;
+        state.previousVenue = previousVenue(prior);
         state.previousKnowledgeQuestions = prior.knowledgeQuestions;
-        if (Duration.between(prior.identity.currentTime(), state.identity.currentTime())
-                .getSeconds()
-            < 30) {
+        long age =
+            Duration.between(prior.identity.currentTime(), state.identity.currentTime())
+                .getSeconds();
+        if (age >= 0 && age < 30) {
           state.candidateSessions = prior.candidateSessions;
           state.existingBookings = prior.existingBookings;
           state.toolResults = prior.toolResults;
@@ -63,25 +66,44 @@ public class GuideAgentV2 {
               s -> {
                 if (events != null) {
                   if (events.isCancelled()) throw new java.util.concurrent.CancellationException();
-                  events.emit("status", Map.of("node", s.currentNode));
+                  if (s.currentNode != null) events.emit("status", Map.of("node", s.currentNode));
+                  if ("InformationNeedPlan".equals(s.currentNode))
+                    events.emit("delta", Map.of("text", "正在核对与本轮需求有关的资料。", "kind", "progress"));
                 }
                 persistence.checkpoint(s);
               });
       if (events != null && events.isCancelled())
         throw new java.util.concurrent.CancellationException();
       access.owner(owner);
+      if (state.phase.equals("FAILED")) {
+        boolean business =
+            state.failureType == Failure.TOOL_EXECUTION_FAILED
+                || state.failureType == Failure.TOOL_PLAN_INCOMPLETE
+                || state.failureType == Failure.MISSING_BUSINESS_DATA;
+        throw new Problem(
+            business ? "AI_BUSINESS_QUERY_FAILED" : "AI_VERIFICATION_FAILED",
+            business ? "业务资料查询未完成，请稍后重试。" : "规划未通过验证，请调整条件后重试。",
+            503);
+      }
       var candidates = persistence.save(state);
       String answer =
           switch (state.phase) {
             case "VERIFIED" ->
-                state.requirements.intentType() == IntentType.VENUE_QA
-                    ? "请查看下方公开知识来源；无法确认的规则请向场馆核实。"
-                    : "已生成可行活动安排。每个场次需分别选择并确认；当前尚未预约。";
+                state.detailOnly
+                    ? "已查询指定的公开场次。"
+                    : state.requirements.intentType() == IntentType.VENUE_QA
+                        ? "可查看下方核对过的场馆资料和知识来源。"
+                        : "已生成可行活动安排。每场可以分别选择确认，当前尚未预约。";
             case "CLARIFICATION" ->
                 Objects.requireNonNullElse(
                     state.requirements.clarificationQuestion(), "请说明要查询哪个场馆。");
             case "CANCELLED" -> "已停止本轮规划，未提交预约。";
-            case "KNOWLEDGE_BLOCKED" -> "现有证据不足以确认您要求的场馆规则，未将该条件标记为满足。";
+            case "KNOWLEDGE_BLOCKED" ->
+                state.knowledgeStatus == ResultStatus.FAILED
+                        || state.knowledgeStatus == ResultStatus.PARTIAL
+                    ? "必要知识暂时无法查询，请稍后再试。"
+                    : "当前证据无法确认你要求的规则条件。请查看下方原因。";
+            case "NO_VALID_COMBINATION" -> "没有符合当前硬条件的活动组合，可调整日期、间隔或活动数量。";
             case "NO_RESULTS" ->
                 state.toolResults.stream().anyMatch(r -> "VENUE_NOT_FOUND".equals(r.errorType()))
                     ? "未找到指定场馆，请核对场馆名称。"
@@ -101,10 +123,19 @@ public class GuideAgentV2 {
       result.put("candidates", candidates);
       result.put("plan", state.phase.equals("VERIFIED") ? state.proposal : null);
       result.put("planVersion", version);
+      var approvedSources =
+          state.evidenceBindings.stream()
+              .filter(b -> b.status() == GradeStatus.SUPPORTED)
+              .flatMap(b -> b.evidenceIds().stream())
+              .collect(java.util.stream.Collectors.toSet());
       result.put(
           "sources",
-          state.rerankedDocuments.stream().map(e -> e.source() + "#" + e.chunkId()).toList());
-      result.put("evidence", state.evidenceGrade);
+          state.rerankedDocuments.stream()
+              .filter(e -> approvedSources.contains(e.chunkId()))
+              .map(e -> e.source() + "#" + e.chunkId())
+              .distinct()
+              .toList());
+      result.put("evidence", evidence(state));
       result.put("evidenceBindings", state.evidenceBindings);
       result.put("businessAnswers", state.businessAnswers);
       result.put(
@@ -130,13 +161,8 @@ public class GuideAgentV2 {
               "completionTokens",
               state.completionTokens));
       result.put("knowledgeStatus", state.knowledgeStatus);
-      if (events != null) {
-        for (int offset = 0; offset < answer.length(); offset += 16)
-          events.emit(
-              "delta",
-              Map.of("text", answer.substring(offset, Math.min(answer.length(), offset + 16))));
-        events.emit("proposal", Map.of("candidates", candidates));
-      }
+      if (events != null && state.phase.equals("VERIFIED"))
+        events.emit("proposal", Map.of("candidates", candidates, "plan", state.proposal));
       return result;
     } catch (RuntimeException error) {
       for (Throwable cause = error; cause != null; cause = cause.getCause()) {
@@ -151,6 +177,45 @@ public class GuideAgentV2 {
     }
   }
 
+  private String previousVenue(Turn prior) {
+    if (prior.proposal != null && !prior.proposal.orderedSessionIds().isEmpty()) {
+      long chosen = prior.proposal.orderedSessionIds().get(0);
+      return prior.candidateSessions.stream()
+          .filter(s -> s.sessionId() == chosen)
+          .findFirst()
+          .map(Session::venueName)
+          .orElse(null);
+    }
+    return prior.toolResults.stream()
+        .flatMap(r -> r.venues().stream())
+        .findFirst()
+        .map(Venue::name)
+        .orElse(prior.previousVenue);
+  }
+
+  private List<Map<String, Object>> evidence(Turn state) {
+    return state.evidenceGrade.stream()
+        .map(
+            g -> {
+              Map<String, Object> view = new LinkedHashMap<>();
+              view.put("questionId", g.questionId());
+              view.put(
+                  "question",
+                  state.retrievalNeeds.stream()
+                      .filter(n -> n.questionId().equals(g.questionId()))
+                      .map(RetrievalNeed::question)
+                      .findFirst()
+                      .orElse(g.questionId()));
+              view.put("status", g.status());
+              view.put("supportedFacts", g.supportedFacts());
+              view.put("evidenceIds", g.evidenceIds());
+              view.put("failureReason", g.failureReason());
+              view.put("satisfiesRequirement", g.satisfiesRequirement());
+              return view;
+            })
+        .toList();
+  }
+
   public Map<String, Object> select(String conversation, String candidate, String mode) {
     return persistence.select(conversation, candidate, mode);
   }
@@ -161,10 +226,14 @@ public class GuideAgentV2 {
 
   public Object recover(String conversation) {
     check(conversation);
-    var state = persistence.previous(conversation);
+    var state = persistence.activePlan(conversation);
     var result = new LinkedHashMap<String, Object>();
     result.put("plan", state == null ? null : state.proposal);
     result.put("candidates", persistence.cards(conversation));
+    result.put("evidence", state == null ? List.of() : evidence(state));
+    result.put("businessAnswers", state == null ? List.of() : state.businessAnswers);
+    result.put(
+        "sessionDetails", state == null || !state.detailOnly ? List.of() : state.candidateSessions);
     result.put("bookingProposal", persistence.pendingProposal(conversation));
     result.put("explanation", "已恢复保存的规划，名额仍以确认时查询为准。");
     return result;

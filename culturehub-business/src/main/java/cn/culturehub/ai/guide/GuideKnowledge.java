@@ -6,11 +6,14 @@ import cn.culturehub.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.*;
 import java.util.*;
+import org.springframework.ai.chroma.vectorstore.ChromaVectorStore;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -25,6 +28,27 @@ public class GuideKnowledge {
   final ObjectMapper json;
   final StringRedisTemplate redis;
   final String indexKey;
+
+  @Bean
+  static BeanFactoryPostProcessor deferChromaConnection() {
+    return factory -> {
+      for (String name : factory.getBeanNamesForType(ChromaVectorStore.class, false, false))
+        if (factory.containsBeanDefinition(name)) factory.getBeanDefinition(name).setLazyInit(true);
+    };
+  }
+
+  private VectorStore vector(Duration timeout) {
+    try {
+      var vector =
+          Mono.fromCallable(vectors::getIfAvailable)
+              .subscribeOn(Schedulers.boundedElastic())
+              .block(timeout);
+      if (vector != null) return vector;
+    } catch (RuntimeException unavailable) {
+      // A failed lazy initialization stays inside the RAG path.
+    }
+    throw new Problem("RAG_UNAVAILABLE", "Embedding 或 Chroma 暂不可用", 503);
+  }
 
   GuideKnowledgeIndex.Snapshot activeSnapshot() {
     if (redis == null) return null;
@@ -96,17 +120,21 @@ public class GuideKnowledge {
   }
 
   public List<Evidence> retrieve(Turn state) {
-    VectorStore vector = vectors.getIfAvailable();
-    if (vector == null) throw new Problem("RAG_UNAVAILABLE", "知识库未配置", 503);
+    long budget =
+        Math.max(1, Math.min(8000, state.deadlineEpochMillis - System.currentTimeMillis()));
+    VectorStore vector = vector(Duration.ofMillis(budget));
     var snapshot = activeSnapshot();
     if (snapshot == null) return List.of();
+    boolean sameGeneration = snapshot.generation().equals(state.knowledgeGeneration);
+    state.knowledgeGeneration = snapshot.generation();
     var result = new LinkedHashMap<String, Evidence>();
     int length = 0;
-    for (var existing : state.retrievedDocuments) {
+    for (var existing : sameGeneration ? state.retrievedDocuments : List.<Evidence>of()) {
       result.put(existing.questionId() + ":" + existing.chunkId(), existing);
       length += existing.text().length();
     }
-    var unavailable = new LinkedHashSet<>(state.unavailableQuestions);
+    var unavailable =
+        new LinkedHashSet<>(sameGeneration ? state.unavailableQuestions : Set.<String>of());
     for (var query : state.retrievalPlan) {
       var n = query.need();
       String filter =
@@ -341,9 +369,8 @@ public class GuideKnowledge {
 
   public Object reindex() throws Exception {
     access.platformOnly();
-    var vector = vectors.getIfAvailable();
-    if (vector == null || redis == null)
-      throw new Problem("RAG_UNAVAILABLE", "Embedding、Chroma 或知识索引登记未配置", 503);
+    if (redis == null) throw new Problem("RAG_UNAVAILABLE", "知识索引登记未配置", 503);
+    var vector = vector(Duration.ofSeconds(8));
     var staged = index.stage();
     // A unique generation stays invisible until every Chroma write succeeds.
     // Failure or timeout cannot publish it, even if a remote upsert finishes later.

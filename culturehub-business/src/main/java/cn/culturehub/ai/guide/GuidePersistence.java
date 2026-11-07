@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.*;
 import java.util.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -14,6 +15,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 /** MySQL controls versions/ownership; Redis is short-lived memory, never a booking ledger. */
 @Service
 public class GuidePersistence {
+  private static final DefaultRedisScript<Long> REMEMBER =
+      new DefaultRedisScript<>(
+          "redis.call('RPUSH', KEYS[1], ARGV[1]); redis.call('LTRIM', KEYS[1], -20, -1);"
+              + " return redis.call('EXPIRE', KEYS[1], 1800)",
+          Long.class);
   final Store s;
   final Access access;
   final AiBookingProposalService proposals;
@@ -157,7 +163,12 @@ public class GuidePersistence {
     owned(id, false);
     try {
       String snapshot = redis.opsForValue().get("ai:v2:checkpoint:" + access.user() + ":" + id);
-      if (snapshot != null) return json.readValue(snapshot, Turn.class);
+      if (snapshot != null) {
+        var cached = json.readValue(snapshot, Turn.class);
+        if (cached.identity != null
+            && cached.identity.ownerUserId() == access.user()
+            && id.equals(cached.identity.conversationId())) return cached;
+      }
     } catch (Exception ignored) {
     }
     var rows =
@@ -169,6 +180,24 @@ public class GuidePersistence {
     try {
       return json.readValue(rows.get(0).get("constraints_snapshot").toString(), Turn.class);
     } catch (Exception e) {
+      throw new Problem("AI_STATE_INVALID", "已保存的规划无法读取", 503);
+    }
+  }
+
+  public Turn activePlan(String id) {
+    owned(id, false);
+    var rows =
+        s.db.queryForList(
+            "select p.constraints_snapshot from ai_activity_plan p join ai_guide_conversation c on"
+                + " c.id=p.conversation_id where p.conversation_id=? and p.user_id=? and"
+                + " p.status='ACTIVE' and p.verification_status='VERIFIED' and p.version=c.version"
+                + " and p.expires_at>now(6) limit 1",
+            id,
+            access.user());
+    if (rows.isEmpty()) return null;
+    try {
+      return json.readValue(rows.get(0).get("constraints_snapshot").toString(), Turn.class);
+    } catch (com.fasterxml.jackson.core.JsonProcessingException invalid) {
       throw new Problem("AI_STATE_INVALID", "已保存的规划无法读取", 503);
     }
   }
@@ -191,19 +220,56 @@ public class GuidePersistence {
   }
 
   public void remember(Turn turn, String answer) {
-    String key = "ai:v2:chat:" + turn.identity.ownerUserId() + ":" + turn.identity.conversationId();
     try {
-      redis
-          .opsForList()
-          .rightPush(
-              key,
-              json.writeValueAsString(
-                  Map.of("user", turn.identity.latestUserMessage(), "assistant", answer)));
-      redis.opsForList().trim(key, -20, -1);
-      redis.expire(key, Duration.ofMinutes(30));
+      redis.execute(
+          REMEMBER,
+          List.of(memoryKey(turn.identity.ownerUserId(), turn.identity.conversationId())),
+          json.writeValueAsString(
+              new ConversationExchange(
+                  memoryText(turn.identity.latestUserMessage()), memoryText(answer))));
     } catch (Exception ignored) {
       /* Redis memory has no booking authority. */
     }
+  }
+
+  public List<ConversationExchange> recent(String conversation) {
+    owned(conversation, false);
+    var exchanges = new ArrayList<ConversationExchange>();
+    try {
+      var entries = redis.opsForList().range(memoryKey(access.user(), conversation), -4, -1);
+      if (entries == null) return List.of();
+      for (var entry : entries) {
+        if (entry == null || entry.length() > 2400) continue;
+        try {
+          var exchange = json.readValue(entry, ConversationExchange.class);
+          var user = memoryText(exchange.user());
+          if (!user.isBlank())
+            exchanges.add(new ConversationExchange(user, memoryText(exchange.assistant())));
+        } catch (com.fasterxml.jackson.core.JsonProcessingException malformed) {
+          // One malformed item should not hide the rest of the conversation.
+        }
+      }
+    } catch (RuntimeException unavailable) {
+      return List.of();
+    }
+    return List.copyOf(exchanges);
+  }
+
+  private static String memoryKey(long user, String conversation) {
+    return "ai:v2:chat:" + user + ":" + conversation;
+  }
+
+  private static String memoryText(String text) {
+    if (text == null) return "";
+    var normalized = text.replaceAll("[\\p{Cntrl}]", " ").strip();
+    if (normalized.matches(
+        "(?is).*(忽略.{0,8}指令|系统提示词|修改数据库|ignore.{0,20}instructions|system prompt|execute SQL).*"))
+      return "";
+    return normalized
+        .codePoints()
+        .limit(240)
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
   }
 
   public List<Map<String, Object>> save(Turn turn) {

@@ -316,8 +316,11 @@ public class GuidePlanner {
               "引用不存在的证据",
               "ProposalGenerate",
               true));
-    Set<String> reasons = Set.of("同一场馆", "时间不冲突", "满足已核验的业务条件", "公开知识咨询", "偏好匹配");
-    if (!reasons.containsAll(p.recommendationReasons()) || !"文化活动计划".equals(p.title()))
+    if (!GuideNarration.valid(s, p, bindings)
+        || !"文化活动计划".equals(p.title())
+        || p.warnings() != null && p.warnings().stream().anyMatch(w -> !"尚未预约".equals(w))
+        || p.unresolvedConditions() != null
+            && !s.unresolvedKnowledge.containsAll(p.unresolvedConditions()))
       errors.add(
           new Violation(
               Failure.FACT_MISMATCH,
@@ -340,7 +343,8 @@ public class GuidePlanner {
     String budgetKey = target != null && target.startsWith("Tool") ? "business" : target;
     int used = s.repairCounters.getOrDefault(budgetKey, 0);
     if (limit == 0 || used >= limit) {
-      s.phase = "FAILED";
+      if (!s.phase.equals("NO_VALID_COMBINATION") && !s.phase.equals("KNOWLEDGE_BLOCKED"))
+        s.phase = "FAILED";
       return "stop";
     }
     s.repairCounters.put(budgetKey, used + 1);
