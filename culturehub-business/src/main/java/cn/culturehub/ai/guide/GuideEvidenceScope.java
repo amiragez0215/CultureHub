@@ -22,7 +22,7 @@ final class GuideEvidenceScope {
     var result = new ArrayList<RetrievalNeed>();
     var venues = turn.toolResults.stream().flatMap(r -> r.venues().stream()).toList();
     for (var question : questions) {
-      if (turn.requirements.intentType() == IntentType.VENUE_QA) {
+      if (turn.requirements.intentType() == IntentType.VENUE_QA && !turn.detailOnly) {
         if (venues.size() == 1) {
           var venue = venues.get(0);
           if (question.type().equals("OPENING_HOURS")
@@ -45,7 +45,7 @@ final class GuideEvidenceScope {
         result.add(need(question, first.venueId(), null, first.venueName()));
       }
     }
-    return List.copyOf(result);
+    return result.stream().distinct().toList();
   }
 
   private static RetrievalNeed need(
@@ -59,7 +59,8 @@ final class GuideEvidenceScope {
         venue,
         activity,
         question.type(),
-        question.required());
+        question.required(),
+        question.target());
   }
 
   static List<Session> subjectSessions(Turn turn) {
@@ -106,6 +107,14 @@ final class GuideEvidenceScope {
                           !claimMatches(c, need)
                               || !scopedIds.contains(c.evidenceId())
                               || !entails(turn, need, c)))) status = GradeStatus.INSUFFICIENT;
+      var verdict =
+          turn.detailOnly || turn.requirements.intentType() == IntentType.VENUE_QA
+              ? RequirementVerdict.NOT_APPLICABLE
+              : GuideRuleAssessment.verdict(
+                  need,
+                  status,
+                  grade == null ? List.of() : grade.claims(),
+                  GuideKnowledgeQuestions.childAge(turn));
       if (selected.isEmpty()) {
         bindings.add(
             new EvidenceBinding(
@@ -116,7 +125,7 @@ final class GuideEvidenceScope {
                 need.required(),
                 status,
                 scopedIds,
-                status == GradeStatus.SUPPORTED && grade.satisfiesRequirement()));
+                verdict));
       } else {
         for (var session : selected) {
           if (!Objects.equals(need.venueId(), session.venueId())
@@ -130,7 +139,7 @@ final class GuideEvidenceScope {
                   need.required(),
                   status,
                   scopedIds,
-                  status == GradeStatus.SUPPORTED && grade.satisfiesRequirement()));
+                  verdict));
         }
       }
     }
@@ -145,7 +154,7 @@ final class GuideEvidenceScope {
   }
 
   private static boolean entails(Turn turn, RetrievalNeed need, Claim claim) {
-    Integer age = turn.requirements.hardConstraints().childAge();
+    Integer age = GuideKnowledgeQuestions.childAge(turn);
     return turn.rerankedDocuments.stream()
         .filter(d -> claim.evidenceId().equals(d.chunkId()) && scoped(d, need))
         .anyMatch(d -> GuideRuleAssessment.claims(need, d, age).contains(claim));
@@ -180,7 +189,7 @@ final class GuideEvidenceScope {
   static boolean advance(Turn turn) {
     var blockedQuestions = new HashSet<String>();
     turn.evidenceBindings.stream()
-        .filter(b -> b.required() && !b.satisfiesRequirement())
+        .filter(b -> b.rejectsCandidate() || b.unresolved())
         .forEach(b -> blockedQuestions.add(b.questionId()));
     for (int i = turn.evidenceCandidateIndex + 1; i < turn.activityCombinations.size(); i++) {
       var next = needs(turn, turn.activityCombinations.get(i).sessions());

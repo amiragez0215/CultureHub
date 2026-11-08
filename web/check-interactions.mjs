@@ -31,7 +31,16 @@ globalThis.fetch=async(url,options={})=>{
  else if(path==='/me/participations/count')data={total:23};
  else if(path==='/admin/sessions'&&options.method==='POST'){savedSession=JSON.parse(options.body);data={id:101};}
  else if(path==='/ai/conversations')data={id:'test-conversation'};
- else if(path==='/ai/conversations/test-conversation/messages/stream'){if(proposal?.status==='PENDING')proposal={...proposal,status:'REJECTED'};data={type:'RECOMMENDATION',explanation:'可以了解这项剪纸活动',candidates:[guideCandidate],sources:[],knowledgeNotice:'知识库未配置，使用真实活动查询'};}
+ else if(path==='/ai/conversations/test-conversation/messages/stream'){
+   if(proposal?.status==='PENDING')proposal={...proposal,status:'REJECTED'};
+   const question=JSON.parse(options.body).message;
+   data=question.includes('8 岁')?{type:'KNOWLEDGE_ANSWER',explanation:'该规则不支持独自参加或入场。',candidates:[],
+     evidence:[{questionId:'guardian:1',question:'儿童能否独自入场',evidenceStatus:'SUPPORTED',
+       requirementVerdict:'NOT_APPLICABLE',conclusion:'ACCOMPANIMENT_REQUIRED',
+       explanation:'6～12 岁可以参加，但必须由监护人陪同。',sources:['虚构测试语料#guardian'],unresolvedQuestions:[]}]}
+     :{type:'RECOMMENDATION',explanation:'可以了解这项剪纸活动',candidates:[guideCandidate],sources:[],
+       knowledgeNotice:'知识库未配置，使用真实活动查询'};
+ }
  else if(path==='/ai/conversations/test-conversation/proposals'){const choice=JSON.parse(options.body);proposal={id:'proposal-'+(++proposalSequence),proposalId:'proposal-'+proposalSequence,status:'PENDING',entryType:choice.mode,expiresAt:'2099-01-01T10:00:00',serverTime:new Date().toISOString(),session:guideCandidate};data=proposal;}
  else if(/^\/ai\/booking-proposals\/proposal-\d+(\/confirm|\/reject)?$/.test(path)){if(path.endsWith('/confirm')){guideConfirmCalls++;proposal={...proposal,status:'SUCCEEDED',participation:{id:41,status:proposal.entryType==='WAITLIST'?'WAITING':'RESERVED'}};}if(path.endsWith('/reject'))proposal={...proposal,status:'REJECTED'};data=proposal;}
  else if(path==='/admin/ai/activity-plans')data={title:'城市记忆体验',description:'观察地图与分享故事',steps:[{name:'导入',minutes:20,description:'共同观察'},{name:'体验',minutes:40,description:'分享收获'}],notice:'提前到场',copywriting:'一起认识城市'};
@@ -48,7 +57,7 @@ globalThis.fetch=async(url,options={})=>{
  else if(path==='/me/notifications'){if(slowResponse)await slowResponse;data=[];}
  else throw Error('Unexpected API '+url);
  if(path.endsWith('/messages/stream')){
-   const events=[['status',{node:'IntentExtract'}],['delta',{text:'可以了解'}],['delta',{text:'这项剪纸活动'}],['proposal',{candidates:data.candidates}],['done',data]];
+   const events=[['status',{node:'IntentExtract'}],['delta',{text:'可以了解'}],['delta',{text:'这项剪纸活动'}],...(data.candidates.length?[['proposal',{candidates:data.candidates}]]:[]),['done',data]];
    const bytes=new TextEncoder().encode(events.map(([name,value])=>'event: '+name+'\ndata: '+JSON.stringify(value)+'\n\n').join(''));
    return {ok:true,status:200,headers:new Headers({'content-type':'text/event-stream'}),body:new ReadableStream({start(controller){for(let i=0;i<bytes.length;i+=7)controller.enqueue(bytes.slice(i,i+7));controller.close();}})};
  }
@@ -117,6 +126,11 @@ try{
  vm.me={user:{username:'manager'},roles:['VENUE_ADMIN']};await vm.go('grants');assert.match(vm.error,/仅向平台管理员/);
  assert.equal(vm.messages.length,0);assert.equal(vm.guideProposal,null);
   await vm.go('guide');
+  vm.question='8 岁能独自入场吗';await vm.chat();await settle();
+  assert.equal(vm.messages.at(-1).cards.length,0);
+  assert.match(text(root),/规则答复/);assert.match(text(root),/需要陪同/);
+  assert.match(text(root),/必须由监护人陪同/);assert.match(text(root),/虚构测试语料#guardian/);
+  assert.doesNotMatch(text(root),/已确认不符合本轮硬条件/);
   const beforeStreamingFetch=globalThis.fetch;let beginStream;const streamStarted=new Promise(resolve=>beginStream=resolve);
   globalThis.fetch=async(url,options)=>{
     if(!url.endsWith('/messages/stream'))return beforeStreamingFetch(url,options);

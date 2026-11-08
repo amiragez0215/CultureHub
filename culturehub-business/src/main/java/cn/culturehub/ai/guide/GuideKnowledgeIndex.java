@@ -60,15 +60,23 @@ final class GuideKnowledgeIndex {
   }
 
   Staged stage() throws Exception {
-    var resource = new ClassPathResource("knowledge/manifest.json");
+    return stage("knowledge/");
+  }
+
+  Staged stage(String resourceRoot) throws Exception {
+    var resource = new ClassPathResource(resourceRoot + "manifest.json");
     try (var input = resource.getInputStream()) {
-      return stage(json.readTree(input));
+      return stage(json.readTree(input), resourceRoot);
     } catch (java.io.IOException missing) {
       throw new Problem("KNOWLEDGE_INVALID", "无法读取知识清单或知识文件", 400);
     }
   }
 
   Staged stage(JsonNode manifest) throws Exception {
+    return stage(manifest, "knowledge/");
+  }
+
+  private Staged stage(JsonNode manifest, String resourceRoot) throws Exception {
     Problem.require(
         manifest != null && manifest.isArray() && !manifest.isEmpty() && manifest.size() <= 128,
         "KNOWLEDGE_INVALID",
@@ -93,7 +101,7 @@ final class GuideKnowledgeIndex {
           "KNOWLEDGE_INVALID",
           "知识文档标识、类型或可见性无效");
       String text =
-          new ClassPathResource("knowledge/" + file).getContentAsString(StandardCharsets.UTF_8);
+          new ClassPathResource(resourceRoot + file).getContentAsString(StandardCharsets.UTF_8);
       Problem.require(!text.isBlank() && text.length() <= 24000, "KNOWLEDGE_INVALID", "知识文档内容无效");
       var tags = new LinkedHashMap<String, Object>();
       tags.put("indexNamespace", NAMESPACE);

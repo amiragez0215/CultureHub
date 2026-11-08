@@ -1,0 +1,234 @@
+{
+  "run": {
+    "round": "round3",
+    "jarSha256": "f4cd20bd12ec95add4bd4fe0ce993f68857803fc038c61959da71ce6ec3dc3b3",
+    "indexedChunks": 18,
+    "cases": [
+      {
+        "case": "venue-guardian",
+        "question": "只想咨询场馆规则。市文化博物馆，8 岁孩子能独自入场吗？",
+        "expectedCatalogSessionIds": [],
+        "phase": "KNOWLEDGE_ANSWER",
+        "answer": "该规则不支持独自参加或入场。儿童须有家长陪同入场，监护人在活动期间留在现场",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "SUPPORTED",
+            "ids": [
+              "museum-guardian-policy:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [
+          "场馆知识查询"
+        ],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "ProposalGenerate",
+          "ProposalVerifier",
+          "DecisionGate"
+        ],
+        "usage": {
+          "completionTokens": 106,
+          "nativeToolCalls": 0,
+          "promptTokens": 1062,
+          "toolCalls": 1,
+          "llmCalls": 1
+        },
+        "seconds": 1.469
+      },
+      {
+        "case": "session-details",
+        "question": "只核实场次编号 1 的资格，8 岁能不能参加非遗剪纸体验？",
+        "expectedCatalogSessionIds": [
+          1
+        ],
+        "sseOrder": [
+          "status",
+          "status",
+          "status",
+          "delta",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "done"
+        ],
+        "sseNodes": [
+          "CONNECTED",
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "RepairRouter",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "InformationGate"
+        ],
+        "streamErrors": [],
+        "phase": "KNOWLEDGE_BLOCKED",
+        "answer": "当前证据无法确认你要求的规则条件。请查看下方原因。",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "INSUFFICIENT",
+            "ids": [
+              "paper-cutting-age:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "RepairRouter",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate"
+        ],
+        "usage": {
+          "completionTokens": 131,
+          "nativeToolCalls": 1,
+          "promptTokens": 1355,
+          "toolCalls": 1,
+          "llmCalls": 2
+        },
+        "seconds": 2.516
+      },
+      {
+        "case": "hard-independent",
+        "question": "请在市文化博物馆推荐一个活动，必须找一个允许孩子独自参加的活动。",
+        "expectedCatalogSessionIds": [],
+        "phase": "NO_RESULTS",
+        "answer": "当前条件没有匹配的公开场次，可修改日期或活动条件。",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [],
+        "reasons": [],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck"
+        ],
+        "usage": {
+          "completionTokens": 113,
+          "nativeToolCalls": 0,
+          "promptTokens": 1060,
+          "toolCalls": 1,
+          "llmCalls": 1
+        },
+        "seconds": 1.453
+      }
+    ]
+  },
+  "recordedAt": "2026-11-07T13:39:13.125442+00:00",
+  "provider": "Configured chat model and real Chroma + Embedding",
+  "participationBefore": 0,
+  "participationAfter": 0,
+  "answers": [
+    {
+      "phase": "KNOWLEDGE_ANSWER",
+      "candidateCount": 0,
+      "evidence": [
+        {
+          "questionId": "guardian:1",
+          "question": "儿童是否允许单独参加或入场（市文化博物馆）",
+          "status": "SUPPORTED",
+          "evidenceStatus": "SUPPORTED",
+          "requirementVerdict": "NOT_APPLICABLE",
+          "conclusion": "ACCOMPANIMENT_REQUIRED",
+          "conditions": [],
+          "supportedFacts": [
+            "儿童须有家长陪同入场，监护人在活动期间留在现场"
+          ],
+          "evidenceIds": [
+            "museum-guardian-policy:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / museum-guardian-policy.md#museum-guardian-policy:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [],
+          "failureReason": null,
+          "explanation": "该规则不支持独自参加或入场。儿童须有家长陪同入场，监护人在活动期间留在现场"
+        }
+      ]
+    },
+    {
+      "phase": "KNOWLEDGE_BLOCKED",
+      "candidateCount": 0,
+      "evidence": [
+        {
+          "questionId": "age:1:1",
+          "question": "8岁儿童的参与年龄范围及适用条件（非遗剪纸体验）",
+          "status": "INSUFFICIENT",
+          "evidenceStatus": "INSUFFICIENT",
+          "requirementVerdict": "NOT_APPLICABLE",
+          "conclusion": null,
+          "conditions": [],
+          "supportedFacts": [
+            "剪纸活动适合 6～12 岁儿童，须有家长陪同"
+          ],
+          "evidenceIds": [
+            "paper-cutting-age:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / paper-cutting-age.md#paper-cutting-age:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [
+            "8岁儿童的参与年龄范围及适用条件（非遗剪纸体验）"
+          ],
+          "failureReason": "现有资料只有推荐年龄，不能据此确定报名资格",
+          "explanation": "现有资料只有推荐年龄，不能据此确定报名资格"
+        }
+      ]
+    },
+    {
+      "phase": "NO_RESULTS",
+      "candidateCount": 0,
+      "evidence": []
+    }
+  ]
+}

@@ -96,7 +96,8 @@ public class GuideKnowledge {
         .filter(
             need ->
                 !checked.containsKey(need.questionId())
-                    || need.required() && !checked.get(need.questionId()).satisfiesRequirement())
+                    || need.required()
+                        && checked.get(need.questionId()).status() == GradeStatus.INSUFFICIENT)
         .sorted(Comparator.comparing(RetrievalNeed::required).reversed())
         .limit(8)
         .map(
@@ -312,8 +313,7 @@ public class GuideKnowledge {
   }
 
   public List<Grade> grade(Turn state) {
-    Integer child =
-        state.requirements == null ? null : state.requirements.hardConstraints().childAge();
+    Integer child = GuideKnowledgeQuestions.childAge(state);
     return state.retrievalNeeds.stream()
         .map(
             need -> {
@@ -327,27 +327,25 @@ public class GuideKnowledge {
                     List.of(need.question()),
                     "知识检索暂不可用",
                     List.of(),
-                    false);
+                    GuideRuleAssessment.verdict(need, GradeStatus.UNAVAILABLE, List.of(), child));
+
               List<Claim> claims =
                   state.rerankedDocuments.stream()
                       .filter(e -> GuideEvidenceScope.scoped(e, need))
                       .flatMap(e -> GuideRuleAssessment.claims(need, e, child).stream())
                       .toList();
-              boolean conflict = GuideRuleAssessment.conflict(claims);
+              boolean conflict = GuideRuleAssessment.conflict(claims, child);
+              boolean recommendationOnly =
+                  !claims.isEmpty()
+                      && claims.stream().allMatch(c -> c.conclusion() == Conclusion.RECOMMENDED);
+              boolean answered =
+                  !claims.isEmpty() && (!recommendationOnly || need.question().contains("推荐年龄"));
               var status =
                   conflict
                       ? GradeStatus.CONFLICTING
-                      : claims.isEmpty() ? GradeStatus.INSUFFICIENT : GradeStatus.SUPPORTED;
-              boolean satisfied =
-                  status == GradeStatus.SUPPORTED
-                      && claims.stream()
-                          .noneMatch(
-                              c ->
-                                  c.conclusion() == Conclusion.DENIED
-                                      || c.conclusion() == Conclusion.ACCOMPANIMENT_REQUIRED
-                                          && need.question().matches("(?s).*(单独|独自).*"));
+                      : answered ? GradeStatus.SUPPORTED : GradeStatus.INSUFFICIENT;
               var facts =
-                  status == GradeStatus.SUPPORTED
+                  status == GradeStatus.SUPPORTED || recommendationOnly
                       ? claims.stream().map(Claim::statement).distinct().toList()
                       : List.<String>of();
               return new Grade(
@@ -355,14 +353,16 @@ public class GuideKnowledge {
                   status,
                   facts,
                   claims.stream().map(Claim::evidenceId).distinct().toList(),
-                  satisfied ? List.of() : List.of(need.question()),
-                  satisfied
-                      ? null
-                      : conflict
-                          ? "有效来源对同一规则存在冲突"
-                          : status == GradeStatus.SUPPORTED ? "已有规则显示所求条件不满足" : "证据没有直接回答该问题",
+                  status == GradeStatus.SUPPORTED ? List.of() : List.of(need.question()),
+                  switch (status) {
+                    case SUPPORTED -> null;
+                    case CONFLICTING -> "有效来源对同一规则存在冲突";
+                    case INSUFFICIENT ->
+                        recommendationOnly ? "现有资料只有推荐年龄，不能据此确定报名资格" : "证据没有直接回答该问题";
+                    case UNAVAILABLE -> "知识检索暂不可用";
+                  },
                   claims,
-                  satisfied);
+                  GuideRuleAssessment.verdict(need, status, claims, child));
             })
         .toList();
   }
@@ -371,7 +371,11 @@ public class GuideKnowledge {
     access.platformOnly();
     if (redis == null) throw new Problem("RAG_UNAVAILABLE", "知识索引登记未配置", 503);
     var vector = vector(Duration.ofSeconds(8));
-    var staged = index.stage();
+    return publish(vector, index.stage());
+  }
+
+  Map<String, Object> publish(VectorStore vector, GuideKnowledgeIndex.Staged staged)
+      throws Exception {
     // A unique generation stays invisible until every Chroma write succeeds.
     // Failure or timeout cannot publish it, even if a remote upsert finishes later.
     String registry = json.writeValueAsString(staged.snapshot());

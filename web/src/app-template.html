@@ -602,11 +602,25 @@
         <p>查询时剩余 {{session.remaining}} 个名额 · {{date(session.asOf)}}</p>
         <button @click="run(()=>detail({id:session.activityId}))">查看活动详情 →</button>
       </section>
-      <details v-if="m.evidence?.length"><summary>场馆规则与证据</summary>
-        <div v-for="e in m.evidence" :key="e.questionId"><p>{{e.question || e.questionId}} · {{({SUPPORTED:'有证据支持',INSUFFICIENT:'证据不足',CONFLICTING:'来源冲突',UNAVAILABLE:'知识库不可用'})[e.status]}}</p>
-          <p v-for="fact in e.supportedFacts" :key="fact" class="preserve-lines">{{fact}}</p><p>{{e.failureReason}}</p>
+      <section v-if="m.evidence?.length" aria-label="规则答复">
+        <div v-for="e in m.evidence" :key="e.questionId" class="guide-session-card">
+          <strong>{{e.question || e.questionId}}</strong>
+          <span class="badge" v-if="(e.evidenceStatus || e.status) === 'SUPPORTED'">
+            {{e.conditions?.length && e.conclusion === 'ALLOWED' ? '附条件允许' :
+              e.conditions?.length && e.conclusion === 'INDEPENDENT_ALLOWED' ? '附条件允许独自参加' :
+              ({ALLOWED:'已证实允许',DENIED:'已证实不符合资格',ACCOMPANIMENT_REQUIRED:'需要陪同',
+                INDEPENDENT_ALLOWED:'允许独自参加',OPEN:'开放',CLOSED:'闭馆',
+                RECOMMENDED:'建议年龄'})[e.conclusion] || '有证据支持'}}
+          </span>
+          <span class="badge" v-else>
+            {{({INSUFFICIENT:'证据不足',CONFLICTING:'来源冲突',UNAVAILABLE:'知识库暂不可用'})[e.evidenceStatus || e.status]}}
+          </span>
+          <p v-if="e.requirementVerdict === 'NOT_MATCHED'">已确认不符合本轮硬条件。</p>
+          <p v-if="e.explanation && e.explanation !== m.text" class="preserve-lines">{{e.explanation}}</p>
+          <p v-if="(e.evidenceStatus || e.status) === 'INSUFFICIENT' && e.supportedFacts?.length" class="muted">{{e.supportedFacts.join('。')}}</p>
+          <small v-if="e.sources?.length">来源：{{e.sources.join('、')}}</small>
         </div>
-      </details>
+      </section>
       <div v-for="a in m.cards" :key="a.candidateId" class="guide-session-card">
         <h3>{{a.title}}</h3>
         <p>{{a.venueName}} · {{date(a.startAt)}} — {{date(a.endAt)}}</p>

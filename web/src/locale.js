@@ -4,6 +4,7 @@ export const labels = {
   ERROR: "本轮未完成",
   CLARIFICATION: "补充需求",
   RECOMMENDATION: "场次推荐",
+  KNOWLEDGE_ANSWER: "规则答复",
   NO_RESULT: "暂无合适场次",
   PENDING_CONFIRMATION: "等待明确确认",
   BOOKING_RESULT: "业务处理结果",

@@ -148,11 +148,18 @@ class GuideRoundTwoNodesTest {
 
   @Test
   void conditionalRuleDoesNotProveIndependentAdmission() {
-    var s = state(IntentType.ACTIVITY_PLAN, 1, "儿童是否允许单独入场", null);
+    var s = state(IntentType.ACTIVITY_PLAN, 1, "8 岁儿童必须独自入场", null);
     s.retrievalNeeds =
         List.of(
             new RetrievalNeed("age", "适用年龄", 1L, null, "AGE_RULE", true),
-            new RetrievalNeed("guardian", "儿童能否单独入场", 1L, null, "GUARDIAN_RULE", true));
+            new RetrievalNeed(
+                "guardian",
+                "儿童能否单独入场",
+                1L,
+                null,
+                "GUARDIAN_RULE",
+                true,
+                RequirementTarget.INDEPENDENT_ADMISSION));
     String conditional = "6～12 岁儿童可以参加，但须有家长陪同。";
     s.rerankedDocuments =
         List.of(
@@ -161,7 +168,8 @@ class GuideRoundTwoNodesTest {
     var grades = rag.grade(s);
     assertEquals("须有家长或监护人陪同", grades.get(0).claims().get(0).condition());
     assertEquals(GradeStatus.SUPPORTED, grades.get(1).status());
-    assertFalse(grades.get(1).satisfiesRequirement());
+    assertEquals(RequirementVerdict.NOT_MATCHED, grades.get(1).requirementVerdict());
+    assertTrue(grades.get(1).unresolvedQuestions().isEmpty());
     s.rerankedDocuments =
         List.of(
             evidence("required", conditional, "GUARDIAN_RULE", "guardian"),

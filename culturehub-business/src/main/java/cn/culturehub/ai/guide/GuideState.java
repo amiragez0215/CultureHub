@@ -197,12 +197,31 @@ public final class GuideState {
       Long venueId,
       Long activityId,
       String knowledgeType,
-      boolean required)
-      implements java.io.Serializable {}
+      boolean required,
+      RequirementTarget target)
+      implements java.io.Serializable {
+    public RetrievalNeed {
+      if (target == null) target = RequirementTarget.NONE;
+    }
+
+    public RetrievalNeed(
+        String id, String question, Long venue, Long activity, String type, boolean required) {
+      this(id, question, venue, activity, type, required, RequirementTarget.NONE);
+    }
+  }
 
   public record KnowledgeQuestion(
-      String id, String question, String type, boolean required, boolean activityScoped)
-      implements java.io.Serializable {}
+      String id,
+      String question,
+      String type,
+      boolean required,
+      boolean activityScoped,
+      RequirementTarget target)
+      implements java.io.Serializable {
+    public KnowledgeQuestion {
+      if (target == null) target = RequirementTarget.NONE;
+    }
+  }
 
   public record RetrievalQuery(RetrievalNeed need, String rewrittenQuery, int topK)
       implements java.io.Serializable {}
@@ -259,6 +278,20 @@ public final class GuideState {
     UNAVAILABLE
   }
 
+  public enum RequirementTarget {
+    NONE,
+    AGE_ELIGIBILITY,
+    INDEPENDENT_ADMISSION,
+    OPEN
+  }
+
+  public enum RequirementVerdict {
+    MATCHED,
+    NOT_MATCHED,
+    UNKNOWN,
+    NOT_APPLICABLE
+  }
+
   public enum Conclusion {
     ALLOWED,
     DENIED,
@@ -266,6 +299,7 @@ public final class GuideState {
     INDEPENDENT_ALLOWED,
     OPEN,
     CLOSED,
+    RECOMMENDED,
     EXCERPT
   }
 
@@ -282,6 +316,7 @@ public final class GuideState {
       Integer maxAge)
       implements java.io.Serializable {}
 
+  @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
   public record Grade(
       String questionId,
       GradeStatus status,
@@ -290,8 +325,24 @@ public final class GuideState {
       List<String> unresolvedQuestions,
       String failureReason,
       List<Claim> claims,
-      boolean satisfiesRequirement)
+      RequirementVerdict requirementVerdict)
       implements java.io.Serializable {
+    public Grade {
+      if (requirementVerdict == null) requirementVerdict = RequirementVerdict.UNKNOWN;
+    }
+
+    public Conclusion conclusion() {
+      if (status != GradeStatus.SUPPORTED || claims == null) return null;
+      var directions =
+          claims.stream()
+              .map(Claim::conclusion)
+              .filter(c -> c != Conclusion.RECOMMENDED)
+              .distinct()
+              .toList();
+      if (directions.size() == 1) return directions.get(0);
+      return directions.isEmpty() && !claims.isEmpty() ? Conclusion.RECOMMENDED : null;
+    }
+
     public Grade(
         String questionId,
         GradeStatus status,
@@ -307,10 +358,11 @@ public final class GuideState {
           unresolvedQuestions,
           failureReason,
           List.of(),
-          status == GradeStatus.SUPPORTED);
+          RequirementVerdict.NOT_APPLICABLE);
     }
   }
 
+  @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
   public record EvidenceBinding(
       Long sessionId,
       Long venueId,
@@ -319,8 +371,23 @@ public final class GuideState {
       boolean required,
       GradeStatus status,
       List<String> evidenceIds,
-      boolean satisfiesRequirement)
-      implements java.io.Serializable {}
+      RequirementVerdict requirementVerdict)
+      implements java.io.Serializable {
+    public EvidenceBinding {
+      if (requirementVerdict == null) requirementVerdict = RequirementVerdict.UNKNOWN;
+    }
+
+    boolean rejectsCandidate() {
+      return required
+          && status == GradeStatus.SUPPORTED
+          && requirementVerdict == RequirementVerdict.NOT_MATCHED;
+    }
+
+    boolean unresolved() {
+      return required
+          && (status != GradeStatus.SUPPORTED || requirementVerdict == RequirementVerdict.UNKNOWN);
+    }
+  }
 
   public record Combination(List<Session> sessions, double score, List<String> reasons)
       implements java.io.Serializable {}

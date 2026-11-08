@@ -298,15 +298,27 @@ public class GuidePlanner {
     bindings.stream()
         .filter(b -> b.status() == GradeStatus.SUPPORTED)
         .forEach(b -> allowed.addAll(b.evidenceIds()));
-    if (bindings.stream().anyMatch(b -> b.required() && !b.satisfiesRequirement()))
+    if (bindings.stream().anyMatch(EvidenceBinding::rejectsCandidate))
       errors.add(
           new Violation(
-              Failure.RETRIEVAL_INSUFFICIENT,
+              Failure.HARD_CONSTRAINT_CONFLICT,
               "evidenceBindings",
               p.orderedSessionIds(),
-              "必要规则没有对应场次的有效证据",
+              "已查证的规则不满足硬条件",
               "RetrievalPlan",
               true));
+    else if (bindings.stream().anyMatch(EvidenceBinding::unresolved)) {
+      boolean conflict =
+          bindings.stream().anyMatch(b -> b.unresolved() && b.status() == GradeStatus.CONFLICTING);
+      errors.add(
+          new Violation(
+              conflict ? Failure.EVIDENCE_CONFLICT : Failure.RETRIEVAL_INSUFFICIENT,
+              "evidenceBindings",
+              p.orderedSessionIds(),
+              "必要规则仍无法确认",
+              "RetrievalPlan",
+              !conflict));
+    }
     if (!allowed.containsAll(p.evidenceReferences()))
       errors.add(
           new Violation(

@@ -1,0 +1,131 @@
+[
+  {
+    "file": "a-guardian.md",
+    "documentId": "r3-a-guardian",
+    "version": "fixture-1",
+    "scope": "VENUE",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "GUARDIAN_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-guardian.md"
+  },
+  {
+    "file": "b-guardian.md",
+    "documentId": "r3-b-guardian",
+    "version": "fixture-1",
+    "scope": "VENUE",
+    "venueName": "测试文化馆 B",
+    "knowledgeType": "GUARDIAN_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / b-guardian.md"
+  },
+  {
+    "file": "a-open.md",
+    "documentId": "r3-a-open",
+    "version": "fixture-1",
+    "scope": "VENUE",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "OPENING_HOURS",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-open.md"
+  },
+  {
+    "file": "b-open.md",
+    "documentId": "r3-b-open",
+    "version": "fixture-1",
+    "scope": "VENUE",
+    "venueName": "测试文化馆 B",
+    "knowledgeType": "OPENING_HOURS",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / b-open.md"
+  },
+  {
+    "file": "a-exclusive.md",
+    "documentId": "r3-a-exclusive",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-exclusive.md",
+    "activityTitle": "虚构年龄限定体验"
+  },
+  {
+    "file": "a-recommended.md",
+    "documentId": "r3-a-recommended",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-recommended.md",
+    "activityTitle": "虚构推荐年龄体验"
+  },
+  {
+    "file": "a-accompanied.md",
+    "documentId": "r3-a-accompanied",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-accompanied.md",
+    "activityTitle": "虚构陪同体验"
+  },
+  {
+    "file": "a-conflict-allow.md",
+    "documentId": "r3-a-conflict-allow",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-conflict-allow.md",
+    "activityTitle": "虚构冲突规则体验"
+  },
+  {
+    "file": "a-conflict-deny.md",
+    "documentId": "r3-a-conflict-deny",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-conflict-deny.md",
+    "activityTitle": "虚构冲突规则体验"
+  },
+  {
+    "file": "a-history.md",
+    "documentId": "r3-a-history",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-history.md",
+    "activityTitle": "虚构历史体验"
+  },
+  {
+    "file": "a-expired.md",
+    "documentId": "r3-a-expired",
+    "version": "fixture-1",
+    "scope": "ACTIVITY",
+    "venueName": "测试文化馆 A",
+    "knowledgeType": "AGE_RULE",
+    "visibility": "PUBLIC",
+    "active": true,
+    "source": "完全虚构测试语料 / a-expired.md",
+    "activityTitle": "虚构年龄限定体验",
+    "expiresOn": "2020-01-01"
+  }
+]

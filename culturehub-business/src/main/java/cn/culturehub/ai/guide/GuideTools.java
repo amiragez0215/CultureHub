@@ -32,7 +32,7 @@ public class GuideTools {
   static List<Need> needs(Turn state) {
     var requirements = state.requirements;
     var filters = requirements.hardConstraints();
-    if (requirements.intentType() == IntentType.VENUE_QA) {
+    if (requirements.intentType() == IntentType.VENUE_QA && !state.detailOnly) {
       if (filters.venue() == null) return List.of();
       return List.of(
           new Need(
@@ -61,9 +61,10 @@ public class GuideTools {
                 true,
                 ToolName.SESSION_DETAILS,
                 new ToolArguments(session, null, null)));
-    if (requirements.intentType() != IntentType.ACTIVITY_SEARCH
-        || requirements.requestedActivityCount() > 1
-        || state.identity.latestUserMessage().matches("(?s).*(避开|冲突|已有预约|已约|我约过).*"))
+    if (!state.detailOnly
+        && (requirements.intentType() != IntentType.ACTIVITY_SEARCH
+            || requirements.requestedActivityCount() > 1
+            || state.identity.latestUserMessage().matches("(?s).*(避开|冲突|已有预约|已约|我约过).*")))
       needs.add(
           new Need(
               "bookings",

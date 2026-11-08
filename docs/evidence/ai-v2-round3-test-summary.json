@@ -1,0 +1,49 @@
+{
+  "total": {
+    "tests": 383,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 96,
+    "passed": 287
+  },
+  "modules": {
+    "culturehub-notification-worker": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 7,
+      "passed": 5
+    },
+    "culturehub-business": {
+      "tests": 365,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 89,
+      "passed": 276
+    },
+    "culturehub-api": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 6
+    }
+  },
+  "realChromaResults": [
+    "Chroma injected transport outage: UNAVAILABLE; generation kept; old corpus usable after recovery",
+    "Round3 Chroma denied SUPPORTED DENIED NOT_MATCHED [r3-a-exclusive:fixture-1:0]",
+    "Round3 Chroma recommended INSUFFICIENT null NOT_APPLICABLE [r3-a-recommended:fixture-1:0]",
+    "Round3 Chroma accompanied SUPPORTED ALLOWED NOT_APPLICABLE [r3-a-accompanied:fixture-1:0]",
+    "Round3 Chroma conflict CONFLICTING null NOT_APPLICABLE [r3-a-conflict-allow:fixture-1:0, r3-a-conflict-deny:fixture-1:0]",
+    "Round3 Chroma history INSUFFICIENT null NOT_APPLICABLE []",
+    "Round3 Chroma wrong-venue INSUFFICIENT null NOT_APPLICABLE []",
+    "Round3 Chroma closed SUPPORTED CLOSED NOT_APPLICABLE [r3-a-open:fixture-1:0]",
+    "Round3 Chroma open SUPPORTED OPEN NOT_APPLICABLE [r3-b-open:fixture-1:0]",
+    "Round3 Chroma guardian-a SUPPORTED ACCOMPANIMENT_REQUIRED NOT_APPLICABLE [r3-a-guardian:fixture-1:0]",
+    "Round3 Chroma guardian-b SUPPORTED INDEPENDENT_ALLOWED MATCHED [r3-b-guardian:fixture-1:0]"
+  ],
+  "frontend": {
+    "testUi": true,
+    "productionBuild": true
+  }
+}

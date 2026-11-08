@@ -1,0 +1,390 @@
+{
+  "run": {
+    "round": "round3",
+    "jarSha256": "f4cd20bd12ec95add4bd4fe0ce993f68857803fc038c61959da71ce6ec3dc3b3",
+    "indexedChunks": 18,
+    "cases": [
+      {
+        "case": "venue-guardian",
+        "question": "只想咨询场馆规则。市文化博物馆，8 岁孩子能独自入场吗？",
+        "expectedCatalogSessionIds": [],
+        "phase": "KNOWLEDGE_ANSWER",
+        "answer": "该规则不支持独自参加或入场。儿童须有家长陪同入场，监护人在活动期间留在现场",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "SUPPORTED",
+            "ids": [
+              "museum-guardian-policy:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [
+          "场馆知识查询"
+        ],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "ProposalGenerate",
+          "ProposalVerifier",
+          "DecisionGate"
+        ],
+        "usage": {
+          "toolCalls": 1,
+          "llmCalls": 1,
+          "completionTokens": 106,
+          "nativeToolCalls": 0,
+          "promptTokens": 1062
+        },
+        "seconds": 2.015
+      },
+      {
+        "case": "session-details",
+        "question": "只核实场次编号 1 的资格，8 岁能不能参加非遗剪纸体验？",
+        "expectedCatalogSessionIds": [
+          1
+        ],
+        "sseOrder": [
+          "status",
+          "status",
+          "status",
+          "delta",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "status",
+          "done"
+        ],
+        "sseNodes": [
+          "CONNECTED",
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "RepairRouter",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "InformationGate"
+        ],
+        "streamErrors": [],
+        "phase": "KNOWLEDGE_BLOCKED",
+        "answer": "当前证据无法确认你要求的规则条件。请查看下方原因。",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "INSUFFICIENT",
+            "ids": [
+              "paper-cutting-age:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "RepairRouter",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate"
+        ],
+        "usage": {
+          "toolCalls": 1,
+          "llmCalls": 2,
+          "completionTokens": 128,
+          "nativeToolCalls": 1,
+          "promptTokens": 1355
+        },
+        "seconds": 2.266
+      },
+      {
+        "case": "venue-age",
+        "question": "只咨询市文化博物馆的年龄规则：8 岁孩子符合参加年龄吗？",
+        "expectedCatalogSessionIds": [],
+        "phase": "KNOWLEDGE_ANSWER",
+        "answer": "6～12 岁儿童可以参加，但须有家长陪同",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "SUPPORTED",
+            "ids": [
+              "museum-child-policy:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [
+          "场馆知识查询"
+        ],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "ProposalGenerate",
+          "ProposalVerifier",
+          "DecisionGate"
+        ],
+        "usage": {
+          "toolCalls": 1,
+          "llmCalls": 1,
+          "completionTokens": 106,
+          "nativeToolCalls": 0,
+          "promptTokens": 1062
+        },
+        "seconds": 1.344
+      },
+      {
+        "case": "hard-independent",
+        "question": "请在市文化博物馆找一个活动，活动类别、主题和受众标签不限，但必须允许孩子独自入场。",
+        "expectedCatalogSessionIds": [],
+        "phase": "NO_VALID_COMBINATION",
+        "answer": "本轮核验的活动组合中，没有找到满足硬条件的方案。请查看已确认的规则。",
+        "ids": [],
+        "detailIds": [],
+        "evidence": [
+          {
+            "status": "SUPPORTED",
+            "ids": [
+              "museum-guardian-policy:2.1-demo:0"
+            ]
+          }
+        ],
+        "reasons": [],
+        "nodes": [
+          "IntentExtract",
+          "InformationNeedPlan",
+          "ToolPlan",
+          "ToolExecute",
+          "ToolCheck",
+          "CandidateOptimize",
+          "RetrievalPlan",
+          "Retrieve",
+          "Rerank",
+          "EvidenceGrade",
+          "InformationGate",
+          "RepairRouter"
+        ],
+        "usage": {
+          "toolCalls": 1,
+          "llmCalls": 1,
+          "completionTokens": 113,
+          "nativeToolCalls": 0,
+          "promptTokens": 1067
+        },
+        "seconds": 0.968
+      }
+    ]
+  },
+  "recordedAt": "2026-11-07T13:41:18.688602+00:00",
+  "provider": "Configured chat model and real Chroma + Embedding",
+  "participationBefore": 0,
+  "participationAfter": 0,
+  "answers": [
+    {
+      "phase": "KNOWLEDGE_ANSWER",
+      "candidateCount": 0,
+      "preferences": {
+        "fromDate": null,
+        "toDate": null,
+        "fromTime": null,
+        "toTime": null,
+        "category": null,
+        "audience": null,
+        "keyword": null,
+        "venue": "市文化博物馆",
+        "childAge": 8,
+        "minimumRemaining": null
+      },
+      "evidence": [
+        {
+          "questionId": "guardian:1",
+          "question": "儿童是否允许单独参加或入场（市文化博物馆）",
+          "status": "SUPPORTED",
+          "evidenceStatus": "SUPPORTED",
+          "requirementVerdict": "NOT_APPLICABLE",
+          "conclusion": "ACCOMPANIMENT_REQUIRED",
+          "conditions": [],
+          "supportedFacts": [
+            "儿童须有家长陪同入场，监护人在活动期间留在现场"
+          ],
+          "evidenceIds": [
+            "museum-guardian-policy:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / museum-guardian-policy.md#museum-guardian-policy:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [],
+          "failureReason": null,
+          "explanation": "该规则不支持独自参加或入场。儿童须有家长陪同入场，监护人在活动期间留在现场"
+        }
+      ]
+    },
+    {
+      "phase": "KNOWLEDGE_BLOCKED",
+      "candidateCount": 0,
+      "preferences": {
+        "fromDate": null,
+        "toDate": null,
+        "fromTime": null,
+        "toTime": null,
+        "category": null,
+        "audience": null,
+        "keyword": "非遗剪纸体验",
+        "venue": null,
+        "childAge": 8,
+        "minimumRemaining": null
+      },
+      "evidence": [
+        {
+          "questionId": "age:1:1",
+          "question": "8岁儿童的参与年龄范围及适用条件（非遗剪纸体验）",
+          "status": "INSUFFICIENT",
+          "evidenceStatus": "INSUFFICIENT",
+          "requirementVerdict": "NOT_APPLICABLE",
+          "conclusion": null,
+          "conditions": [],
+          "supportedFacts": [
+            "剪纸活动适合 6～12 岁儿童，须有家长陪同"
+          ],
+          "evidenceIds": [
+            "paper-cutting-age:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / paper-cutting-age.md#paper-cutting-age:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [
+            "8岁儿童的参与年龄范围及适用条件（非遗剪纸体验）"
+          ],
+          "failureReason": "现有资料只有推荐年龄，不能据此确定报名资格",
+          "explanation": "现有资料只有推荐年龄，不能据此确定报名资格"
+        }
+      ]
+    },
+    {
+      "phase": "KNOWLEDGE_ANSWER",
+      "candidateCount": 0,
+      "preferences": {
+        "fromDate": null,
+        "toDate": null,
+        "fromTime": null,
+        "toTime": null,
+        "category": null,
+        "audience": null,
+        "keyword": null,
+        "venue": "市文化博物馆",
+        "childAge": 8,
+        "minimumRemaining": null
+      },
+      "evidence": [
+        {
+          "questionId": "age:1",
+          "question": "8岁儿童的参与年龄范围及适用条件（市文化博物馆）",
+          "status": "SUPPORTED",
+          "evidenceStatus": "SUPPORTED",
+          "requirementVerdict": "NOT_APPLICABLE",
+          "conclusion": "ALLOWED",
+          "conditions": [
+            "须有家长或监护人陪同"
+          ],
+          "supportedFacts": [
+            "6～12 岁儿童可以参加，但须有家长陪同"
+          ],
+          "evidenceIds": [
+            "museum-child-policy:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / museum-child-policy.md#museum-child-policy:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [],
+          "failureReason": null,
+          "explanation": "6～12 岁儿童可以参加，但须有家长陪同"
+        }
+      ]
+    },
+    {
+      "phase": "NO_VALID_COMBINATION",
+      "candidateCount": 0,
+      "preferences": {
+        "fromDate": null,
+        "toDate": null,
+        "fromTime": null,
+        "toTime": null,
+        "category": null,
+        "audience": null,
+        "keyword": null,
+        "venue": "市文化博物馆",
+        "childAge": null,
+        "minimumRemaining": null
+      },
+      "evidence": [
+        {
+          "questionId": "guardian:1",
+          "question": "儿童是否允许单独参加或入场（市文化博物馆）",
+          "status": "SUPPORTED",
+          "evidenceStatus": "SUPPORTED",
+          "requirementVerdict": "NOT_MATCHED",
+          "conclusion": "ACCOMPANIMENT_REQUIRED",
+          "conditions": [],
+          "supportedFacts": [
+            "儿童须有家长陪同入场，监护人在活动期间留在现场"
+          ],
+          "evidenceIds": [
+            "museum-guardian-policy:2.1-demo:0"
+          ],
+          "sources": [
+            "CultureHub 模拟知识 / museum-guardian-policy.md#museum-guardian-policy:2.1-demo:0"
+          ],
+          "unresolvedQuestions": [],
+          "failureReason": null,
+          "explanation": "该规则不支持独自参加或入场。儿童须有家长陪同入场，监护人在活动期间留在现场"
+        }
+      ]
+    }
+  ]
+}

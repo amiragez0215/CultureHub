@@ -119,7 +119,7 @@ class GuideInteractionTest {
                         true,
                         GradeStatus.SUPPORTED,
                         List.of("opening-doc"),
-                        true)))
+                        RequirementVerdict.MATCHED)))
             .isEmpty());
   }
 
