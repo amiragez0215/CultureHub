@@ -1,0 +1,7 @@
+{
+  "realBrokerStopped": true,
+  "coreStartsWithoutBroker": true,
+  "acceptedWhileUnavailable": true,
+  "restoredToOneQualification": true,
+  "scope": "dedicated MySQL/Redis/RabbitMQ, no simulated broker acknowledgements"
+}

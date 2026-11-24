@@ -1,6 +1,8 @@
 package cn.culturehub;
 
+import cn.culturehub.v3.ServiceBoundary;
 import java.util.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -82,13 +84,30 @@ public class ApiController {
   }
 
   @PostMapping("/sessions/{id}/reservations")
-  Object reserve(@PathVariable long id, @RequestBody Map<String, String> v) {
-    return b.create(id, v.get("request_id"), false);
+  Object reserve(@PathVariable long id, @RequestBody Map<String, String> v,
+      @RequestHeader(name = ServiceBoundary.TRACE, required = false) String trace) {
+    return bookingResponse(b.create(id, v.get("request_id"), false, trace));
   }
 
   @PostMapping("/sessions/{id}/waitlist")
-  Object waitlist(@PathVariable long id, @RequestBody Map<String, String> v) {
-    return b.create(id, v.get("request_id"), true);
+  Object waitlist(@PathVariable long id, @RequestBody Map<String, String> v,
+      @RequestHeader(name = ServiceBoundary.TRACE, required = false) String trace) {
+    return bookingResponse(b.create(id, v.get("request_id"), true, trace));
+  }
+
+  @GetMapping("/booking-requests/{request}")
+  Object bookingStatus(@PathVariable String request) {
+    return b.status(request);
+  }
+
+  @PostMapping("/admin/sessions/{id}/booking-reconcile")
+  Object reconcileBookingInventory(@PathVariable long id) {
+    return b.reconcile(id);
+  }
+
+  private ResponseEntity<?> bookingResponse(Map<String, Object> value) {
+    return ("ACCEPTED".equals(value.get("status")) || "WAITLIST_PENDING".equals(value.get("status")))
+        ? ResponseEntity.accepted().body(value) : ResponseEntity.ok(value);
   }
 
   @GetMapping("/me/participations")
@@ -128,8 +147,9 @@ public class ApiController {
   }
 
   @PostMapping("/participations/{id}/confirm")
-  Object confirm(@PathVariable long id) {
-    return p.confirm(id);
+  Object confirm(@PathVariable long id,
+      @RequestHeader(name = ServiceBoundary.TRACE, required = false) String trace) {
+    return bookingResponse(b.confirm(id, trace));
   }
 
   @GetMapping("/participations/{id}/checkin-status")

@@ -8,6 +8,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** Durable confirmation barrier. Graph/checkpoints never authorize a booking. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class AiBookingProposalService {
   final Store s;
@@ -45,10 +46,11 @@ public class AiBookingProposalService {
   public Map<String, Object> create(String conversation, long session, boolean wait) {
     long user = access.user();
     String id = UUID.randomUUID().toString();
+    var card = queries.current(session);
     tx.executeWithoutResult(
         status -> {
           // Serializes replacement within a user; the unique active guard is a second invariant.
-          s.one("select id from app_user where id=? for update", user);
+          lockOwner(user);
           Problem.require(
               s.number(
                       "select count(*) from ai_booking_proposal where user_id=? and"
@@ -58,7 +60,6 @@ public class AiBookingProposalService {
                   == 0,
               "PROPOSAL_PROCESSING",
               "已有方案正在提交，请先查询结果");
-          var card = queries.current(session);
           Problem.require(queries.open(card), "REGISTRATION_CLOSED", "场次已不可报名");
           if (wait)
             Problem.require(
@@ -74,12 +75,7 @@ public class AiBookingProposalService {
                 ((Number) card.get("remaining")).longValue() > 0, "SESSION_FULL", "名额已满，可另行选择候补");
           }
           Problem.require(
-              s.number(
-                      "select count(*) from participation where session_id=? and user_id=? and"
-                          + " active_guard=1",
-                      session,
-                      user)
-                  == 0,
+              !hasActiveParticipation(session,user),
               "ALREADY_PARTICIPATING",
               "已拥有有效参与资格");
           supersede(conversation, user);
@@ -120,11 +116,18 @@ public class AiBookingProposalService {
         "WAITLIST".equals(row.get("entry_type")));
   }
 
+  Map<String,Object> recoverExisting(Map<String,Object> row) {
+    try {return existing(row);} catch(RuntimeException unavailable) {
+      s.db.update("update ai_booking_proposal set error_code='BOOKING_RESULT_UNKNOWN' where id=? and status='PROCESSING'",row.get("id"));
+      return null;
+    }
+  }
+
   public Map<String, Object> get(String id) {
     var row = owned(id, false);
     // Recovery works after expiry/restart. A result lookup never submits a new booking.
     if (List.of("PROCESSING", "SUCCEEDED").contains(row.get("status"))) {
-      var original = existing(row);
+      var original = recoverExisting(row);
       if (original != null) {
         s.db.update(
             "update ai_booking_proposal set"
@@ -133,6 +136,18 @@ public class AiBookingProposalService {
             original.get("id"),
             id);
         row = owned(id, false);
+      } else if ("PROCESSING".equals(row.get("status"))) {
+        String error;
+        try {error=booking.rejection(row.get("request_id").toString());}
+        catch(RuntimeException unavailable){error=null;s.db.update("update ai_booking_proposal set error_code='BOOKING_RESULT_UNKNOWN' where id=? and status='PROCESSING'",id);}
+        if("BOOKING_RESULT_UNKNOWN".equals(error))error=null;
+        if (error != null) {
+          s.db.update("""
+              update ai_booking_proposal set status='FAILED',error_code=?,
+                finished_at=current_timestamp(6),processing_until=null where id=? and status='PROCESSING'
+              """, error, id);
+          row = owned(id, false);
+        }
       }
     }
     if ("PENDING".equals(row.get("status")) && !s.now().isBefore(Store.time(row, "expires_at"))) {
@@ -209,6 +224,7 @@ public class AiBookingProposalService {
               Store.id(row, "session_id"),
               row.get("request_id").toString(),
               "WAITLIST".equals(row.get("entry_type")));
+      if (Boolean.TRUE.equals(original.get("asyncBooking"))) return get(id);
       s.db.update(
           "update ai_booking_proposal set"
               + " status='SUCCEEDED',participation_id=?,finished_at=current_timestamp(6),processing_until=null,error_code=null"
@@ -219,7 +235,7 @@ public class AiBookingProposalService {
     } catch (Problem problem) {
       code = problem.code;
       // Another attempt may have committed under the same durable request key.
-      var original = existing(row);
+      var original = recoverExisting(row);
       if (original != null)
         s.db.update(
             "update ai_booking_proposal set"
@@ -228,7 +244,7 @@ public class AiBookingProposalService {
             original.get("id"),
             id,
             token);
-      else if (Set.of("RATE_LIMITED", "RATE_LIMIT_UNAVAILABLE").contains(problem.code))
+      else if (Set.of("RATE_LIMITED", "RATE_LIMIT_UNAVAILABLE", "BOOKING_UNAVAILABLE", "BOOKING_RESULT_UNKNOWN").contains(problem.code))
         s.db.update(
             "update ai_booking_proposal set"
                 + " error_code=?,processing_until=date_add(current_timestamp(6),interval 3 second)"
@@ -301,11 +317,7 @@ public class AiBookingProposalService {
     if (row.get("participation_id") != null)
       result.put(
           "participation",
-          s.one(
-              "select id,session_id,status,queue_seq,confirm_deadline from participation where id=?"
-                  + " and user_id=?",
-              row.get("participation_id"),
-              access.user()));
+          qualification(row));
     result.put("canConfirm", "PENDING".equals(row.get("status")));
     result.put(
         "canRetry",
@@ -318,5 +330,16 @@ public class AiBookingProposalService {
 
   public String conversation(String id) {
     return owned(id, false).get("conversation_id").toString();
+  }
+
+  void lockOwner(long user) { s.one("select id from app_user where id=? for update", user); }
+
+  boolean hasActiveParticipation(long session,long user) {
+    return s.number("select count(*) from participation where session_id=? and user_id=? and active_guard=1",session,user)>0;
+  }
+
+  Map<String,Object> qualification(Map<String,Object> row) {
+    return s.one("select id,session_id,status,queue_seq,confirm_deadline from participation where id=? and user_id=?",
+        row.get("participation_id"), access.user());
   }
 }

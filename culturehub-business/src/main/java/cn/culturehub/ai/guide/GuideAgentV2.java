@@ -7,6 +7,7 @@ import java.time.*;
 import java.util.*;
 import org.springframework.stereotype.Service;
 
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class GuideAgentV2 {
   final GuideGraphV2 graph;

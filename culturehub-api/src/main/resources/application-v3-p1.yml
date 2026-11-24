@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: ${V3_PARTNER_SERVICE_NAME:culturehub-core}
+  datasource:
+    url: ${DB_URL}
+    username: ${V3_PARTNER_DB_USER:culturehub_core}
+    password: ${V3_PARTNER_DB_PASSWORD:${CORE_DB_PASSWORD:}}
+  cloud:
+    nacos:
+      discovery:
+        enabled: ${V3_DISCOVERY_ENABLED:true}
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+v3:
+  internal:
+    ai: ${V3_AI_CORE_TOKEN}
+    knowledge: ${V3_KNOWLEDGE_CORE_TOKEN}
+    combination: ${V3_COMBINATION_TOKEN:${V3_ORCHESTRATOR_CORE_TOKEN:}}
+    notification: ${V3_NOTIFICATION_CORE_TOKEN}

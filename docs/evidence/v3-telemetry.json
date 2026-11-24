@@ -1,0 +1,23 @@
+{
+  "realOtlpExport": true,
+  "sameTraceAcrossRedisStreamAndWorker": true,
+  "prometheusScrape": true,
+  "businessBacklogGauge": true,
+  "hikariMetrics": true,
+  "gatewayPrometheusScrape": true,
+  "gatewayBookingIngress": true,
+  "spanNames": [
+    "authenticate bearertoken",
+    "authorize request",
+    "culturehub.booking.consume",
+    "culturehub.rabbit.publish",
+    "http post /api/v1/sessions/{id}/reservations",
+    "secured request",
+    "security filterchain after",
+    "security filterchain before"
+  ],
+  "limitations": [
+    "controlled OTLP HTTP receiver; Collector/Grafana containers not started",
+    "Knowledge trace route not covered in this test"
+  ]
+}

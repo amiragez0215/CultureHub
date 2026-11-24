@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitTransport {
   final RabbitTemplate template;
+  @org.springframework.beans.factory.annotation.Autowired(required=false)
+  private io.micrometer.tracing.Tracer tracer;
 
   public RabbitTransport(RabbitTemplate template) {
     this.template = template;
@@ -18,6 +20,17 @@ public class RabbitTransport {
   }
 
   public void send(String exchange, String route, Message message) throws Exception {
+    String parent=null;
+    try {parent=new com.fasterxml.jackson.databind.ObjectMapper().readTree(message.getBody()).path("traceId").asText();}
+    catch(Exception invalid){ /* Transport retains its original payload and routing semantics. */ }
+    var span=cn.culturehub.v3.TraceCarrier.start(tracer,parent,"culturehub.rabbit.publish");
+    try(var scope=span==null?null:tracer.withSpan(span)) {
+      sendConfirmed(exchange,route,message);
+    }catch(Exception error){if(span!=null)span.error(error);throw error;}
+    finally{if(span!=null)span.end();}
+  }
+
+  private void sendConfirmed(String exchange,String route,Message message)throws Exception {
     message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
     var correlation = new CorrelationData(UUID.randomUUID().toString());
     template.send(exchange, route, message, correlation);

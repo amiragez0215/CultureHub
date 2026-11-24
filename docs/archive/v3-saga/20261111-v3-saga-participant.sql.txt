@@ -1,0 +1,39 @@
+ALTER TABLE booking_request MODIFY operation
+  ENUM('DIRECT','JOIN','CONFIRM','PROMOTE','SAGA_RESERVE','SAGA_CONFIRM','SAGA_CANCEL') NOT NULL;
+CREATE TABLE IF NOT EXISTS saga_participant (
+  saga_id CHAR(36) PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  cancelled BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+);
+CREATE TABLE IF NOT EXISTS saga_participant_command (
+  command_id CHAR(36) PRIMARY KEY,
+  saga_id CHAR(36) NOT NULL,
+  operation ENUM('RESERVE','CONFIRM','CANCEL') NOT NULL,
+  payload JSON NOT NULL,
+  state ENUM('RECEIVED','SUCCEEDED','REJECTED','MANUAL_INTERVENTION') NOT NULL DEFAULT 'RECEIVED',
+  result JSON,
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  INDEX ix_saga_participant_pending(state,created_at,command_id),
+  FOREIGN KEY(saga_id) REFERENCES saga_participant(saga_id)
+);
+CREATE TABLE IF NOT EXISTS saga_participant_hold (
+  id VARCHAR(80) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+  saga_id CHAR(36) NOT NULL,
+  user_id BIGINT NOT NULL,
+  session_id BIGINT NOT NULL,
+  state ENUM('HELD','CONFIRMED','CANCELLED','EXPIRED') NOT NULL,
+  expires_at DATETIME(6) NOT NULL,
+  participation_id BIGINT,
+  active_guard TINYINT GENERATED ALWAYS AS (CASE WHEN state IN ('HELD','CONFIRMED') THEN 1 ELSE NULL END) STORED,
+  UNIQUE KEY uq_saga_hold_user(session_id,user_id,active_guard),
+  FOREIGN KEY(saga_id) REFERENCES saga_participant(saga_id),
+  FOREIGN KEY(session_id) REFERENCES activity_session(id),
+  FOREIGN KEY(participation_id) REFERENCES participation(id)
+);
+CREATE TABLE IF NOT EXISTS saga_booking_link (
+  request_id VARCHAR(80) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+  command_id CHAR(36) NOT NULL,
+  FOREIGN KEY(request_id) REFERENCES booking_request(request_id),
+  FOREIGN KEY(command_id) REFERENCES saga_participant_command(command_id)
+);

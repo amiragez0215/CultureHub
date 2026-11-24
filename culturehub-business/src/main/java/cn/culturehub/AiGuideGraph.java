@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 /**
  * AI1 only. Read-only Graph runs across bounded turns; confirmation is a separate HTTP operation.
  */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class AiGuideGraph {
   @org.springframework.beans.factory.annotation.Autowired(required = false)

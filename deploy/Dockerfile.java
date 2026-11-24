@@ -5,6 +5,10 @@ COPY culturehub-contracts culturehub-contracts
 COPY culturehub-business culturehub-business
 COPY culturehub-api culturehub-api
 COPY culturehub-notification-worker culturehub-notification-worker
+COPY culturehub-gateway culturehub-gateway
+COPY culturehub-service-runtime culturehub-service-runtime
+COPY culturehub-knowledge culturehub-knowledge
+COPY culturehub-ai culturehub-ai
 RUN mvn -B -DskipTests package
 FROM eclipse-temurin:17-jre
 ARG MODULE=culturehub-api

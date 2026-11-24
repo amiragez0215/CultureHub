@@ -22,6 +22,23 @@ abstract class ProposalIntegrationTest extends BookingIntegrationTest {
   }
 
   @Test
+  void acceptedButLostResponseRemainsProcessingUntilOriginalRequestCompletes() {
+    String id=pending();
+    var remote=org.mockito.Mockito.mock(Booking.class);
+    org.mockito.Mockito.when(remote.result(org.mockito.ArgumentMatchers.anyLong(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyBoolean())).thenReturn(null);
+    org.mockito.Mockito.when(remote.create(org.mockito.ArgumentMatchers.anyLong(),org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.anyBoolean()))
+      .thenThrow(new Problem("BOOKING_RESULT_UNKNOWN","response lost",503));
+    var service=new AiBookingProposalService(s,new Access(s),remote,queries,new org.springframework.jdbc.datasource.DataSourceTransactionManager(s.db.getDataSource()));
+    assertEquals("PROCESSING",service.confirm(id,true).get("status"));
+    String request=proposals.owned(id,false).get("request_id").toString();
+    org.mockito.Mockito.verify(remote).create(1,request,false);
+    assertEquals("PROCESSING",service.get(id).get("status"));
+    booking.create(1,request,false); // Core finishes the same accepted command later.
+    assertEquals("SUCCEEDED",proposals.get(id).get("status"));
+    assertEquals(1,count());invariant();
+  }
+
+  @Test
   void unconfirmedProposalAndRejectionNeverBook() {
     String id = pending();
     assertEquals(0, count());

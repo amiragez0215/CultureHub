@@ -1,0 +1,36 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  application:
+    name: culturehub-${V3_ROLE}
+  datasource:
+    url: ${V3_DB_URL}
+    username: ${V3_DB_USER}
+    password: ${V3_DB_PASSWORD}
+    hikari:
+      connection-timeout: 3000
+  cloud:
+    loadbalancer:
+      cache:
+        enabled: false
+    nacos:
+      discovery:
+        enabled: ${V3_DISCOVERY_ENABLED:true}
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+    openfeign:
+      client:
+        config:
+          culturehub-core:
+            connect-timeout: 2000
+            read-timeout: 3000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+v3:
+  role: ${V3_ROLE}
+  probe-token: ${V3_PROBE_TOKEN}
+  core-token: ${V3_CORE_TOKEN}
+  core:
+    url: ${V3_CORE_URL:}

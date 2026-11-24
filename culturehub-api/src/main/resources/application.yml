@@ -1,8 +1,14 @@
+seata.enabled: false
 spring:
   config:
     import: optional:file:.env[.properties]
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:}
+    group:
+      v3-p2: v3-p1
+      v3-p5: v3-p4
+      v3-p4: v3-p2
+      v3-partner: v3-p4
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/culturehub?useUnicode=true&characterEncoding=UTF-8&connectionTimeZone=Asia/Shanghai}
     username: ${DB_USER:root}
@@ -48,6 +54,7 @@ server.port: 8080
 culture.jobs.enabled: ${JOBS_ENABLED:false}
 culture.ai.guide-v2.enabled: ${AI_GUIDE_V2_ENABLED:true}
 mybatis-plus.configuration.call-setters-on-nulls: true
+spring.cloud.nacos.discovery.enabled: false
 
 spring.rabbitmq.host: ${RABBIT_HOST:localhost}
 spring.rabbitmq.port: ${RABBIT_PORT:5672}

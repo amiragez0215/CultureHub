@@ -11,6 +11,7 @@ public class ParticipationService {
   final Access access;
   final Cache cache;
   final Events events;
+  private BookingLedger bookingLedger;
 
   public ParticipationService(Store s, Access a, Cache c, Events e) {
     this.s = s;
@@ -19,12 +20,26 @@ public class ParticipationService {
     events = e;
   }
 
+  @org.springframework.beans.factory.annotation.Autowired(required = false)
+  void asyncInventory(BookingLedger bookingLedger) {
+    this.bookingLedger = bookingLedger;
+  }
+
   public Map<String, Object> lock(long id) {
+    if (bookingLedger != null) return bookingLedger.lockSession(id);
     return s.one("select * from activity_session where id=? for update", id);
+  }
+
+  void requireCombinationIdle(long session) {
+    if (bookingLedger != null) bookingLedger.requireCombinationIdle(session);
   }
 
   public Map<String, Object> qualification(long id) {
     return s.one("select * from participation where id=? for update", id);
+  }
+
+  Map<String, Object> qualificationOwner(long id) {
+    return s.one("select id,user_id,session_id from participation where id=?", id);
   }
 
   public static String token() {
@@ -102,7 +117,17 @@ public class ParticipationService {
   // authority.
   @Transactional
   public Map<String, Object> createTx(long session, long u, String request, boolean wait) {
-    var x = lock(session);
+    return createLocked(lock(session), u, request, wait, null, false);
+  }
+
+  Map<String, Object> createLocked(Map<String, Object> x, long u, String request, boolean wait,
+                                    Long durableQueue, boolean asyncAdmission) {
+    return createLocked(x, u, request, wait, durableQueue, asyncAdmission, true);
+  }
+
+  Map<String, Object> createLocked(Map<String, Object> x, long u, String request, boolean wait,
+                                    Long durableQueue, boolean asyncAdmission, boolean publish) {
+    long session = Store.id(x, "id");
     var n = s.now();
     var prev =
         s.db.queryForList(
@@ -127,16 +152,18 @@ public class ParticipationService {
         "ALREADY_PARTICIPATING",
         "An active qualification already exists");
     long used = Store.id(x, "occupied_count"), capacity = Store.id(x, "capacity");
-    Long seq = null;
+    Long seq = durableQueue;
     String status;
     if (wait) {
-      Problem.require(used >= capacity, "SEATS_AVAILABLE", "Please reserve directly");
-      seq = Store.id(x, "last_waitlist_seq") + 1;
-      s.db.update("update activity_session set last_waitlist_seq=? where id=?", seq, session);
+      if (seq == null) {
+        Problem.require(used >= capacity, "SEATS_AVAILABLE", "Please reserve directly");
+        seq = Store.id(x, "last_waitlist_seq") + 1;
+        s.db.update("update activity_session set last_waitlist_seq=? where id=?", seq, session);
+      }
       status = "WAITING";
     } else {
       Problem.require(
-          s.number(
+          asyncAdmission || s.number(
                   "select count(*) from participation where session_id=? and status='WAITING'",
                   session)
               == 0,
@@ -160,8 +187,10 @@ public class ParticipationService {
             wait ? null : n,
             wait ? null : token());
     history(id, null, status, "CREATED");
-    if (!wait) events.add("RESERVATION_CONFIRMED", id, "confirmed:" + id);
-    cache.invalidate(session, id);
+    if (publish) {
+      if (!wait) events.add("RESERVATION_CONFIRMED", id, "confirmed:" + id);
+      cache.invalidate(session, id);
+    }
     return s.one("select * from participation where id=?", id);
   }
 
@@ -185,7 +214,9 @@ public class ParticipationService {
     if (!state.equals("WAITING")) {
       occupancy(session, -1);
       if (state.equals("RESERVED")) events.add("RESERVATION_CANCELLED", id, "cancelled:" + id);
-      promote(x, n);
+      seatReleased(x, n);
+    } else if (bookingLedger != null) {
+      bookingLedger.changed(session, null, false);
     }
     return s.one("select * from participation where id=?", id);
   }
@@ -196,6 +227,11 @@ public class ParticipationService {
     var x = lock(session);
     var p = qualification(id);
     access.owner(Store.id(p, "user_id"));
+    return confirmLocked(x, p);
+  }
+
+  Map<String, Object> confirmLocked(Map<String, Object> x, Map<String, Object> p) {
+    long id = Store.id(p, "id");
     String st = (String) p.get("status");
     if (Set.of("RESERVED", "CHECKED_IN").contains(st)) return p;
     var n = s.now();
@@ -221,18 +257,25 @@ public class ParticipationService {
                   + " queue_seq limit 1 for update",
               session);
       if (rows.isEmpty()) return;
-      var p = rows.get(0);
-      long id = Store.id(p, "id");
-      var end = n.plusMinutes(10);
-      if (end.isAfter(Store.time(x, "registration_end_at")))
-        end = Store.time(x, "registration_end_at");
-      if (end.isAfter(Store.time(x, "start_at"))) end = Store.time(x, "start_at");
-      change(p, "OFFERED", "PROMOTED");
-      s.db.update(
-          "update participation set offered_at=?,confirm_deadline=? where id=?", n, end, id);
-      occupancy(session, 1);
-      events.add("WAITLIST_OFFERED", id, "offered:" + id);
+      offerLocked(x, rows.get(0), n, 10);
     }
+  }
+
+  void offerLocked(Map<String, Object> session, Map<String, Object> qualification, LocalDateTime now,
+                   long minutes) {
+    long id = Store.id(qualification, "id");
+    var end = now.plusMinutes(minutes);
+    if (end.isAfter(Store.time(session, "registration_end_at"))) end = Store.time(session, "registration_end_at");
+    if (end.isAfter(Store.time(session, "start_at"))) end = Store.time(session, "start_at");
+    change(qualification, "OFFERED", "PROMOTED");
+    s.db.update("update participation set offered_at=?,confirm_deadline=? where id=?", now, end, id);
+    occupancy(Store.id(session, "id"), 1);
+    events.add("WAITLIST_OFFERED", id, "offered:" + id);
+  }
+
+  private void seatReleased(Map<String, Object> session, LocalDateTime now) {
+    if (bookingLedger == null) promote(session, now);
+    else bookingLedger.changed(Store.id(session, "id"), null, true);
   }
 
   @Transactional
@@ -245,9 +288,11 @@ public class ParticipationService {
     if (st.equals("OFFERED") && !n.isBefore(Store.time(p, "confirm_deadline"))) {
       change(p, "EXPIRED", "CONFIRM_TIMEOUT");
       occupancy(session, -1);
-      promote(x, n);
-    } else if (st.equals("WAITING") && !n.isBefore(Store.time(x, "registration_end_at")))
+      seatReleased(x, n);
+    } else if (st.equals("WAITING") && !n.isBefore(Store.time(x, "registration_end_at"))) {
       change(p, "EXPIRED", "REGISTRATION_CLOSED");
+      if (bookingLedger != null) bookingLedger.changed(session, null, false);
+    }
   }
 
   @Transactional
@@ -271,6 +316,7 @@ public class ParticipationService {
       events.add("SESSION_CANCELLED", Store.id(p, "id"), "session-cancel:" + Store.id(p, "id"));
     }
     s.db.update("update activity_session set status='CANCELLED',occupied_count=0 where id=?", id);
+    if (bookingLedger != null) bookingLedger.changed(id, null, true);
     cache.invalidate(id, 0);
   }
 }

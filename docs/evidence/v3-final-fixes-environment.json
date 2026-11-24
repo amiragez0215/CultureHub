@@ -1,0 +1,6 @@
+{
+  "dockerCliFound": false,
+  "dockerComposeExecuted": false,
+  "reason": "Docker CLI is unavailable in this execution environment; no remote Docker endpoint supplied",
+  "cleanMysqlContainerInitializationVerified": false
+}

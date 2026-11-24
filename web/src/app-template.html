@@ -13,7 +13,7 @@
     </button>
     <template v-if="token"
       ><button
-        v-for="[key,name] in [['mine','我的参与'],['notifications','站内通知'],['guide','智能导览']]"
+        v-for="[key,name] in [['mine','我的参与'],['combinations','组合预约'],['notifications','站内通知'],['guide','智能导览']]"
         :class="{active:section===key}"
         :aria-current="section===key?'page':undefined"
         @click="go(key)"
@@ -61,12 +61,12 @@
     正在加载或处理，请稍候…
   </div>
   <aside
-    v-if="admin&&['manage','venues','grants','check','stats','plan','report'].includes(section)"
+    v-if="admin&&['manage','venues','grants','check','stats','plan','report','knowledge'].includes(section)"
     class="admin-nav"
     aria-label="管理模块"
   >
     <button
-      v-for="[key,name] in [['manage','活动与场次'],['venues','场馆管理'],['grants','管理员授权'],['check','签到核销'],['stats','运营报表']]"
+      v-for="[key,name] in [['manage','活动与场次'],['venues','场馆管理'],['grants','管理员授权'],['check','签到核销'],['stats','运营报表'],['knowledge','场馆知识库']]"
       v-show="key!=='grants'||platform"
       :class="{active:section===key}"
       @click="form={};go(key)"
@@ -74,6 +74,39 @@
       {{name}}
     </button>
   </aside>
+  <template v-if="page==='knowledge'">
+    <form class="panel" @submit.prevent="uploadKnowledge">
+      <label>文档标题<input v-model="form.title" maxlength="200" required /></label>
+      <label>来源说明<input v-model="form.source" maxlength="500" required placeholder="场馆规则发布处、版本或公开来源" /></label>
+      <label>知识范围<select v-model="form.scope">
+        <option v-if="platform" value="GLOBAL">全局文化知识</option>
+        <option value="VENUE">指定场馆规则</option><option value="ACTIVITY">指定活动说明</option>
+      </select></label>
+      <label v-if="form.scope!=='GLOBAL'">场馆<select v-model="form.venueId" required>
+        <option v-for="venue in venues" :value="venue.id">{{venue.name}}</option>
+      </select></label>
+      <label v-if="form.scope==='ACTIVITY'">活动编号<input v-model="form.activityId" type="number" min="1" required /></label>
+      <label>规则类型<select v-model="form.knowledgeType">
+        <option value="VENUE_RULE">场馆规则</option><option value="AGE_RULE">年龄规则</option>
+        <option value="GUARDIAN_RULE">陪同规则</option><option value="OPENING_HOURS">开放时间</option>
+        <option value="ACTIVITY_BACKGROUND">活动背景</option>
+      </select></label>
+      <label>可见范围<select v-model="form.visibility"><option value="PUBLIC">公开知识</option><option value="ADMIN">管理资料</option></select></label>
+      <label>文件（最大 20 MB）<input type="file" accept=".pdf,.docx,.md,.txt" required @change="knowledgeFile=$event.target.files[0]" /></label>
+      <button class="primary" :disabled="busy">上传并入库</button>
+    </form>
+    <article v-if="knowledgeJob" class="panel">
+      <h2>文档处理任务</h2>
+      <p>状态 {{knowledgeJob.status}} · 版本 {{knowledgeJob.version}}</p>
+      <p v-if="knowledgeJob.last_error">最近错误 {{knowledgeJob.last_error}}</p>
+      <button :disabled="busy" @click="refreshKnowledgeJob">刷新处理进度</button>
+    </article>
+    <article v-for="document in rows" :key="document.id" class="panel">
+      <h2>{{document.title}}</h2><p>当前生效版本 {{document.active_version||'尚未生效'}} · 最新版本 {{document.latest_version}}</p>
+      <button :disabled="busy" @click="knowledgeAction(document.id,'reindex')">重新入库</button>
+      <button :disabled="busy" @click="knowledgeAction(document.id,'delete')">删除文档</button>
+    </article>
+  </template>
 
   <form
     v-if="page==='login'"
@@ -328,6 +361,10 @@
   </section>
 
   <template v-if="page==='mine'"
+    ><div v-if="pendingBooking" class="opportunity">
+      <p>预约请求正在处理，处理完成后会显示在参与记录中。</p>
+      <button :disabled="busy" @click="refreshPendingBooking">查询处理结果</button>
+    </div
     ><p class="list-summary">共 {{total}} 条参与记录 · 共 {{pageCount}} 页 · 当前第 {{total?pageNo:0}} 页 · 每页 20 条</p>
     <article v-for="r in rows" :key="r.id" class="participation-card">
       <div class="section-heading">
@@ -621,6 +658,12 @@
           <small v-if="e.sources?.length">来源：{{e.sources.join('、')}}</small>
         </div>
       </section>
+      <section v-if="m.plan?.orderedSessionIds?.length>1" class="panel">
+        <h3>同一场馆活动组合</h3>
+        <p v-for="item in m.plan.scheduleItems" :key="item.sessionId">场次 {{item.sessionId}}：{{date(item.startAt)}} — {{date(item.endAt)}}</p>
+        <button class="primary" :disabled="busy||m.current===false" @click="prepareGuideGroup(m)">选择整组方案，前往明确确认</button>
+        <p class="muted">默认整组成功或全部释放；此处不会自动预约。</p>
+      </section>
       <div v-for="a in m.cards" :key="a.candidateId" class="guide-session-card">
         <h3>{{a.title}}</h3>
         <p>{{a.venueName}} · {{date(a.startAt)}} — {{date(a.endAt)}}</p>
@@ -755,7 +798,7 @@
     <DataView :value="result" />
   </section>
   <footer
-    v-if="['activities','manage','mine'].includes(page)"
+    v-if="['activities','manage','mine','combinations'].includes(page)"
     class="pagination"
   >
     <button :disabled="busy||pageNo<=1" @click="paginate(-1)">上一页</button
@@ -770,3 +813,52 @@
   </footer>
 </main>
 <footer class="site-footer">文化有约 · 公共文化，人人共享</footer>
+
+<section v-if="page==='combinations'" class="panel">
+  <h2>整组预约</h2>
+  <p>默认整组成功或全部释放。可查询数据库事务结果和名额同步进度。</p>
+  <form v-if="!combinationInput.historyMode" @submit.prevent="submitCombination">
+    <label><input type="checkbox" :disabled="!!combinationInput.sourcePlan" v-model="combinationInput.demo" />受控跨服务演示（需服务端开启）</label>
+    <section v-if="combinationInput.demo&&!combinationInput.sourcePlan">
+      <button type="button" @click="loadDemoCatalog">查询受控演示活动</button>
+      <article v-for="catalog in demoCatalog" :key="catalog.participant">
+       <h3>{{catalog.participant==='CORE'?'本平台':catalog.participant==='PARTNER_A'?'外部场馆 A':'外部场馆 B'}}</h3>
+       <p v-if="catalog.status==='UNAVAILABLE'">该参与方暂不可用</p>
+       <div v-for="session in catalog.sessions" :key="session.sessionId">
+        <p>{{session.title}} · {{session.venueName}} · {{date(session.startAt)}} · 剩余 {{session.remaining}}</p>
+        <button type="button" @click="selectDemoSession(catalog.participant,session)">加入待确认组合</button>
+       </div>
+      </article>
+    </section>
+    <div v-for="(item,index) in combinationInput.items" :key="index" class="toolbar">
+      <label>参与方<select v-model="item.participant" :disabled="!!combinationInput.sourcePlan"><option value="CORE">本平台</option><template v-if="combinationInput.demo"><option value="PARTNER_A">外部场馆 A</option><option value="PARTNER_B">外部场馆 B</option></template></select></label>
+      <label>场次编号<input type="number" min="1" required :readonly="!!combinationInput.sourcePlan" v-model="item.sessionId" /></label>
+      <button type="button" v-if="!combinationInput.sourcePlan&&combinationInput.items.length>1" @click="combinationInput.items.splice(index,1)">移除</button>
+    </div>
+    <button type="button" v-if="!combinationInput.sourcePlan&&combinationInput.items.length<3" @click="combinationInput.items.push({participant:'CORE',sessionId:''})">添加场次</button>
+    <label><input type="checkbox" v-model="combinationInput.retainPartial" />我明确选择：整组失败且释放后，对仍可预约的场次逐项重新预约</label>
+    <label><input type="checkbox" required v-model="combinationInput.confirmed" />我确认提交以上场次，每个场次仅预约当前账号的一份资格</label>
+    <button class="primary" :disabled="busy">确认整组预约</button>
+    <button type="button" @click="resetCombination">开始新请求</button>
+  </form>
+  <button v-if="combinationInput.historyMode" @click="resetCombination">开始新请求</button>
+  <section v-if="combination" aria-live="polite">
+    <h3>请求状态：{{label(combination.status)}}</h3><p>请求编号：{{combination.id||combination.requestId}}</p>
+    <p v-if="combination.db_result">数据库事务：{{label(combination.db_result)}}</p>
+    <p v-if="combination.allReleased">整组失败，全部名额已释放。</p>
+    <p v-if="combination.status==='MANUAL_INTERVENTION'">部分结果尚无法安全确认，需要人工核对。请查看各项状态。</p>
+    <p v-if="combination.status==='SETTLING'">数据库事务已结束，正在同步预约名额。</p>
+    <DataView :value="combination.steps" />
+    <button @click="refreshCombination">查询最新结果</button>
+    <p v-if="combination.resultUnknown">结果暂未确认；已保存原授权，请查询结果或使用原请求恢复，不能视为失败。</p>
+    <button v-if="combination.resultUnknown&&combinationInput.sourcePlan" @click="submitCombination">按原授权恢复提交</button>
+  </section>
+</section>
+
+<section v-if="page==='combinations'" class="panel">
+ <h2>我的组合请求</h2>
+ <p v-if="!rows.length">暂无已登记的组合请求。</p>
+ <article v-for="row in rows" :key="row.id"><p>{{row.id}} · {{label(row.status)}} · {{date(row.created_at)}}</p><button @click="openCombinationHistory(row)">查看处理结果</button></article>
+ <h3 v-if="aiGroupHistory.length">已保存的 AI 整组授权</h3>
+ <article v-for="row in aiGroupHistory" :key="row.plan_id"><p>计划 {{row.plan_id}} · 版本 {{row.version}}</p><button @click="openCombinationHistory(row,true)">恢复原授权与结果</button></article>
+</section>

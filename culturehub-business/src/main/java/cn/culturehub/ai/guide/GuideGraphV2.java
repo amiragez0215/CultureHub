@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /** Fifteen real nodes and conditional routes. No booking dependency or write tool. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class GuideGraphV2 {
   final GuideIntent intent;

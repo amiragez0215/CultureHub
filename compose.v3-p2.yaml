@@ -1,0 +1,18 @@
+# Use with compose.v3-p1.yaml. The overlay uses a separate project by default.
+name: culturehub-v3-p2
+services:
+  redis:
+    command: [redis-server, --appendonly, "yes", --appendfsync, everysec, --save, ""]
+    volumes: [redis-data:/data]
+  mysql:
+    environment:
+      V3_BOOKING_ENABLED: "true"
+    volumes:
+      - ./deploy/migrations:/culturehub-migrations:ro
+  core:
+    environment:
+      SPRING_PROFILES_ACTIVE: v3-p2
+      V3_BOOKING_HOLD_SECONDS: ${V3_BOOKING_HOLD_SECONDS:-180}
+      V3_BOOKING_OFFER_MINUTES: ${V3_BOOKING_OFFER_MINUTES:-5}
+volumes:
+  redis-data:

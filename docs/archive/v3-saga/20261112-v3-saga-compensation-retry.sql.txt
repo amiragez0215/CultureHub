@@ -1,0 +1,18 @@
+-- Repeatable amendment for an existing saga_db.
+SET @add_generation = IF(
+  (SELECT COUNT(*) FROM information_schema.columns
+   WHERE table_schema=DATABASE() AND table_name='saga_outbox' AND column_name='generation')=0,
+  'ALTER TABLE saga_outbox ADD COLUMN generation INT NOT NULL DEFAULT 1',
+  'DO 0');
+PREPARE saga_ddl FROM @add_generation;
+EXECUTE saga_ddl;
+DEALLOCATE PREPARE saga_ddl;
+SET @change_index = IF(
+  (SELECT COUNT(*) FROM information_schema.statistics
+   WHERE table_schema=DATABASE() AND table_name='saga_outbox'
+     AND index_name='uq_saga_step_operation' AND column_name='generation')=0,
+  'ALTER TABLE saga_outbox DROP INDEX uq_saga_step_operation, ADD UNIQUE KEY uq_saga_step_operation(step_id,operation,generation)',
+  'DO 0');
+PREPARE saga_ddl FROM @change_index;
+EXECUTE saga_ddl;
+DEALLOCATE PREPARE saga_ddl;

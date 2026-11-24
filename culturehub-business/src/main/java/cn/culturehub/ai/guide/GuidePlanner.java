@@ -8,6 +8,7 @@ import java.util.*;
 import org.springframework.stereotype.Component;
 
 /** Bounded deterministic same-venue interval scheduling, independent of model arithmetic. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Component
 public class GuidePlanner {
   public List<Combination> optimize(Turn s) {

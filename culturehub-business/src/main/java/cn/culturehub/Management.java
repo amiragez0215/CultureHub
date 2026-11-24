@@ -306,6 +306,8 @@ public class Management {
         "NO_SESSION",
         "No upcoming session");
 
+    for (var session : xs) p.requireCombinationIdle(Store.id(session, "id"));
+
     s.db.update("update activity set status='PUBLISHED' where id=?", id);
 
     s.db.update(

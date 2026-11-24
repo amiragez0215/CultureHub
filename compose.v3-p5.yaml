@@ -1,0 +1,29 @@
+# Overlay after P1-P4. All AI public routes belong to the independent service.
+name: culturehub-v3
+services:
+  mysql:
+    environment:
+      V3_AI_ENABLED: "true"
+  core:
+    environment:
+      SPRING_PROFILES_ACTIVE: v3-p5
+      AI_CHAT_PROVIDER: none
+      AI_EMBEDDING_PROVIDER: none
+      AI_VECTORSTORE: none
+  ai:
+    image: culturehub-v3-ai:1.0.0
+    build:
+      args:
+        MODULE: culturehub-ai
+    environment:
+      AI_DB_URL: jdbc:mysql://mysql:3306/ai_db?connectionTimeZone=Asia/Shanghai
+      AI_DB_PASSWORD: ${AI_DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      V3_AI_CORE_TOKEN: ${V3_AI_CORE_TOKEN}
+      V3_AI_KNOWLEDGE_TOKEN: ${V3_AI_KNOWLEDGE_TOKEN}
+      AI_CHAT_PROVIDER: ${AI_CHAT_PROVIDER:-none}
+      AI_API_KEY: ${AI_API_KEY:-not-configured}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.deepseek.com}
+      AI_CHAT_MODEL: ${AI_CHAT_MODEL:-deepseek-chat}
+      REDIS_HOST: redis
+      NACOS_SERVER_ADDR: nacos:8848

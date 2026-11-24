@@ -1,0 +1,15 @@
+package cn.culturehub.saga;
+
+import static org.junit.jupiter.api.Assertions.*;
+import java.sql.Timestamp;
+import java.time.*;
+import org.junit.jupiter.api.Test;
+
+class SagaTimestampTest {
+  @Test void mysqlDatetimeAndTimestampUseTheSameBusinessInstant() {
+    Instant expiry = Instant.parse("2026-11-12T05:30:00Z");
+    assertEquals(expiry, SagaCoordinator.instant(LocalDateTime.of(2026,11,12,13,30)));
+    assertEquals(expiry, SagaCoordinator.instant(Timestamp.from(expiry)));
+    assertThrows(IllegalArgumentException.class, () -> SagaCoordinator.instant("untrusted time"));
+  }
+}

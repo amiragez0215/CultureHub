@@ -1,0 +1,23 @@
+seata:
+  enabled: ${SEATA_ENABLED:false}
+  application-id: ${spring.application.name}
+  tx-service-group: culturehub_at
+  enable-auto-data-source-proxy: true
+  data-source-proxy-mode: AT
+  service:
+    vgroup-mapping:
+      culturehub_at: default
+    grouplist:
+      default: ${SEATA_SERVER_ADDR:localhost:8091}
+  registry:
+    type: file
+  config:
+    type: file
+  client:
+    tm:
+      commit-retry-count: 2
+      rollback-retry-count: 2
+    rm:
+      sql-parser-type: druid
+  transport:
+    enable-tm-client-batch-send-request: false

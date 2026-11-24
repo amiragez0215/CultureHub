@@ -46,6 +46,7 @@ export const App = {
       error = timedMessage(6000),
       busy = ref(false),
       result = ref(null),
+      pendingBooking = ref(null),
       qr = ref(""),
       q = ref(""),
       category = ref(""),
@@ -74,6 +75,12 @@ export const App = {
       toast = timedMessage(3000),
       venueInfo = ref(null),
       ticket = ref(null),
+      knowledgeFile = ref(null),
+      knowledgeJob = ref(null),
+      combination = ref(null),
+      aiGroupHistory = ref([]),
+      demoCatalog = ref([]),
+      combinationInput = ref({items: [{participant:"CORE",sessionId:""}], confirmed:false, retainPartial:false, demo:false, requestId:crypto.randomUUID()}),
       detailOrigin = ref("activities"),
       resultTitle = ref(""),
       clock = ref(Date.now());
@@ -91,7 +98,7 @@ export const App = {
       (v.name + " " + v.address).includes(grantVenueQuery.value.trim())));
     const grantChanged = computed(() => [...grantVenueIds.value].sort((a,b)=>a-b).join(",") !==
       [...grantOriginalIds.value].sort((a,b)=>a-b).join(","));
-    const pages = { activities: 1, mine: 1, manage: 1 };
+    const pages = { activities: 1, mine: 1, manage: 1, combinations: 1 };
     const categories = [
       "HERITAGE",
       "LECTURE",
@@ -148,6 +155,8 @@ export const App = {
       venueDetail: ["场馆参观详情", "查看场馆位置与开放信息", "文化场馆"],
       credential: ["电子签到凭证", "到场后出示二维码或核销码", "我的参与"],
       review: ["提交或修改评价", "请根据实际参与体验填写评价", "我的参与"],
+      combinations: ["组合预约", "选择 1～3 个场次，明确确认后查看整组处理状态", "我的参与"],
+      knowledge: ["场馆知识库", "上传规则文档，查看入库进度和版本", "管理工作台"],
       editActivity: [
         "编辑活动",
         "保存草稿后，通过发布操作对外开放",
@@ -348,6 +357,10 @@ export const App = {
       sessionStorage.removeItem("token");
       token.value = "";
       me.value = null;
+      pendingBooking.value = null;
+      resetCombination();
+      aiGroupHistory.value = [];
+      demoCatalog.value = [];
       nav("login");
     }
     async function nav(p) {
@@ -395,6 +408,18 @@ export const App = {
           [list, {total: count}] = await Promise.all([
             api("/me/participations?page=" + pageNo.value), api("/me/participations/count")]);
         if (p === "notifications") list = await api("/me/notifications");
+        if (p === "combinations") {
+          const history=await api("/combinations?page="+pageNo.value);
+          list=history.records;count=history.total;
+          aiGroupHistory.value=await api("/ai/group-requests").catch(()=>[]);
+        }
+        if (p === "knowledge") {
+          scopedVenues = await api("/admin/me/venues");
+          const venue = platform.value ? 0 : scopedVenues[0]?.id;
+          form.value = { venueId: venue, scope: venue ? "VENUE" : "GLOBAL",
+            visibility: "PUBLIC", knowledgeType: "VENUE_RULE", title: "", source: "" };
+          list = await api("/knowledge/documents?venueId=" + (venue || 0));
+        }
         if (p === "venues") {
           list = await api("/admin/me/venues");
           scopedVenues = list;
@@ -456,7 +481,7 @@ export const App = {
     }
     async function book(id, wait = false) {
       await run(async () => {
-        const key = "request:" + id + ":" + wait;
+        const key = "request:" + me.value?.user?.id + ":" + id + ":" + wait;
         let request = sessionStorage.getItem(key);
         if (!request) {
           request = crypto.randomUUID();
@@ -468,12 +493,28 @@ export const App = {
             "POST",
             { request_id: request },
           );
+          if (result.value?.asyncBooking) {
+            const final = await awaitBooking(result.value, key);
+            await nav("mine");
+            if (!final) toast.value = "请求已受理，处理完成后可在这里查询结果";
+            return;
+          }
           sessionStorage.removeItem(key);
           await nav("mine");
           toast.value = wait
             ? "已加入候补队列，请在我的参与中查看进度"
             : "预约成功，可查看电子签到凭证";
         } catch (e) {
+          if (e.code === "BOOKING_UNAVAILABLE") {
+            try {
+              const accepted = await api("/booking-requests/" + request);
+              await awaitBooking(accepted, key);
+              await nav("mine");
+              return;
+            } catch {
+              throw e;
+            }
+          }
           try {
             result.value = await api(
               "/me/participations/by-request/" + request,
@@ -493,12 +534,136 @@ export const App = {
       )
         return;
       await run(async () => {
-        await api("/participations/" + id + "/" + action, "POST", {});
+        const value = await api("/participations/" + id + "/" + action, "POST", {});
+        if (value?.asyncBooking) {
+          const final = await awaitBooking(value);
+          await nav("mine");
+          if (!final) toast.value = "候补确认已受理，结果处理中";
+          return;
+        }
         toast.value =
           action === "confirm"
             ? "候补确认成功，已转为正式预约"
             : "操作成功，资格状态已更新";
         await nav("mine");
+      });
+    }
+    async function awaitBooking(value, storageKey) {
+      const identity = token.value;
+      for (let check = 0; check <= 8 && identity === token.value; check++) {
+        if (["CONFIRMED", "REJECTED", "EXPIRED", "FAILED_REVIEW"].includes(value.requestStatus)) {
+          pendingBooking.value = null;
+          if (storageKey) sessionStorage.removeItem(storageKey);
+          if (value.requestStatus !== "CONFIRMED") {
+            throw Error(errorMessage(value.errorCode, 409));
+          }
+          result.value = value.participation;
+          toast.value = value.participation?.status === "WAITING" ? "已加入候补队列" : "预约成功";
+          return true;
+        }
+        pendingBooking.value = { requestId: value.requestId, storageKey, identity };
+        if (check === 8) break;
+        if (check > 0) await new Promise(resolve => setTimeout(resolve, 650));
+        if (identity !== token.value) break;
+        value = await api("/booking-requests/" + value.requestId);
+      }
+      return false;
+    }
+    async function refreshPendingBooking() {
+      const item = pendingBooking.value;
+      if (!item || item.identity !== token.value) return;
+      await run(async () => {
+        const value = await api("/booking-requests/" + item.requestId);
+        if (await awaitBooking(value, item.storageKey)) await nav("mine");
+      });
+    }
+    async function uploadKnowledge() {
+      await run(async () => {
+        if (!knowledgeFile.value) throw Error("请选择 PDF、DOCX、Markdown 或 TXT 文件");
+        const metadata = { ...form.value,
+          venueId: form.value.scope === "GLOBAL" ? null : Number(form.value.venueId),
+          activityId: form.value.scope === "ACTIVITY" ? Number(form.value.activityId) : null };
+        const body = new FormData();
+        body.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+        body.append("file", knowledgeFile.value);
+        const reply = await fetch("/api/v1/knowledge/documents", { method: "POST",
+          headers: { Authorization: "Bearer " + token.value }, body });
+        const value = await reply.json();
+        if (!reply.ok) throw Error(errorMessage(value.code, reply.status));
+        knowledgeJob.value = value;
+        toast.value = "文档已上传，正在异步入库";
+        rows.value = await api("/knowledge/documents?venueId=" + (metadata.venueId || 0));
+      });
+    }
+    async function loadDemoCatalog() {
+      const identity=token.value;
+      await run(async()=>{const value=await api("/demo/combinations/catalog");
+        if(identity===token.value)demoCatalog.value=value.participants||[];});
+    }
+    function selectDemoSession(participant, session) {
+      if(combinationInput.value.sourcePlan) return;
+      const items=combinationInput.value.items;
+      if(items.some(x=>x.participant===participant&&Number(x.sessionId)===session.sessionId)) return;
+      const empty=items.find(x=>!x.sessionId);
+      if(empty){empty.participant=participant;empty.sessionId=session.sessionId;}
+      else if(items.length<3)items.push({participant,sessionId:session.sessionId});
+      else {error.value="每组最多选择三个场次";return;}
+      combinationInput.value.confirmed=false;
+    }
+    async function prepareGuideGroup(message) {
+      const ids=message.plan?.orderedSessionIds || [];
+      if(message.current===false || ids.length<2 || ids.length>3 || !message.plan.planId) return;
+      combinationInput.value={items:ids.map(sessionId=>({participant:"CORE",sessionId})),confirmed:false,
+        retainPartial:false,demo:false,requestId:crypto.randomUUID(),sourcePlan:message.plan.planId,planVersion:message.plan.planVersion};
+      combination.value=null;
+      await nav("combinations");
+    }
+    function resetCombination() {combinationInput.value.historyMode=false;combinationInput.value.sourcePlan=null;
+      if(!combinationInput.value.items.length)combinationInput.value.items=[{participant:"CORE",sessionId:""}];combination.value=null;combinationInput.value.requestId=crypto.randomUUID();combinationInput.value.confirmed=false;}
+    async function submitCombination() {
+      await run(async () => {
+        const ownerToken = token.value;
+        const value = combinationInput.value;
+        if (!value.confirmed) throw Error("请先明确确认整组预约");
+        const items = value.items.map(x => ({participant:x.participant,sessionId:Number(x.sessionId)}));
+        if (items.some(x=>!Number.isSafeInteger(x.sessionId)||x.sessionId<=0)) throw Error("请输入有效场次编号");
+        const reply = value.sourcePlan
+          ? await api("/ai/plans/"+value.sourcePlan+"/combination","POST",{version:value.planVersion,confirmed:true,retainPartial:value.retainPartial})
+          : await api((value.demo?"/demo":"")+"/combinations", "POST", {...value,items});
+        if (ownerToken !== token.value) return;
+        combination.value = reply;
+        toast.value="组合请求已受理，请查询最终处理结果";
+      });
+    }
+    async function openCombinationHistory(row, ai=false) {
+      combinationInput.value.historyMode=true;
+      combinationInput.value.sourcePlan=ai?row.plan_id:null;
+      combinationInput.value.planVersion=ai?row.version:null;
+      combinationInput.value.confirmed=ai;
+      combinationInput.value.retainPartial=!!row.group_retain_partial;
+      combination.value=ai?{planId:row.plan_id,status:"PROCESSING"}:{id:row.id};
+      await refreshCombination();
+    }
+    async function refreshCombination() {
+      const plan=combinationInput.value.sourcePlan;
+      if (!combination.value?.id && !plan) return;
+      const ownerToken=token.value, id=combination.value?.id;
+      await run(async()=>{const reply=await api(plan?"/ai/plans/"+plan+"/combination":"/combinations/"+id);
+        if(ownerToken===token.value && combination.value?.id===id) combination.value=reply;});
+    }
+
+    async function knowledgeAction(id, action) {
+      await run(async () => {
+        if (action === "delete" && !window.confirm("删除后该文档立即停止被检索，随后清理文件与向量。继续吗？")) return;
+        knowledgeJob.value = await api("/knowledge/documents/" + id + (action === "reindex" ? "/reindex" : ""),
+          action === "delete" ? "DELETE" : "POST");
+        rows.value = await api("/knowledge/documents?venueId=" + (form.value.venueId || 0));
+      });
+    }
+    async function refreshKnowledgeJob() {
+      if (!knowledgeJob.value) return;
+      await run(async () => {
+        knowledgeJob.value = await api("/knowledge/jobs/" + (knowledgeJob.value.jobId || knowledgeJob.value.id));
       });
     }
     async function credential(id) {
@@ -1042,6 +1207,24 @@ export const App = {
       error,
       busy,
       result,
+      pendingBooking: computed(() => pendingBooking.value?.identity === token.value),
+      refreshPendingBooking,
+      combination,
+      combinationInput,
+      aiGroupHistory,
+      demoCatalog,
+      loadDemoCatalog,
+      selectDemoSession,
+      openCombinationHistory,
+      resetCombination,
+      submitCombination,
+      prepareGuideGroup,
+      refreshCombination,
+      knowledgeFile,
+      knowledgeJob,
+      uploadKnowledge,
+      knowledgeAction,
+      refreshKnowledgeJob,
       qr,
       q,
       category,

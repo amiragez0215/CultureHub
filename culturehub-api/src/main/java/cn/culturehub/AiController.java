@@ -7,6 +7,7 @@ import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @RestController
 @RequestMapping("/api/v1")
 public class AiController {

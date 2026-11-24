@@ -1,0 +1,69 @@
+# Overlay after P1, P2 and P3. Partner services have no published host ports.
+name: culturehub-v3
+services:
+  mysql:
+    environment:
+      V3_COMBINATION_ENABLED: "true"
+      V3_DEMO_ENABLED: ${V3_DEMO_ENABLED:-false}
+      PARTNER_A_DB_PASSWORD: ${PARTNER_A_DB_PASSWORD:?Set PARTNER_A_DB_PASSWORD}
+      PARTNER_B_DB_PASSWORD: ${PARTNER_B_DB_PASSWORD:?Set PARTNER_B_DB_PASSWORD}
+  core:
+    environment:
+      SPRING_PROFILES_ACTIVE: v3-p4
+      SEATA_ENABLED: "true"
+      SEATA_SERVER_ADDR: seata:8091
+      V3_COMBINATION_TOKEN: ${V3_COMBINATION_TOKEN:-${V3_ORCHESTRATOR_CORE_TOKEN:?Set V3_COMBINATION_TOKEN}}
+      V3_DEMO_ENABLED: ${V3_DEMO_ENABLED:-false}
+  seata:
+    image: apache/seata-server:2.5.0
+    environment:
+      SEATA_PORT: "8091"
+      SEATA_SERVER_SERVICE_PORT: "8091"
+      SERVER_PORT: "7091"
+      STORE_MODE: file
+      SEATA_STORE_MODE: file
+      SEATA_STORE_FILE_DIR: /seata-server/sessionStore
+      SEATA_STORE_FILE_FLUSH_DISK_MODE: sync
+    volumes:
+      - seata-data:/seata-server/sessionStore
+  partner-a: &partner
+    image: culturehub-v3-core:1.0.0
+    build: {context: ., dockerfile: deploy/Dockerfile.java, args: {MODULE: culturehub-api}}
+    depends_on:
+      mysql: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    environment: &partner-env
+      SPRING_PROFILES_ACTIVE: v3-partner
+      SEATA_ENABLED: "true"
+      SEATA_SERVER_ADDR: seata:8091
+      V3_PARTICIPANT: PARTNER_A
+      V3_PARTNER_SERVICE_NAME: culturehub-partner-a
+      V3_PARTNER_DB_SCHEMA: partner_db_a
+      V3_PARTNER_DB_USER: culturehub_partner_a
+      V3_PARTNER_DB_PASSWORD: ${PARTNER_A_DB_PASSWORD}
+      DB_URL: jdbc:mysql://mysql:3306/partner_db_a?connectionTimeZone=Asia/Shanghai
+      JWT_SECRET: ${JWT_SECRET}
+      V3_AI_CORE_TOKEN: ${V3_AI_CORE_TOKEN}
+      V3_KNOWLEDGE_CORE_TOKEN: ${V3_KNOWLEDGE_CORE_TOKEN}
+      V3_COMBINATION_TOKEN: ${V3_COMBINATION_TOKEN:-${V3_ORCHESTRATOR_CORE_TOKEN:?Set V3_COMBINATION_TOKEN}}
+      V3_NOTIFICATION_CORE_TOKEN: ${V3_NOTIFICATION_CORE_TOKEN}
+      REDIS_HOST: redis
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: culturehub
+      RABBIT_PASSWORD: ${RABBIT_PASSWORD}
+      NACOS_SERVER_ADDR: nacos:8848
+      AI_CHAT_PROVIDER: none
+      AI_EMBEDDING_PROVIDER: none
+      AI_VECTORSTORE: none
+  partner-b:
+    <<: *partner
+    environment:
+      <<: *partner-env
+      V3_PARTICIPANT: PARTNER_B
+      V3_PARTNER_SERVICE_NAME: culturehub-partner-b
+      V3_PARTNER_DB_SCHEMA: partner_db_b
+      V3_PARTNER_DB_USER: culturehub_partner_b
+      V3_PARTNER_DB_PASSWORD: ${PARTNER_B_DB_PASSWORD}
+      DB_URL: jdbc:mysql://mysql:3306/partner_db_b?connectionTimeZone=Asia/Shanghai
+volumes:
+  seata-data:

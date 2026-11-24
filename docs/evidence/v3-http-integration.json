@@ -1,0 +1,41 @@
+{
+  "scope": "real local HTTP/services; AI plan fixture is injected, no real chat model",
+  "checks": {
+    "saga": [
+      "6 SQL accounts, 30 cross-schema denials and literal underscore",
+      "p4-partner_a independently started on 18121",
+      "p4-partner_b independently started on 18122",
+      "p4-core independently started on 18110",
+      "p4-orchestrator independently started on 18120",
+      "same-database group confirms both items in the participant transaction",
+      "real Core + Partner A + Partner B Reserve/Confirm via RabbitMQ",
+      "cross-service rejection compensates every participant before reporting all released",
+      "one invalid local item leaves zero valid qualifications and zero occupied seats",
+      "repeated group request returns the same Saga without duplicate qualification",
+      "p4-orchestrator-held independently started on 18120",
+      "p4-orchestrator-restarted independently started on 18120",
+      "coordinator process crash and restart recovers durable unpublished commands"
+    ],
+    "ai": [
+      "6 SQL accounts, 30 cross-schema denials and literal underscore",
+      "p5-core independently started on 18110",
+      "p5-orchestrator independently started on 18120",
+      "p5-ai independently started on 18130",
+      "AI starts without model key; conversation stored in ai_db; foreign owner and Core AI route denied",
+      "selection never books; explicit confirm uses real Redis/Stream/Rabbit/Worker; ai_db recovers one stable Core result",
+      "AI group authorization persists one stable request; Orchestrator and Core confirm both sessions; repeat returns same Saga",
+      "AI authorization history can recover the original group request after page reload"
+    ],
+    "telemetry": [
+      "6 SQL accounts, 30 cross-schema denials and literal underscore",
+      "p6-telemetry-core independently started on 18110",
+      "real OTLP export preserves the HTTP trace through Redis/Stream/RabbitMQ to Worker; Prometheus backlog and Hikari scrape"
+    ],
+    "brokerOutage": [
+      "6 SQL accounts, 30 cross-schema denials and literal underscore",
+      "p6-broker-down-core independently started on 18110",
+      "API starts with broker stopped; HTTP 202 retains durable request, no fabricated participation",
+      "broker restart recovers the original Stream request and creates exactly one qualification"
+    ]
+  }
+}

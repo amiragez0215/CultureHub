@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 /** Native 1.1.2.0 CheckpointSaver SPI backed by the existing Lettuce template. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Component
 public class LettuceGuideSaver implements BaseCheckpointSaver {
   record Frame(String id, String node, String next, GuideState.Turn guide) {}

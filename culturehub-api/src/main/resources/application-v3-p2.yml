@@ -1,0 +1,10 @@
+spring:
+  task:
+    scheduling:
+      pool:
+        size: 3
+v3:
+  booking:
+    hold-seconds: ${V3_BOOKING_HOLD_SECONDS:180}
+    offer-minutes: ${V3_BOOKING_OFFER_MINUTES:5}
+    reclaim-millis: ${V3_BOOKING_RECLAIM_MILLIS:5000}

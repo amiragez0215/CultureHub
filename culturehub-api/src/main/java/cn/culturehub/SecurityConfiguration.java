@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 c.dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ASYNC)
                     .permitAll()
                     .requestMatchers(
-                        "/api/v1/auth/register", "/api/v1/auth/login", "/actuator/health")
+                        "/api/v1/auth/register", "/api/v1/auth/login", "/actuator/health", "/actuator/prometheus")
                     .permitAll()
                     .requestMatchers(
                         org.springframework.http.HttpMethod.GET,

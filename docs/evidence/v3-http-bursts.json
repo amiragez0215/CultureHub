@@ -1,0 +1,74 @@
+{
+  "scope": "real HTTP bursts; fixture preparation and terminal polling excluded from ingress latency",
+  "runsPerConcurrency": 1,
+  "components": "Java17/MySQL8/Redis7/RabbitMQ4, local single machine",
+  "databaseConcurrencyMeasured": false,
+  "results": [
+    {
+      "concurrency": 50,
+      "requests": 50,
+      "capacity": 25,
+      "occupied": 25,
+      "validQualifications": 25,
+      "durationSeconds": 0.48150220000025,
+      "ingressRps": 103.84168545849643,
+      "meanMs": 413.0262499998935,
+      "p95Ms": 455.3407999992487,
+      "p99Ms": 471.72130000035395,
+      "responses": {
+        "accepted": 50
+      },
+      "terminalStates": {
+        "CONFIRMED": 25,
+        "REJECTED": 25
+      },
+      "duplicateQualifications": 0
+    },
+    {
+      "concurrency": 100,
+      "requests": 100,
+      "capacity": 25,
+      "occupied": 25,
+      "validQualifications": 25,
+      "durationSeconds": 0.8144974999995611,
+      "ingressRps": 122.77508525201598,
+      "meanMs": 596.7601600000853,
+      "p95Ms": 744.9278000021877,
+      "p99Ms": 764.3725000016275,
+      "responses": {
+        "accepted": 100
+      },
+      "terminalStates": {
+        "CONFIRMED": 25,
+        "REJECTED": 75
+      },
+      "duplicateQualifications": 0
+    },
+    {
+      "concurrency": 200,
+      "requests": 200,
+      "capacity": 25,
+      "occupied": 25,
+      "validQualifications": 25,
+      "durationSeconds": 0.7810709000004863,
+      "ingressRps": 256.05870094491485,
+      "meanMs": 479.8494160001792,
+      "p95Ms": 703.1382000022859,
+      "p99Ms": 719.5713000000978,
+      "responses": {
+        "accepted": 100,
+        "rate_limited": 100
+      },
+      "terminalStates": {
+        "CONFIRMED": 25,
+        "REJECTED": 75
+      },
+      "duplicateQualifications": 0
+    }
+  ],
+  "limitations": [
+    "No sustained throughput claim",
+    "No SQL or connection-pool instrumentation",
+    "No full V3 gateway or AI path"
+  ]
+}

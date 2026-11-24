@@ -3,5 +3,12 @@
 **/dist
 .tools
 .env
+.env.v3
+.env.*
+**/.env
+**/.env.*
+*.zip
+*.7z
+**/__pycache__
 .git
 *.log

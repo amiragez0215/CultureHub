@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 /** Independent RAG adapter. Retrieved text is never a tool/system instruction. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class GuideKnowledge {
   final ObjectProvider<VectorStore> vectors;

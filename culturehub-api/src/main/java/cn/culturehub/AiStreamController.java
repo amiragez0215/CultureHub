@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.*;
 
 /** Bounded MVC streaming workers. Authentication is captured from the JWT HTTP request. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @RestController
 @RequestMapping("/api/v1/ai/conversations")
 public class AiStreamController {

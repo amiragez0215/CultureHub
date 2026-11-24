@@ -1,0 +1,2897 @@
+{
+  "modules": {
+    "culturehub-ai": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 5
+    },
+    "culturehub-api": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 10
+    },
+    "culturehub-business": {
+      "tests": 371,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 91,
+      "passed": 280
+    },
+    "culturehub-knowledge": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 4
+    },
+    "culturehub-notification-worker": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 7,
+      "passed": 5
+    },
+    "culturehub-orchestrator": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 4
+    }
+  },
+  "total": {
+    "tests": 406,
+    "passed": 308,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 98
+  },
+  "cases": [
+    {
+      "module": "culturehub-ai",
+      "class": "cn.culturehub.RemoteBoundaryTest",
+      "test": "missingAuthenticationCannotCallTheBusinessService",
+      "status": "passed",
+      "seconds": "0.053"
+    },
+    {
+      "module": "culturehub-ai",
+      "class": "cn.culturehub.RemoteBoundaryTest",
+      "test": "toolPayloadNeverAcceptsCallerSuppliedOwnerAndPrefetchAvoidsNetworkUnderLock",
+      "status": "passed",
+      "seconds": "5.629"
+    },
+    {
+      "module": "culturehub-ai",
+      "class": "cn.culturehub.RemoteBoundaryTest",
+      "test": "graphNodesKeepAuthenticatedContextWithoutSerializingCredentials",
+      "status": "passed",
+      "seconds": "0.738"
+    },
+    {
+      "module": "culturehub-ai",
+      "class": "cn.culturehub.RemoteBoundaryTest",
+      "test": "bookingWriteUsesStableKeyAndStatusReadsCannotSubmit",
+      "status": "passed",
+      "seconds": "0.009"
+    },
+    {
+      "module": "culturehub-ai",
+      "class": "cn.culturehub.RemoteBoundaryTest",
+      "test": "knowledgeRejectsWrongVenueAndInjectionAndMarksUnavailable",
+      "status": "passed",
+      "seconds": "0.041"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiBusinessQueryTest",
+      "test": "callerCannotSupplyAnotherOwnerAndUnknownIdentityFailsClosed",
+      "status": "passed",
+      "seconds": "5.835"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiBusinessQueryTest",
+      "test": "missingRequiredToolArgumentsNeverReachDataAccess",
+      "status": "passed",
+      "seconds": "0.004"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "channelCancellationIsIdempotentAndStopsFutureEmits",
+      "status": "passed",
+      "seconds": "1.743"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "disconnectedTransportClosesChannelAndCancellationSignal",
+      "status": "passed",
+      "seconds": "0.041"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "mvcStreamsEventsWithCapturedAuthenticationAndCleansWorkerContext",
+      "status": "passed",
+      "seconds": "0.259"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "saturatedWorkerPoolFailsFastInsteadOfQueueingUnboundedRequests",
+      "status": "passed",
+      "seconds": "0.025"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "authorizationAndValidationFailBeforeSseHeaders",
+      "status": "passed",
+      "seconds": "0.061"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.AiStreamControllerTest",
+      "test": "providerTimeoutIsAnErrorEventWithoutStackOrDone",
+      "status": "passed",
+      "seconds": "0.018"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.CoreBoundaryAuthorizationTest",
+      "test": "serviceCredentialsAreBoundToCallerAndEndpoint",
+      "status": "passed",
+      "seconds": "0.159"
+    },
+    {
+      "module": "culturehub-api",
+      "class": "cn.culturehub.CoreBoundaryAuthorizationTest",
+      "test": "sharedOrMalformedCredentialsFailConfiguration",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideChallengeTest",
+      "test": "repeatableDeterministicChallengeSet",
+      "status": "passed",
+      "seconds": "0.244"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideChromaLocalTest",
+      "test": "manifestToEmbeddingToScopedGrade",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideChromaLocalTest",
+      "test": "standaloneFictitiousCorpusResolvesBothDirectionsWithoutDemoDatabase",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideEvidenceScopeTest",
+      "test": "optionalUnknownDoesNotBlockAndBackgroundIsBoundPerActivity",
+      "status": "passed",
+      "seconds": "0.103"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideEvidenceScopeTest",
+      "test": "seventhVenueCannotBorrowEvidenceAndRepairOnlyChecksReplacement",
+      "status": "passed",
+      "seconds": "2.481"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideEvidenceScopeTest",
+      "test": "verifierRejectsSameVenueEvidenceForTheWrongActivityAndConflictingRequiredRules",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideInteractionTest",
+      "test": "latestCorrectionsRetainOtherConstraintsAndUseTheActualPreviousVenue",
+      "status": "passed",
+      "seconds": "0.005"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideInteractionTest",
+      "test": "narrationUsesBusinessFactsAndRejectsInventedOrMismatchedReferences",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideInteractionTest",
+      "test": "graphPassesRecentMessagesOnlyToUnderstanding",
+      "status": "passed",
+      "seconds": "0.048"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeIndexTest",
+      "test": "rejectsIncompleteMetadataAndMissingRequiredCatalog",
+      "status": "passed",
+      "seconds": "0.384"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeIndexTest",
+      "test": "failedStageCannotChangeRegistryAndNeverDeletesOtherData",
+      "status": "passed",
+      "seconds": "2.877"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "missingSourceRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "contradictionIsNotSupported",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "injectionRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "familyTagIsNotAgeProof",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "wrongVenueRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "forgedSourceCannotBecomeOfficialEvidence",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "expiredRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "sameVenueDifferentActivityIsNotValidEvidence",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideKnowledgeTest",
+      "test": "lexicalRerankIsIndependentOfRecallOrder",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "relativeTomorrowUsesBusinessClock",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "zeroMeansUnspecifiedOnlyWhenUserDidNotRequestZero",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "omittedHistoricalHardConstraintSurvives",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "excessiveCountFailsClosed",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "familyDoesNotBecomeMultipleReservations",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "ordinalRevisionDoesNotResetHardCountOrDuration",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "emptyIsNotFailure",
+      "status": "passed",
+      "seconds": "0.013"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "missingBookingsRequiresToolPlanRepair",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePhaseOneTest",
+      "test": "toolFailureIsDistinct",
+      "status": "passed",
+      "seconds": "0.008"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "verifierFindsCollisionEvenWhenOptimizerOutputWasCorrupted",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "preferredCountCanDowngrade",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "existingBookingConflicts",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "boundedRepairStops",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "necessaryGapAndTotalDuration",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "overlappingPairRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "outputClaimCannotDeclareBookingSuccess",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "hallucinatedIdsAndTimesFail",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuidePlanningTest",
+      "test": "hardCountNeverDowngrades",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundComparisonTest",
+      "test": "recordMatchedDeterministicCases",
+      "status": "passed",
+      "seconds": "0.006"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "agentReturnsKnowledgeAnswerWithNoBookingCardsOrProposalEvent",
+      "status": "passed",
+      "seconds": "0.139"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "confirmedMismatchWithoutAlternativeDoesNotSearchAgain",
+      "status": "passed",
+      "seconds": "0.084"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "ageEligibilityKeepsExclusiveAndRecommendedRangesDistinct",
+      "status": "passed",
+      "seconds": "0.003"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "consultationReturnsConfirmedNegativeWithoutRepairAndExposesItsSource",
+      "status": "passed",
+      "seconds": "0.068"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "conditionalPermissionDoesNotClaimAnUnknownAgeRequirementWasMet",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "requiredIndependentAdmissionSkipsRejectedVenueAndChecksNextCandidate",
+      "status": "passed",
+      "seconds": "0.08"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "changingTheHardRuleReplansItWithoutUsingTheOldVerdict",
+      "status": "passed",
+      "seconds": "0.003"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "planningWithAQuestionAboutCompanionsDoesNotRequireIndependentAdmission",
+      "status": "passed",
+      "seconds": "0.073"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "consultationAboutClosedHoursIsAnAnswer",
+      "status": "passed",
+      "seconds": "0.066"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundThreeTest",
+      "test": "conflictUnavailableAndInsufficientRemainDistinctAndOnlyInsufficientIsRewritten",
+      "status": "passed",
+      "seconds": "0.056"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundTwoNodesTest",
+      "test": "choosesToolsFromNeedsAndDistinguishesAnUnknownVenue",
+      "status": "passed",
+      "seconds": "0.006"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundTwoNodesTest",
+      "test": "staleOrChangedArgumentsInvalidateOnlyTheirOwnFacts",
+      "status": "passed",
+      "seconds": "0.003"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundTwoNodesTest",
+      "test": "incompleteOrTimedOutDetailIsTheOnlyReplannedNeed",
+      "status": "passed",
+      "seconds": "0.009"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundTwoNodesTest",
+      "test": "conditionalRuleDoesNotProveIndependentAdmission",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoundTwoNodesTest",
+      "test": "parsesSpecificQuestionsAndOnlyRelevantRuleCanAnswer",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoutingTest",
+      "test": "independentChainsAndTargetedGenerationRepairVisitAllFifteenNodes",
+      "status": "passed",
+      "seconds": "0.079"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ai.guide.GuideRoutingTest",
+      "test": "globalRuleQuerySkipsToolsAndFailsClosedWhenChromaMissing",
+      "status": "passed",
+      "seconds": "0.04"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiBoundaryTest",
+      "test": "reportWithoutReviewsUsesJavaMetricsAndNoModel",
+      "status": "passed",
+      "seconds": "0.374"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiBoundaryTest",
+      "test": "planPermissionCheckedBeforeModel",
+      "status": "passed",
+      "seconds": "0.017"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiBoundaryTest",
+      "test": "invalidReviewReferenceCannotOverwriteExistingReport",
+      "status": "passed",
+      "seconds": "0.122"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiBoundaryTest",
+      "test": "disabledCredentialAndOverflowDurationAreRejected",
+      "status": "passed",
+      "seconds": "0.055"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "unavailableKnowledgeDegradesToRealData",
+      "status": "passed",
+      "seconds": "0.202"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "selectionRequiresOwnedFreshCandidateAndStillDoesNotBook",
+      "status": "passed",
+      "seconds": "0.027"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "streamingProviderFailureReleasesConversationAndNoBooking",
+      "status": "passed",
+      "seconds": "0.078"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "toolBudgetFailurePropagatesThroughTheRealSpringToolManager",
+      "status": "passed",
+      "seconds": "0.013"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "optionalExplanationConnectionResetKeepsVerifiedCardsWithoutBooking",
+      "status": "passed",
+      "seconds": "0.033"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "endedOrUnpublishedCandidateCannotBeConfirmed",
+      "status": "passed",
+      "seconds": "0.036"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "realStreamPublisherProducesMultipleSafeChunksBeforeVerifiedCards",
+      "status": "passed",
+      "seconds": "0.039"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "venueInformationDoesNotDemandAnActivityDate",
+      "status": "passed",
+      "seconds": "0.024"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "noModelDoesNotPreventGraphConstructionButRequestIsUnavailable",
+      "status": "passed",
+      "seconds": "0.006"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "vagueQuestionClarifiesWithoutQueryOrBooking",
+      "status": "passed",
+      "seconds": "0.016"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "unavailableKnowledgeProviderAlsoDegradesSafely",
+      "status": "passed",
+      "seconds": "0.023"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "foreignConversationIsRejected",
+      "status": "passed",
+      "seconds": "0.006"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "toolFailureFailsWithoutWriteAndWithoutLoop",
+      "status": "passed",
+      "seconds": "0.015"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "minimumRemainingIsVerifiedAndExplainsSinglePersonBoundary",
+      "status": "passed",
+      "seconds": "0.024"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "streamCancellationStopsUpstreamAndNeverExposesCandidates",
+      "status": "passed",
+      "seconds": "0.05"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "streamingTimeoutHasExplicitErrorCode",
+      "status": "passed",
+      "seconds": "0.014"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "expiredMemoryCannotStartAnotherTurn",
+      "status": "passed",
+      "seconds": "0.006"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "changedDateReplacesPreferenceAndInvalidatesOldCandidate",
+      "status": "passed",
+      "seconds": "0.044"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "inventedSessionIsRejectedAndRetryIsBounded",
+      "status": "passed",
+      "seconds": "0.031"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "emptySearchDoesNotAskModelToInventCandidates",
+      "status": "passed",
+      "seconds": "0.015"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiGuideGraphTest",
+      "test": "modelCannotClaimSuccessWithoutConfirmation",
+      "status": "passed",
+      "seconds": "0.019"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiValidationTest",
+      "test": "structuredPlanHasValidatedDuration",
+      "status": "passed",
+      "seconds": "0.192"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.AiValidationTest",
+      "test": "badEventRejected",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "expiredHoldReleaseIsIdempotentAndAllowsExactlyOneNewReservation",
+      "status": "passed",
+      "seconds": "0.953"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "redisIncrQueueRestartsAboveDurableSequenceAndDoesNotReuseTickets",
+      "status": "passed",
+      "seconds": "0.07"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "pendingStreamIsClaimedAfterRelayDiesAndRetainsOriginalRequest",
+      "status": "passed",
+      "seconds": "1.243"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "inventoryLossRequiresExplicitReconciliationAndPreservesCommittedCapacity",
+      "status": "passed",
+      "seconds": "0.342"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "workerFinishesBeforeQueuedUpdateAndRedeliveryDoesNotRepeatSideEffects",
+      "status": "passed",
+      "seconds": "0.179"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.BookingP2LocalTest",
+      "test": "workerThatLockedBeforeExpiryCommitsWhileTimeoutWaits",
+      "status": "passed",
+      "seconds": "7.204"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.94"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "0.784"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.757"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.849"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.791"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "0.783"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.694"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.74"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.845"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.761"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "0.755"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.764"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "0.77"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "0.772"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.716"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+      "status": "passed",
+      "seconds": "0.782"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "cacheFailureFallsBackToBatchDatabase",
+      "status": "passed",
+      "seconds": "0.747"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+      "status": "passed",
+      "seconds": "0.852"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+      "status": "passed",
+      "seconds": "0.926"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "publicCacheColdHotPartialMissAndOrder",
+      "status": "passed",
+      "seconds": "0.828"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+      "status": "passed",
+      "seconds": "1.185"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+      "status": "passed",
+      "seconds": "0.774"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+      "status": "passed",
+      "seconds": "0.773"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "dynamicFiltersDatesCountAndPrivilegeAreConsistent",
+      "status": "passed",
+      "seconds": "0.847"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "lambdaEntityReadsAndMapNullsPreserveContract",
+      "status": "passed",
+      "seconds": "0.773"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "activityJoinDoesNotMultiplyPaginationRows",
+      "status": "passed",
+      "seconds": "0.721"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.CatalogLocalTest",
+      "test": "historyResultMapMaintainsNullableQueueAndOwnerIsolation",
+      "status": "passed",
+      "seconds": "0.697"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "duplicateRequest",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "expiredConfirmationRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "lastSeatRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "checkinAndCancelRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "expiryIsIdempotent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "doubleCheckin",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ContainerBookingTest",
+      "test": "unauthorizedVenue",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideNativeToolTest",
+      "test": "nativeResponseInvokesTheSpringCallbackExactlyOnce",
+      "status": "passed",
+      "seconds": "0.013"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideNativeToolTest",
+      "test": "injectedNameOrIdentityIsRejectedBeforeJavaQueries",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.815"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "0.719"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.751"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.84"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.755"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "0.744"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.686"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.77"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.817"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.751"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "0.782"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.787"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "0.772"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "0.797"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.694"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "sseEmitsProgressBeforeVerifiedPlanAndCancellationDoesNotPersistIt",
+      "status": "passed",
+      "seconds": "1.293"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "concurrentConfirmationsCreateOnlyOneQualification",
+      "status": "passed",
+      "seconds": "1.6"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "nativeCheckpointRestoresCursorWithoutRepeatingIntent",
+      "status": "passed",
+      "seconds": "0.782"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "newBookingAfterProposalBlocksConflictingConfirmation",
+      "status": "passed",
+      "seconds": "1.116"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "changedPlanInvalidatesPendingAndRetainsVersions",
+      "status": "passed",
+      "seconds": "1.283"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "reconstructingAgentAfterRedisLossRecoversSavedPlanAndPendingProposal",
+      "status": "passed",
+      "seconds": "1.479"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "concurrentRevisionAndConfirmationRespectClaimBoundary",
+      "status": "passed",
+      "seconds": "1.434"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "cancelledGraphNeverCreatesParticipation",
+      "status": "passed",
+      "seconds": "0.891"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "realGraphCreatesPlanButNeverBooksUntilExplicitConfirmation",
+      "status": "passed",
+      "seconds": "1.866"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "conversationOwnershipSurvivesMemoryLoss",
+      "status": "passed",
+      "seconds": "1.127"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "twoRealSessionsArePlannedButConfirmedIndependently",
+      "status": "passed",
+      "seconds": "1.769"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.GuideV2LocalTest",
+      "test": "recentConversationIsBoundedExpiresAndCannotCrossAccounts",
+      "status": "passed",
+      "seconds": "1.066"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.InputValidationTest",
+      "test": "invalidPaginationAndBlankText",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.InputValidationTest",
+      "test": "timeAndCodesAreValidated",
+      "status": "passed",
+      "seconds": "0.001"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.InputValidationTest",
+      "test": "missingAndWrongInputsAre400",
+      "status": "passed",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.844"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "0.92"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.789"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.861"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.752"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "0.775"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.611"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.754"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.814"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.758"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "0.753"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.751"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "0.734"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "0.907"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.LocalBookingTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.764"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "duplicateRequest",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "expiredConfirmationRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "lastSeatRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "checkinAndCancelRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "expiryIsIdempotent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "doubleCheckin",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "unauthorizedVenue",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "cacheFailureFallsBackToBatchDatabase",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "publicCacheColdHotPartialMissAndOrder",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationContainerTest",
+      "test": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.99"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "1.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.781"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.817"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.765"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "1.01"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.906"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.891"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.815"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.966"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "1.072"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.83"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "0.88"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "1.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.917"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "hotDisplayUsesOneMgetAndOneVisibilityQuery",
+      "status": "passed",
+      "seconds": "0.756"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "cacheFailureFallsBackToBatchDatabase",
+      "status": "passed",
+      "seconds": "0.713"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "mapperGeneratedIdNullableUpdateAndJdbcShareTransaction",
+      "status": "passed",
+      "seconds": "0.806"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "batchUsesFourQueriesForMultipleSessionsAndDashboardConstantSix",
+      "status": "passed",
+      "seconds": "1.268"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "publicCacheColdHotPartialMissAndOrder",
+      "status": "passed",
+      "seconds": "0.986"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "batchStatisticsEqualOriginalAcrossWaitlistAndEndedStates",
+      "status": "passed",
+      "seconds": "1.188"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "guideCapacityThresholdFiltersInRealMySqlAndRechecksChanges",
+      "status": "passed",
+      "seconds": "0.807"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OptimizationLocalTest",
+      "test": "invalidationWaitsForCommitRollbackRetainsDisplayBookingUsesDatabase",
+      "status": "passed",
+      "seconds": "0.828"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.91"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "0.895"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.709"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.803"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.834"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "0.955"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.629"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.821"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.872"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.948"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "0.838"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.745"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "0.752"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "0.884"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.68"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "realNotificationFailureRollsBackAndControlledRetryRecovers",
+      "status": "passed",
+      "seconds": "1.843"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "realNotificationTransactionCommitsBeforeAckAndDeduplicates",
+      "status": "passed",
+      "seconds": "0.75"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "abandonedLeaseIsRecoveredWithoutNewEvent",
+      "status": "passed",
+      "seconds": "0.775"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "firstPersistentFailureDoesNotBlockBatchAndBackoffRecovers",
+      "status": "passed",
+      "seconds": "0.994"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "brokerFailureDoesNotRollbackReservationAndStableEventRecovers",
+      "status": "passed",
+      "seconds": "0.796"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.OutboxRabbitLocalTest",
+      "test": "concurrentPublishersClaimOnlyOnceAndDoNotHoldTransaction",
+      "status": "passed",
+      "seconds": "0.724"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "duplicateRequest",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "expiredConfirmationRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "lastSeatRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "checkinAndCancelRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "expiryIsIdempotent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "doubleCheckin",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "unauthorizedVenue",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "proposalExpiryCannotExceedRegistrationEnd",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "concurrentConfirmationsCreateExactlyOneQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "expiredLeaseRetriesSameRequestAndConverges",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "newSelectionSupersedesPendingButNotProcessing",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "redisFailureRemainsRecoverableAndDoesNotWriteQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "fullAtConfirmationDoesNotImplicitlyWaitlist",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "unconfirmedProposalAndRejectionNeverBook",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "expiredOrLostConversationCannotStartBooking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "foreignProposalCannotBeReadConfirmedOrRejected",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "confirmationBooksThroughOriginalEntryAndOutbox",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "confirmedResultReflectsLaterCancellationWithoutRebooking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalContainerTest",
+      "test": "ongoingLeaseCannotBeRejectedOrRunAgain",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "0.725"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "0.71"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "0.908"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "0.772"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "0.703"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "0.9"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "0.743"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "0.737"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "0.755"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "0.694"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "0.697"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "0.993"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "1.038"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "0.812"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "0.685"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "proposalExpiryCannotExceedRegistrationEnd",
+      "status": "passed",
+      "seconds": "0.927"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "concurrentConfirmationsCreateExactlyOneQualification",
+      "status": "passed",
+      "seconds": "1.317"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "expiredLeaseRetriesSameRequestAndConverges",
+      "status": "passed",
+      "seconds": "1.003"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "repeatedCommittedRequestBypassesBrokenRedisButNewBookingCannot",
+      "status": "passed",
+      "seconds": "1.036"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "newSelectionSupersedesPendingButNotProcessing",
+      "status": "passed",
+      "seconds": "0.989"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "rejectAndConfirmRaceCannotCancelAnAlreadySubmittedBooking",
+      "status": "passed",
+      "seconds": "1.005"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "redisFailureRemainsRecoverableAndDoesNotWriteQualification",
+      "status": "passed",
+      "seconds": "1.245"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "fullAtConfirmationDoesNotImplicitlyWaitlist",
+      "status": "passed",
+      "seconds": "1.476"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "crashAfterBookingCommitRecoversEvenAfterConversationAndProposalExpire",
+      "status": "passed",
+      "seconds": "1.082"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "unconfirmedProposalAndRejectionNeverBook",
+      "status": "passed",
+      "seconds": "1.221"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "expiredOrLostConversationCannotStartBooking",
+      "status": "passed",
+      "seconds": "1.319"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "foreignProposalCannotBeReadConfirmedOrRejected",
+      "status": "passed",
+      "seconds": "0.836"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "confirmationBooksThroughOriginalEntryAndOutbox",
+      "status": "passed",
+      "seconds": "1.065"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "confirmedResultReflectsLaterCancellationWithoutRebooking",
+      "status": "passed",
+      "seconds": "1.176"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.ProposalLocalTest",
+      "test": "ongoingLeaseCannotBeRejectedOrRunAgain",
+      "status": "passed",
+      "seconds": "0.986"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.PublisherIntegrationTest",
+      "test": "brokerSendFailureRetainsEvent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.PublisherIntegrationTest",
+      "test": "unroutableConfirmDoesNotMarkPublished",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.PublisherIntegrationTest",
+      "test": "successThenMarkerFailureRetainsRetry",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitConfirmTest",
+      "test": "returnOverridesPositiveConfirm",
+      "status": "passed",
+      "seconds": "0.202"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitConfirmTest",
+      "test": "negativeConfirmRejects",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitConfirmTest",
+      "test": "positiveConfirmAcceptsPersistentMessage",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "duplicateRequest",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "expiredConfirmationRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "lastSeatRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "checkinAndCancelRace",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "expiryIsIdempotent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "doubleCheckin",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "unauthorizedVenue",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndContainerTest",
+      "test": "actualBrokerStopAndRestartRetainsCommittedOutbox",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "2.11"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "1.701"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "1.919"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "1.668"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "1.825"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "1.78"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "1.9"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "1.648"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "1.721"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "1.767"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "1.754"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "1.826"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "1.65"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "1.864"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "1.801"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+      "status": "passed",
+      "seconds": "2.136"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitEndToEndLocalTest",
+      "test": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+      "status": "passed",
+      "seconds": "1.949"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "cancellationPromotesWithoutOvertaking",
+      "status": "passed",
+      "seconds": "1.845"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "ongoingCheckinIsProgressNotFinalRate",
+      "status": "passed",
+      "seconds": "1.81"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "duplicateRequest",
+      "status": "passed",
+      "seconds": "2.069"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "expiredConfirmationRace",
+      "status": "passed",
+      "seconds": "2.046"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "lastSeatRace",
+      "status": "passed",
+      "seconds": "1.62"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "repeatedBusinessEventIsDeduplicated",
+      "status": "passed",
+      "seconds": "1.746"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "luaRateLimitAndUnavailable",
+      "status": "passed",
+      "seconds": "1.812"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "checkinAndCancelRace",
+      "status": "passed",
+      "seconds": "1.751"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "expiryIsIdempotent",
+      "status": "passed",
+      "seconds": "1.691"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "doubleCheckin",
+      "status": "passed",
+      "seconds": "1.784"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "oldRequestCannotRecreateCancelledQualification",
+      "status": "passed",
+      "seconds": "1.865"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "statisticsAndReviewAreDatabaseDerived",
+      "status": "passed",
+      "seconds": "1.694"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "concurrentWaitlistSequence",
+      "status": "passed",
+      "seconds": "1.664"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "failedTransactionRollsBackAndRetries",
+      "status": "passed",
+      "seconds": "1.658"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "unauthorizedVenue",
+      "status": "passed",
+      "seconds": "1.678"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "bookingOutboxConfirmedDeliveryAndDuplicateProduceOneNotice",
+      "status": "passed",
+      "seconds": "1.767"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "unavailableBrokerDoesNotRollbackBookingAndRecovers",
+      "status": "passed",
+      "seconds": "1.713"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "actualWorkerJvmExitAfterCommitBeforeAckRedeliversAndDeduplicates",
+      "status": "passed",
+      "seconds": "4.973"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "productionQuorumTopologyCanBeRedeclaredWithoutParameterConflict",
+      "status": "passed",
+      "seconds": "1.61"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "realReturnInFirstEventDoesNotBlockLaterEventAndRecovers",
+      "status": "passed",
+      "seconds": "2.063"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "markerDatabaseFailureAfterConfirmRetainsStableEventForRetry",
+      "status": "passed",
+      "seconds": "1.779"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "malformedJsonIsRetainedInDeadLetter",
+      "status": "passed",
+      "seconds": "1.744"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "persistentFailureHasThreeDelayedRetriesThenDeadLetterAndManualReplay",
+      "status": "passed",
+      "seconds": "5.535"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "actualListenerRestartRecoversQueuedEvent",
+      "status": "passed",
+      "seconds": "3.061"
+    },
+    {
+      "module": "culturehub-business",
+      "class": "cn.culturehub.RabbitReliabilityLocalTest",
+      "test": "transientDatabaseFailureActuallyRetriesAfterDelayThenRecovers",
+      "status": "passed",
+      "seconds": "3.94"
+    },
+    {
+      "module": "culturehub-knowledge",
+      "class": "cn.culturehub.knowledge.KnowledgeIntegrityTest",
+      "test": "malformedMetadataFailsBeforeObjectsOrCoreAreTouched",
+      "status": "passed",
+      "seconds": "6.79"
+    },
+    {
+      "module": "culturehub-knowledge",
+      "class": "cn.culturehub.knowledge.KnowledgeIntegrityTest",
+      "test": "chunksAreStableAndPreserveScopeAndCanonicalHashes",
+      "status": "passed",
+      "seconds": "0.033"
+    },
+    {
+      "module": "culturehub-knowledge",
+      "class": "cn.culturehub.knowledge.KnowledgeJobLocalTest",
+      "test": "deletionBeforeProcessingCannotReactivateDocument",
+      "status": "passed",
+      "seconds": "1.136"
+    },
+    {
+      "module": "culturehub-knowledge",
+      "class": "cn.culturehub.knowledge.KnowledgeJobLocalTest",
+      "test": "failedNewVectorVersionKeepsOldVersionAndSuccessfulRedeliveryDoesNotRepeat",
+      "status": "passed",
+      "seconds": "1.343"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.ManualAckTest",
+      "test": "boundedRetriesReachDeadQueue",
+      "status": "passed",
+      "seconds": "1.169"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.ManualAckTest",
+      "test": "ackOnlyAfterConsumerReturns",
+      "status": "passed",
+      "seconds": "0.005"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.ManualAckTest",
+      "test": "failedTransactionRequiresConfirmedRetryBeforeAck",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.ManualAckTest",
+      "test": "poisonIsIsolatedWithoutRetry",
+      "status": "passed",
+      "seconds": "0.002"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.ManualAckTest",
+      "test": "failedRecoverySendNeverAcknowledgesOriginal",
+      "status": "passed",
+      "seconds": "1.019"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "listenerRestartRecoversQueuedEvent",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "duplicateDeliveryAndReplayPersistOnce",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "transientDatabaseFailureRetries",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "manualDeadLetterReplayPreservesEventId",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "poisonMessageIsRetainedInDeadLetter",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "retryExhaustionIsDeadLettered",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-notification-worker",
+      "class": "cn.culturehub.WorkerRabbitTest",
+      "test": "commitBeforeLostAckRedeliversSafely",
+      "status": "skipped",
+      "seconds": "0.0"
+    },
+    {
+      "module": "culturehub-orchestrator",
+      "class": "cn.culturehub.saga.SagaRecoveryLocalTest",
+      "test": "checkedInItemRequiresManualInterventionAndKeepsPerItemTruth",
+      "status": "passed",
+      "seconds": "6.088"
+    },
+    {
+      "module": "culturehub-orchestrator",
+      "class": "cn.culturehub.saga.SagaRecoveryLocalTest",
+      "test": "failureIsNotReportedAsFullyReleasedUntilEveryCompensationAcknowledges",
+      "status": "passed",
+      "seconds": "0.747"
+    },
+    {
+      "module": "culturehub-orchestrator",
+      "class": "cn.culturehub.saga.SagaRecoveryLocalTest",
+      "test": "explicitRetentionAndNewCompensationGenerationRejectOldResult",
+      "status": "passed",
+      "seconds": "0.932"
+    },
+    {
+      "module": "culturehub-orchestrator",
+      "class": "cn.culturehub.saga.SagaTimestampTest",
+      "test": "mysqlDatetimeAndTimestampUseTheSameBusinessInstant",
+      "status": "passed",
+      "seconds": "0.005"
+    }
+  ]
+}

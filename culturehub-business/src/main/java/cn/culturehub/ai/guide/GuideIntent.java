@@ -9,6 +9,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import org.springframework.stereotype.Component;
 
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Component
 public class GuideIntent {
   public Requirements merge(Requirements previous, IntentPatch patch, Identity request, int gap) {

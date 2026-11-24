@@ -1,0 +1,143 @@
+from contextlib import ExitStack
+import importlib.util
+import json
+import os
+from pathlib import Path
+import secrets
+import time
+
+module_spec = importlib.util.spec_from_file_location("p1", Path(__file__).resolve().parents[1] / "v3-p1" / "run-local.py")
+p1 = importlib.util.module_from_spec(module_spec)
+module_spec.loader.exec_module(p1)
+conf, _ = p1.setup()
+conf_file = p1.WORK / "saga-credentials.json"
+if conf_file.exists():
+    saga_conf = json.loads(conf_file.read_text(encoding="utf8"))
+else:
+    saga_conf = {name: secrets.token_hex(24) for name in ("PARTNER_A", "PARTNER_B")}
+    conf_file.write_text(json.dumps(saga_conf), encoding="utf8")
+
+def sql(statement):
+    return p1.root_sql(statement)
+
+base = (p1.ROOT / "deploy/mysql/01-schema.sql").read_text(encoding="utf8")
+for name, schema in (("PARTNER_A", "partner_db_a"), ("PARTNER_B", "partner_db_b")):
+    if not sql(f"select table_name from information_schema.tables where table_schema='{schema}' and table_name='app_user'"):
+        sql(base.replace("CREATE DATABASE IF NOT EXISTS culturehub ", f"CREATE DATABASE IF NOT EXISTS {schema} ", 1)
+                .replace("USE culturehub;", f"USE {schema};", 1))
+        account = "culturehub_" + name.lower()
+        grant_schema = schema.replace("_", r"\_")
+        sql(f"CREATE USER '{account}'@'%' IDENTIFIED BY '{saga_conf[name]}';"
+            f" GRANT SELECT,INSERT,UPDATE,DELETE ON \x60{grant_schema}\x60.* TO '{account}'@'%';".replace("\x60","\x60"))
+    for migration in ("20261111-v3-booking.sql", "20261111-v3-saga-participant.sql"):
+        sql(f"USE {schema};\n" + (p1.ROOT / "deploy/migrations" / migration).read_text(encoding="utf8"))
+sql("USE core_db;\n" + (p1.ROOT / "deploy/migrations/20261111-v3-saga-participant.sql").read_text(encoding="utf8"))
+sql("USE saga_db;\n" + (p1.ROOT / "deploy/migrations/20261111-v3-saga.sql").read_text(encoding="utf8"))
+sql("USE saga_db;\n" + (p1.ROOT / "deploy/migrations/20261112-v3-saga-compensation-retry.sql").read_text(encoding="utf8"))
+
+def slot(schema):
+    return int(sql(f"""
+      USE {schema};
+      insert into venue(name) values('Saga isolated fixture');
+      insert into activity(venue_id,title,status) values(last_insert_id(),'Saga test','PUBLISHED');
+      insert into activity_session(activity_id,registration_start_at,registration_end_at,start_at,end_at,
+        checkin_open_at,checkin_close_at,capacity,status)
+      values(last_insert_id(),date_sub(now(),interval 1 hour),date_add(now(),interval 1 hour),
+        date_add(now(),interval 2 hour),date_add(now(),interval 3 hour),date_sub(now(),interval 1 hour),
+        date_add(now(),interval 3 hour),10,'PUBLISHED');
+      select last_insert_id();
+    """))
+
+http = p1.SMOKE
+env = {**os.environ, **conf, "V3_DISCOVERY_ENABLED":"false", "RABBIT_HOST":"127.0.0.1",
+       "RABBIT_PORT":"5673", "RABBIT_USER":"guest", "RABBIT_PASSWORD":"guest",
+       "RABBIT_VHOST":"culturehub_v3p1_audit", "JOBS_ENABLED":"false",
+       "REDIS_HOST":"127.0.0.1", "REDIS_PORT":"16379", "AI_CHAT_PROVIDER":"none",
+       "AI_EMBEDDING_PROVIDER":"none", "AI_VECTORSTORE":"none", "DEMO_PASSWORD":"", "V3_CORE_URL":"http://127.0.0.1:18110", "V3_PARTNER_A_URL":"http://127.0.0.1:18121", "V3_PARTNER_B_URL":"http://127.0.0.1:18122"}
+with ExitStack() as processes:
+    for name, port in (("PARTNER_A",18121),("PARTNER_B",18122)):
+        schema = "partner_db_" + name[-1].lower()
+        p = p1.spawn(processes, "p4-"+name.lower(), "culturehub-api", port,
+            {**env,"SPRING_PROFILES_ACTIVE":"v3-partner","DB_URL":p1.jdbc(schema),
+             "V3_PARTICIPANT":name,"V3_PARTNER_SERVICE_NAME":"culturehub-"+name.lower(),
+             "V3_PARTNER_DB_USER":"culturehub_"+name.lower(),"V3_PARTNER_DB_PASSWORD":saga_conf[name],
+             "V3_PARTNER_DB_SCHEMA":schema})
+        p1.ready("p4-"+name.lower(),p,port,"/actuator/health/readiness")
+    core=p1.spawn(processes,"p4-core","culturehub-api",18110,
+        {**env,"SPRING_PROFILES_ACTIVE":"v3-p4","DB_URL":p1.jdbc("core_db")})
+    p1.ready("p4-core",core,18110,"/actuator/health/readiness")
+    orchestrator=p1.spawn(processes,"p4-orchestrator","culturehub-orchestrator",18120,
+        {**env,"SAGA_DB_URL":p1.jdbc("saga_db"),"V3_DEMO_ENABLED":"true"})
+    p1.ready("p4-orchestrator",orchestrator,18120)
+    auth={"username":"saga_"+secrets.token_hex(6),"password":secrets.token_hex(16)}
+    http.expect(http.call("http://127.0.0.1:18110","/api/v1/auth/register","POST",auth),200,"register")
+    login,_=http.expect(http.call("http://127.0.0.1:18110","/api/v1/auth/login","POST",auth),200,"login")
+    token=login["token"]
+    def submit(items,demo=False):
+        request=secrets.token_hex(16)
+        value,_=http.expect(http.call("http://127.0.0.1:18120",
+            "/api/v1/"+("demo/" if demo else "")+"combinations","POST",
+            {"requestId":request,"confirmed":True,"retainPartial":False,"items":items},token),200,"submit group")
+        return value["id"]
+    def final(id,expected):
+        deadline=time.monotonic()+40
+        while time.monotonic()<deadline:
+            value,_=http.expect(http.call("http://127.0.0.1:18120","/api/v1/combinations/"+id,token=token),200,"read group")
+            if value["status"] in ("SUCCEEDED","FAILED","PARTIALLY_SUCCEEDED","MANUAL_INTERVENTION"):
+                assert value["status"]==expected,value
+                return value
+            time.sleep(.3)
+        raise AssertionError(value)
+    a,b=slot("core_db"),slot("core_db")
+    id=submit([{"participant":"CORE","sessionId":a},{"participant":"CORE","sessionId":b}])
+    final(id,"SUCCEEDED")
+    assert sql(f"select count(*) from core_db.participation where session_id in ({a},{b}) and status='RESERVED'")=="2"
+    print("PASS: same-database group confirms both items in the participant transaction",flush=True)
+    items=[{"participant":name,"sessionId":slot(schema)} for name,schema in
+           (("CORE","core_db"),("PARTNER_A","partner_db_a"),("PARTNER_B","partner_db_b"))]
+    id=submit(items,True)
+    final(id,"SUCCEEDED")
+    print("PASS: real Core + Partner A + Partner B Reserve/Confirm via RabbitMQ",flush=True)
+    items=[{"participant":name,"sessionId":slot(schema)} for name,schema in
+           (("CORE","core_db"),("PARTNER_A","partner_db_a"),("PARTNER_B","partner_db_b"))]
+    sql(f"update partner_db_b.activity_session set status='CANCELLED' where id={items[-1]['sessionId']}")
+    id=submit(items,True)
+    result=final(id,"FAILED")
+    assert result["allReleased"] is True
+    for item,schema in zip(items,("core_db","partner_db_a","partner_db_b")):
+        assert sql(f"select occupied_count from {schema}.activity_session where id={item['sessionId']}")=="0"
+    print("PASS: cross-service rejection compensates every participant before reporting all released",flush=True)
+
+    a,b=slot("core_db"),slot("core_db")
+    sql(f"update core_db.activity_session set status='CANCELLED' where id={b}")
+    id=submit([{"participant":"CORE","sessionId":a},{"participant":"CORE","sessionId":b}])
+    final(id,"FAILED")
+    assert sql(f"select count(*) from core_db.participation where session_id in ({a},{b}) and active_guard=1")=="0"
+    assert sql(f"select sum(occupied_count) from core_db.activity_session where id in ({a},{b})")=="0"
+    print("PASS: one invalid local item leaves zero valid qualifications and zero occupied seats",flush=True)
+    request=secrets.token_hex(16)
+    payload={"requestId":request,"confirmed":True,"retainPartial":False,
+             "items":[{"participant":"CORE","sessionId":slot("core_db")}]}
+    one,_=http.expect(http.call("http://127.0.0.1:18120","/api/v1/combinations","POST",payload,token),200,"idempotent initial")
+    two,_=http.expect(http.call("http://127.0.0.1:18120","/api/v1/combinations","POST",payload,token),200,"idempotent replay")
+    assert one["id"]==two["id"]
+    final(one["id"],"SUCCEEDED")
+    assert sql(f"select count(*) from saga_db.saga_instance where request_id='{request}'")=="1"
+    print("PASS: repeated group request returns the same Saga without duplicate qualification",flush=True)
+
+    # Controlled process crash before the coordinator publishes its durable commands.
+    orchestrator.terminate()
+    orchestrator.wait(timeout=15)
+    held=p1.spawn(processes,"p4-orchestrator-held","culturehub-orchestrator",18120,
+        {**env,"SAGA_DB_URL":p1.jdbc("saga_db"),"V3_DEMO_ENABLED":"true",
+         "V3_SAGA_PUBLISH_DELAY_MS":"60000"})
+    p1.ready("p4-orchestrator-held",held,18120)
+    id=submit([{"participant":"CORE","sessionId":slot("core_db")}])
+    held.terminate()
+    held.wait(timeout=15)
+    assert sql(f"select status from saga_db.saga_instance where id='{id}'")=="RESERVING"
+    restarted=p1.spawn(processes,"p4-orchestrator-restarted","culturehub-orchestrator",18120,
+        {**env,"SAGA_DB_URL":p1.jdbc("saga_db"),"V3_DEMO_ENABLED":"true"})
+    p1.ready("p4-orchestrator-restarted",restarted,18120)
+    final(id,"SUCCEEDED")
+    print("PASS: coordinator process crash and restart recovers durable unpublished commands",flush=True)

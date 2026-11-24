@@ -1,5 +1,6 @@
 package cn.culturehub;
 
+import cn.culturehub.v3.BookingMessage;
 import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ public class Publisher {
   private static final Logger log = LoggerFactory.getLogger(Publisher.class);
   final Store s;
   final RabbitTransport transport;
+  @org.springframework.beans.factory.annotation.Value("${v3.participant:CORE}")
+  private String participant = "CORE";
 
   public Publisher(Store s, RabbitTransport transport) {
     this.s = s;
@@ -38,9 +41,12 @@ public class Publisher {
         var props = new MessageProperties();
         props.setMessageId(id);
         props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
+        String type = row.get("event_type").toString();
+        boolean booking = type.startsWith(BookingMessage.OUTBOX_PREFIX);
         transport.send(
-            RabbitTopology.EXCHANGE,
-            RabbitTopology.route(row.get("event_type").toString()),
+            booking ? BookingMessage.DOMAIN : RabbitTopology.EXCHANGE,
+            booking ? (type.equals(BookingMessage.OUTBOX_RELEASE)
+                ? BookingMessage.SEAT_RELEASED : BookingMessage.SETTLE) + "." + participant : RabbitTopology.route(type),
             new Message(row.get("payload").toString().getBytes(StandardCharsets.UTF_8), props));
         s.db.update(
             "update outbox set status='PUBLISHED',published_at=current_timestamp,last_error=null"
@@ -81,5 +87,20 @@ public class Publisher {
   private static String failureSummary(Exception error) {
     String text = error.getClass().getSimpleName() + ": " + String.valueOf(error.getMessage());
     return text.replace('\n', ' ').replace('\r', ' ').substring(0, Math.min(300, text.length()));
+  }
+}
+
+@org.springframework.stereotype.Component
+@org.springframework.context.annotation.Profile("v3-partner")
+class PartnerOutboxSchedule {
+  private final Publisher publisher;
+
+  PartnerOutboxSchedule(Publisher publisher) {
+    this.publisher = publisher;
+  }
+
+  @org.springframework.scheduling.annotation.Scheduled(fixedDelayString = "${v3.booking.partner-outbox-delay-ms:1000}")
+  public void publish() {
+    publisher.publish();
   }
 }

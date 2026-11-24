@@ -13,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** MySQL controls versions/ownership; Redis is short-lived memory, never a booking ledger. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class GuidePersistence {
   private static final DefaultRedisScript<Long> REMEMBER =
@@ -27,6 +28,8 @@ public class GuidePersistence {
   final ObjectMapper json;
   final StringRedisTemplate redis;
   final TransactionTemplate tx;
+  @org.springframework.beans.factory.annotation.Value("${culture.ai.owner-table:app_user}")
+  String ownerTable = "app_user";
 
   public GuidePersistence(
       Store s,
@@ -50,7 +53,8 @@ public class GuidePersistence {
     String id = UUID.randomUUID().toString();
     tx.executeWithoutResult(
         t -> {
-          s.one("select id from app_user where id=? for update", user);
+          Problem.require(Set.of("app_user","ai_owner").contains(ownerTable), "AI_CONFIGURATION_INVALID", "Invalid owner table");
+          s.one("select id from " + ownerTable + " where id=? for update", user);
           Problem.require(
               s.number(
                       "select count(*) from ai_guide_conversation where user_id=? and"

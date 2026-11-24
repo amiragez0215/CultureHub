@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ${V3_PARTNER_SERVICE_NAME}
+  datasource:
+    username: ${V3_PARTNER_DB_USER}
+    password: ${V3_PARTNER_DB_PASSWORD}
+v3:
+  participant: ${V3_PARTICIPANT}
+  core:
+    schema: ${V3_PARTNER_DB_SCHEMA}
+    account: ${V3_PARTNER_DB_USER}
+  booking:
+    namespace: ch:${V3_PARTICIPANT}:booking
+    request-queue: booking.request.worker.${V3_PARTICIPANT}
+    inventory-queue: waitlist.promotion.${V3_PARTICIPANT}
+culture:
+  demo:
+    password: ""
+  jobs:
+    enabled: false

@@ -1,0 +1,56 @@
+package cn.culturehub.saga;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import cn.culturehub.v3.SagaMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
+import java.util.*;
+import java.time.Instant;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.*;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.amqp.core.*;
+import org.springframework.security.oauth2.jwt.Jwt;
+/** Real MySQL coordinator transitions; participant messages are controlled, not real broker evidence. */
+@EnabledIfSystemProperty(named="culturehub.localTest",matches="true")
+class SagaRecoveryLocalTest {
+ JdbcTemplate db;SagaCoordinator coordinator;ObjectMapper json;Channel channel;String id;
+ @BeforeEach void setup(){
+  var admin=new DriverManagerDataSource("jdbc:mysql://127.0.0.1:13306/?connectionTimeZone=Asia/Shanghai","root","");
+  new JdbcTemplate(admin).execute("create database if not exists saga_coordinator_test character set utf8mb4");
+  var source=new DriverManagerDataSource("jdbc:mysql://127.0.0.1:13306/saga_coordinator_test?connectionTimeZone=Asia/Shanghai","root","");
+  new ResourceDatabasePopulator(new FileSystemResource("../deploy/migrations/20261111-v3-saga.sql"),new FileSystemResource("../deploy/migrations/20261112-v3-saga-compensation-retry.sql")).execute(source);
+  db=new JdbcTemplate(source);json=new ObjectMapper().findAndRegisterModules();channel=mock(Channel.class);
+  coordinator=new SagaCoordinator(db,new DataSourceTransactionManager(source),mock(cn.culturehub.RabbitTransport.class),json,true);
+ }
+ void start(boolean retain){id=coordinator.submit(17,new SagaCoordinator.Submission(UUID.randomUUID().toString(),true,retain,
+  List.of(new SagaCoordinator.Item("CORE",1),new SagaCoordinator.Item("PARTNER_A",2))),true).get("id").toString();}
+ String command(String participant,String operation){return db.queryForObject("select o.command_id from saga_outbox o join saga_step s on s.id=o.step_id where s.saga_id=? and s.participant=? and o.operation=? order by o.generation desc limit 1",String.class,id,participant,operation);}
+ void reply(String command,String outcome,String itemState)throws Exception{
+  var original=json.readValue(db.queryForObject("select payload from saga_outbox where command_id=?",String.class,command),SagaMessage.class);
+  var result=new SagaMessage(UUID.randomUUID().toString(),"RESULT",1,Instant.now(),id,original.stepId(),command,original.participant(),17,original.sessionIds(),original.expiresAt(),outcome,"controlled-test-result",id,id,List.of(new SagaMessage.Item(original.sessionIds().get(0),itemState,71L)));
+  var props=new MessageProperties();props.setDeliveryTag(8);coordinator.result(new Message(json.writeValueAsBytes(result),props),channel);
+ }
+ String state(){return coordinator.view(id,17).get("status").toString();}
+ void failSecondConfirmation(boolean retain)throws Exception{start(retain);reply(command("CORE","RESERVE"),"SUCCEEDED","HELD");reply(command("PARTNER_A","RESERVE"),"SUCCEEDED","HELD");assertEquals("CONFIRMING",state());reply(command("CORE","CONFIRM"),"SUCCEEDED","RESERVED");reply(command("PARTNER_A","CONFIRM"),"REJECTED","HELD");assertEquals("COMPENSATING",state());}
+ @Test void failureIsNotReportedAsFullyReleasedUntilEveryCompensationAcknowledges()throws Exception{
+  failSecondConfirmation(false);reply(command("CORE","CANCEL"),"SUCCEEDED","CANCELLED");
+  assertEquals("COMPENSATING",state());assertEquals(false,coordinator.view(id,17).get("allReleased"));
+  reply(command("PARTNER_A","CANCEL"),"SUCCEEDED","CANCELLED");assertEquals("FAILED",state());assertEquals(true,coordinator.view(id,17).get("allReleased"));
+ }
+ @Test void checkedInItemRequiresManualInterventionAndKeepsPerItemTruth()throws Exception{
+  failSecondConfirmation(false);reply(command("CORE","CANCEL"),"MANUAL_INTERVENTION","CHECKED_IN");
+  assertEquals("MANUAL_INTERVENTION",state());assertEquals(false,coordinator.view(id,17).get("allReleased"));assertEquals(true,coordinator.view(id,17).get("requiresAttention"));
+  assertTrue(db.queryForObject("select item_results from saga_step where saga_id=? and participant='CORE'",String.class,id).contains("CHECKED_IN"));
+ }
+ @Test void explicitRetentionAndNewCompensationGenerationRejectOldResult()throws Exception{
+  failSecondConfirmation(true);assertEquals(0,db.queryForObject("select count(*) from saga_outbox o join saga_step s on s.id=o.step_id where s.saga_id=? and s.participant='CORE' and o.operation='CANCEL'",Integer.class,id));
+  String old=command("PARTNER_A","CANCEL");reply(old,"REJECTED","HELD");assertEquals("COMPENSATION_REQUIRED",state());
+  coordinator.retryCompensation(id,Jwt.withTokenValue("fixture").header("alg","HS256").subject("17").build());
+  String next=command("PARTNER_A","CANCEL");assertNotEquals(old,next);reply(old,"SUCCEEDED","CANCELLED");assertEquals("COMPENSATING",state());
+  reply(next,"SUCCEEDED","CANCELLED");assertEquals("PARTIALLY_SUCCEEDED",state());assertEquals(false,coordinator.view(id,17).get("allReleased"));
+ }
+}

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class AiService {
   @org.springframework.beans.factory.annotation.Autowired(required=false)

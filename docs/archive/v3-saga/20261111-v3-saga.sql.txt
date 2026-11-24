@@ -1,0 +1,45 @@
+-- Apply to saga_db.
+CREATE TABLE IF NOT EXISTS saga_instance (
+  id CHAR(36) PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  request_id VARCHAR(80) CHARACTER SET ascii COLLATE ascii_bin NOT NULL UNIQUE,
+  fingerprint CHAR(64) NOT NULL,
+  retain_partial BOOLEAN NOT NULL DEFAULT FALSE,
+  status ENUM('PENDING','RESERVING','CONFIRMING','SUCCEEDED','PARTIALLY_SUCCEEDED','COMPENSATING','FAILED',
+    'COMPENSATION_REQUIRED','MANUAL_INTERVENTION') NOT NULL,
+  version INT NOT NULL DEFAULT 1,
+  deadline_at DATETIME(6) NOT NULL,
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  INDEX ix_saga_recovery(status,deadline_at,id)
+);
+CREATE TABLE IF NOT EXISTS saga_step (
+  id CHAR(36) PRIMARY KEY,
+  saga_id CHAR(36) NOT NULL,
+  participant ENUM('CORE','PARTNER_A','PARTNER_B') NOT NULL,
+  session_ids JSON NOT NULL,
+  reserve_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+  confirm_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+  cancel_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+  last_reason VARCHAR(100),
+  item_results JSON,
+  UNIQUE KEY uq_saga_participant(saga_id,participant),
+  FOREIGN KEY(saga_id) REFERENCES saga_instance(id)
+);
+CREATE TABLE IF NOT EXISTS saga_outbox (
+  command_id CHAR(36) PRIMARY KEY,
+  step_id CHAR(36) NOT NULL,
+  operation ENUM('RESERVE','CONFIRM','CANCEL') NOT NULL,
+  payload JSON NOT NULL,
+  published BOOLEAN NOT NULL DEFAULT FALSE,
+  attempts INT NOT NULL DEFAULT 0,
+  next_attempt_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  UNIQUE KEY uq_saga_step_operation(step_id,operation),
+  FOREIGN KEY(step_id) REFERENCES saga_step(id),
+  INDEX ix_saga_publish(published,next_attempt_at,command_id)
+);
+CREATE TABLE IF NOT EXISTS saga_inbox (
+  event_id CHAR(36) PRIMARY KEY,
+  command_id CHAR(36) NOT NULL,
+  occurred_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+);

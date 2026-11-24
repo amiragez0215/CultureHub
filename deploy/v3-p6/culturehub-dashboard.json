@@ -1,0 +1,139 @@
+{
+  "uid": "culturehub-v3",
+  "title": "CultureHub V3 服务与预约监控",
+  "schemaVersion": 40,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "HTTP 请求速率",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "sum by (application,instance)(rate(http_server_requests_seconds_count[1m]))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "HTTP P95",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95,sum by (le,instance)(rate(http_server_requests_seconds_bucket[5m])))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "业务积压",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "culturehub_backlog",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "连接池活跃连接",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "hikaricp_connections_active",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "连接池等待线程",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "hikaricp_connections_pending",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "JVM 堆内存",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "culturehub-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "sum by(instance)(jvm_memory_used_bytes{area=\"heap\"})",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

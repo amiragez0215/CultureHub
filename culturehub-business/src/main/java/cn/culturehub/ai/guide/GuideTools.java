@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /** A closed Java tool catalogue. SQL remains inside the original query service. */
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Service
 public class GuideTools {
   final GuideQueryService queries;

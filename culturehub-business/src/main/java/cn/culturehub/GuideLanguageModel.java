@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+@org.springframework.context.annotation.Profile("!v3-p5 & !v3-partner")
 @Component
 public class GuideLanguageModel implements GuideLanguage {
   final AiService ai;

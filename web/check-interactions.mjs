@@ -75,6 +75,29 @@ const find=(n,p)=>p(n)?n:(n.children||[]).map(c=>find(c,p)).find(Boolean);
 async function settle(){for(let i=0;i<8;i++){await new Promise(r=>setTimeout(r,3));await nextTick();}}
 async function click(name){await nextTick();const button=find(root,n=>n.type==='button'&&text(n).trim()===name);assert.ok(button,'Missing button '+name);assert.ok(!button.props.disabled,'Disabled '+name);const event={preventDefault(){},stopPropagation(){}};if(button.props.onClick)await button.props.onClick(event);else{let form=button.parent;while(form&&form.type!=='form')form=form.parent;assert.ok(form?.props.onSubmit,'No handler for '+name);await form.props.onSubmit(event);}await settle();}
 try{
+  await settle();
+  const beforeAsyncBooking = globalThis.fetch;
+  const bookingStatuses = [];
+  globalThis.fetch = async (url, options = {}) => {
+    let response;
+    if (url.endsWith('/sessions/10/reservations')) {
+      response = { asyncBooking: true, requestId: 'p2-ui-request', requestStatus: 'QUEUED', status: 'ACCEPTED' };
+    } else if (url.endsWith('/booking-requests/p2-ui-request')) {
+      bookingStatuses.push(url);
+      response = { asyncBooking: true, requestId: 'p2-ui-request', requestStatus: 'CONFIRMED',
+        status: 'CONFIRMED', participation: { id: 41, status: 'RESERVED' } };
+    } else {
+      return beforeAsyncBooking(url, options);
+    }
+    return { ok: true, status: 200, text: async () => JSON.stringify(response) };
+  };
+  await vm.book(10);
+  assert.equal(bookingStatuses.length, 1);
+  assert.equal(vm.page, 'mine');
+  assert.equal(vm.toast, '预约成功');
+  assert.equal(vm.pendingBooking, false);
+  globalThis.fetch = beforeAsyncBooking;
+  await vm.nav('activities');
  await settle();assert.equal(vm.page,'activities');assert.equal(vm.pageCount,2);assert.match(text(root),/共 25 个活动/);assert.match(text(root),/共 2 页/);
  vm.venueFilter=9;await vm.search();assert.ok(apiCalls.some(c=>c.url.includes('/activities/count?')&&c.url.includes('venueId=9')));vm.venueFilter=0;
  await click('查看场次 →');assert.equal(vm.page,'activityDetail');assert.match(location.hash,/activityDetail\/1/);assert.match(text(root),/选择参与场次/);assert.equal(find(root,n=>n.props.class==='cards'),undefined);assert.equal(vm.section,'activities');
@@ -144,5 +167,25 @@ try{
  globalThis.fetch=(url,options)=>url.endsWith('/messages/stream')?new Promise(resolve=>{releaseChat=()=>ordinaryFetch(url,options).then(resolve);markStarted();}):ordinaryFetch(url,options);
  vm.question='旧账号的问题';const delayedChat=vm.chat();await startedChat;vm.me={user:{username:'another-user'},roles:['USER']};releaseChat();await delayedChat;await settle();assert.equal(vm.messages.length,0);assert.equal(vm.conversation,'');assert.equal(vm.guideProposal,null);globalThis.fetch=ordinaryFetch;
  assert.ok(scrolls.length>0);assert.match(text(root),/探索活动/);
+ const beforeCombinationFetch=globalThis.fetch;let groupCalls=0;const groupPayloads=[];
+ globalThis.fetch=async(url,options={})=>{
+  if(String(url).includes('/combinations') || String(url).includes('/ai/plans/')) {
+   if(options.method==='POST') {groupCalls++;groupPayloads.push(JSON.parse(options.body));}
+   if(options.method==='GET'&&String(url).includes('/combinations?'))return {ok:true,status:200,text:async()=>JSON.stringify({records:[],total:0})};
+   return {ok:true,status:200,text:async()=>JSON.stringify({id:'group-test',status:options.method==='POST'?'RECEIVED':'SETTLING',db_result:options.method==='POST'?null:'COMMITTED',allReleased:false,steps:[]})};
+  }
+  return beforeCombinationFetch(url,options);
+ };
+ vm.combinationInput.items=[{participant:'CORE',sessionId:10}];
+ vm.combinationInput.confirmed=false;await vm.submitCombination();assert.equal(groupCalls,0);
+ vm.combinationInput.confirmed=true;await vm.submitCombination();assert.equal(groupCalls,1);
+ assert.equal(vm.combination.status,'RECEIVED');assert.equal(groupPayloads[0].retainPartial,false);
+ await vm.refreshCombination();assert.equal(vm.combination.status,'SETTLING');assert.equal(vm.combination.db_result,'COMMITTED');
+ const requestBeforeReset=vm.combinationInput.requestId;vm.resetCombination();assert.notEqual(vm.combinationInput.requestId,requestBeforeReset);assert.equal(vm.combinationInput.confirmed,false);
+ await vm.prepareGuideGroup({current:true,plan:{planId:'verified-plan',planVersion:3,orderedSessionIds:[10,11]}});
+ assert.equal(groupCalls,1);assert.equal(vm.combinationInput.sourcePlan,'verified-plan');assert.equal(vm.combinationInput.confirmed,false);assert.equal(vm.combinationInput.items.length,2);
+ vm.combinationInput.retainPartial=true;vm.combinationInput.confirmed=true;await vm.submitCombination();assert.equal(groupCalls,2);
+ assert.equal(groupPayloads[1].retainPartial,true);
+ globalThis.fetch=beforeCombinationFetch;
  console.log('PASS: Vue interaction regression; Graph session selection does not book, explicit booking/waitlist confirmation, rejection, current qualification, stale cards and cross-user response isolation; original management/grants/AI2/AI3 regression');
 }finally{app.unmount();}
